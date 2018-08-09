@@ -19,6 +19,7 @@
   ],
   "dependencies": {
     "classnames": "2.2.5",
+    "connected-react-router": "^4.3.0",
     "history": "4.7.2",
     "prop-types": "15.6.1",
     "react": "16.3.2",
@@ -28,7 +29,10 @@
     "react-router": "4.2.0",
     "react-router-dom": "4.2.2",
     "react-router-redux": "5.0.0-alpha.9",
-    "redux": "3.7.2"
+    "redux": "3.7.2",
+    "redux-logger": "^3.0.6",
+    "redux-saga": "^0.16.0",
+    "sendbird": "^3.0.70"
   },
   "devDependencies": {
     "autoprefixer": "8.4.1",
