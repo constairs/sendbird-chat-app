@@ -17,13 +17,16 @@ export function reducer(state = initialState, action) {
       };
     case 'USER_LOGIN_SUCCESSED':
       return {
-        userId: action.payload,
+        user: action.payload,
         fetching: false,
         error: ''
       };
     case 'USER_LOGIN_FAILED':
       return {
-        userId: '',
+        user: {
+          userId: '',
+          userNick: ''
+        },
         fetching: false,
         error: action.payload
       };

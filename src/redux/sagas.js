@@ -5,8 +5,8 @@ export function* loginUserAsync(action) {
   try {
     const data = yield call(connectToSB, action.payload.userId);
     yield put({ type: 'USER_LOGIN_SUCCESSED', payload: data });
-  } catch (e) {
-    yield put({ type: 'USER_LOGIN_FAILED', payload: e });
+  } catch (err) {
+    yield put({ type: 'USER_LOGIN_FAILED', payload: err });
   }
 }
 

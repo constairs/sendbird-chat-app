@@ -33,6 +33,7 @@ export class Login extends React.Component {
   }
 
   render() {
+    // const { nickname, isActive } = this.props.data.user;
     return (
       <div className="form login-form">
         <form onSubmit={this.handleLogin}>
