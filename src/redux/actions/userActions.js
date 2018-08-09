@@ -3,13 +3,13 @@ export const loginUserRequest = (data) => {
 };
 
 export const loginUserSuccess = (data) => {
-  return { type: 'REQUESTED_DOG_SUCCEEDED', payload: data };
+  return { type: 'USER_LOGIN_SUCCESSED', payload: data };
 };
 
 export const loginUserError = (error) => {
-  return { type: 'REQUESTED_DOG_FAILED', payload: error };
+  return { type: 'USER_LOGIN_FAILED', payload: error };
 };
 
-export const loggedUser = () => {
-  return { type: 'LOGGED_USER' };
+export const loggedUser = (data) => {
+  return { type: 'LOGGED_USER', payload: data };
 };

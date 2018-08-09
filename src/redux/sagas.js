@@ -1,21 +1,12 @@
 import { call, put, takeLatest } from 'redux-saga/effects';
-import { SendBird } from '../services/sendbird';
+import { connectToSB } from '../services/sendbird';
 
-import {
-  loginUserRequest,
-  loginUserSuccess,
-  loginUserError
-} from './actions/userActions';
-
-export function* loginUserAsync() {
+export function* loginUserAsync(action) {
   try {
-    const userId = yield put(loginUserRequest());
-    const data = yield call(() => {
-      return SendBird.connect(userId);
-    });
-    yield put(loginUserSuccess(data));
+    const data = yield call(connectToSB, action.payload.userId);
+    yield put({ type: 'USER_LOGIN_SUCCESSED', payload: data });
   } catch (e) {
-    yield put(loginUserError(e));
+    yield put({ type: 'USER_LOGIN_FAILED', payload: e });
   }
 }
 

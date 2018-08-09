@@ -34,3 +34,17 @@ class SendBirdAction {
 
 export { SendBirdAction };
 
+
+export const sb = new SendBird({ AppId });
+
+export function connectToSB(userId) {
+  return new Promise((resolve, reject) => {
+    sb.connect(userId, appToken, (user, error) => {
+      if (error) {
+        reject(error);
+      } else {
+        resolve(user);
+      }
+    });
+  });
+}

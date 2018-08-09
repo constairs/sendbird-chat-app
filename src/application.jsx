@@ -8,7 +8,6 @@ import { logger } from 'redux-logger';
 import { createBrowserHistory } from 'history';
 import { ConnectedRouter, connectRouter, routerMiddleware } from 'connected-react-router';
 import createSagaMiddleware from 'redux-saga';
-// import { configureStore, history } from './redux/store';
 import { AppBody } from './components/AppBody';
 
 import { reducer } from './redux/reducers/index';
@@ -18,28 +17,34 @@ import './assets/css/styles.css';
 import './assets/scss/styles.scss';
 
 const history = createBrowserHistory();
-// const store = configureStore();
 const sagaMiddleware = createSagaMiddleware();
-export const store = createStore(
-  connectRouter(history)(reducer),
-  // eslint-disable-next-line
-  window.__REDUX_DEVTOOLS_EXTENSION__ && window.__REDUX_DEVTOOLS_EXTENSION__(),
-  compose(
-    applyMiddleware(
-      routerMiddleware(history),
-      sagaMiddleware,
-      logger
-    )
-  )
-);
 
-if (module.hot) {
-  // Enable Webpack hot module replacement for reducers
-  module.hot.accept('./redux/reducers', () => {
-    const nextRootReducer = require('./redux/reducers/');
-    store.replaceReducer(nextRootReducer);
-  });
+function configureStore() {
+  const store = createStore(
+    connectRouter(history)(reducer),
+    // eslint-disable-next-line
+    window.__REDUX_DEVTOOLS_EXTENSION__ && window.__REDUX_DEVTOOLS_EXTENSION__(),
+    compose(
+      applyMiddleware(
+        routerMiddleware(history),
+        sagaMiddleware,
+        logger
+      )
+    )
+  );
+  if (module.hot) {
+    // Enable Webpack hot module replacement for reducers
+    module.hot.accept('./redux/reducers', () => {
+      // eslint-disable-next-line
+      const nextRootReducer = require('./redux/reducers/');
+      store.replaceReducer(nextRootReducer);
+    });
+  }
+
+  return store;
 }
+
+export const store = configureStore();
 
 sagaMiddleware.run(watchLoginUser);
 

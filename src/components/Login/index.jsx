@@ -7,13 +7,14 @@ export class Login extends React.Component {
     super(props);
     this.state = {
       userId: '',
-      userNick: ''
+      userNick: '',
+      disabledBtn: true
     };
   }
 
   handleTextInput = (e) => {
     if (e.target.name === 'userId') {
-      this.setState({ userId: e.target.value });
+      this.setState({ userId: e.target.value, disabledBtn: false });
     }
     if (e.target.name === 'userNick') {
       this.setState({ userNick: e.target.value });
@@ -27,6 +28,7 @@ export class Login extends React.Component {
       userNick: this.state.userNick
     };
     this.props.userActions.loginUserRequest(formData);
+    this.setState({ userId: '', userNick: '' });
     // console.log('sended');
   }
 
@@ -42,10 +44,9 @@ export class Login extends React.Component {
             <span>UserNick</span>
             <input id="userNick" name="userNick" value={this.state.userNick} onChange={this.handleTextInput} type="text" />
           </label>
-          <button>Login</button>
+          <button disabled={this.state.disabledBtn}>Login</button>
         </form>
       </div>
     );
   }
 }
-/* this.props.dispatch(loggedUser(data)) */

@@ -1,6 +1,6 @@
 .login-form {
   background-color: #f0f0f0;
-  box-shadow: 0 0 15px rgba(0,0,0,.5);
+  box-shadow: 0 0 15px rgba(0,0,0,.3);
   border-radius: 3px;
   max-width: 300px;
   padding: 40px;
@@ -17,7 +17,6 @@
 .login-form input:focus {
   background-color: #fbfbfb;
   border-color: #333;
-  outline: none;
 }
 
 .login-form button {
@@ -28,4 +27,5 @@
   font-family: var(--font);
   background-color: var(--brand-color);
   border: none;
+  transition: all .2s
 }

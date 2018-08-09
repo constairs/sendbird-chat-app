@@ -1,3 +1,11 @@
+input:focus, button:focus {
+  outline: none;
+}
+
+button:disabled {
+  background-color: #ccc;
+}
+
 .form label {
   display: block;
   margin-bottom: 20px;
