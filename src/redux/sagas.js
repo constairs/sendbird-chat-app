@@ -4,7 +4,7 @@ import { connectToSB } from '../services/sendbird';
 export function* loginUserAsync(action) {
   try {
     const data = yield call(connectToSB, action.payload.userId);
-    yield put({ type: 'USER_LOGIN_SUCCESSED', payload: data });
+    yield put({ type: 'USER_LOGIN_SUCCESSED', payload: data.nickname });
   } catch (err) {
     yield put({ type: 'USER_LOGIN_FAILED', payload: err });
   }

@@ -1,36 +1,32 @@
-import { createStore, compose, applyMiddleware } from 'redux';
+import { createStore, applyMiddleware } from 'redux';
 import { createBrowserHistory } from 'history';
 import { connectRouter, routerMiddleware } from 'connected-react-router';
 import createSagaMiddleware from 'redux-saga';
-import { reducer } from './reducers/index';
-import { watchLoginUser } from './sagas';
+import { logger } from 'redux-logger';
+import { reducer } from './user/reducer';
 
 export const history = createBrowserHistory();
 
-export function configureStore(initialState) {
+export function configureStore() {
   const sagaMiddleware = createSagaMiddleware();
   const store = createStore(
     connectRouter(history)(reducer),
     // eslint-disable-next-line
     window.__REDUX_DEVTOOLS_EXTENSION__ && window.__REDUX_DEVTOOLS_EXTENSION__(),
-    initialState,
-    compose(
-      applyMiddleware(
-        routerMiddleware(history),
-        sagaMiddleware
-      )
+    applyMiddleware(
+      logger,
+      routerMiddleware(history),
+      sagaMiddleware
     )
   );
 
-  sagaMiddleware.run(watchLoginUser);
-
   if (module.hot) {
-    module.hot.accept('./reducers', () => {
+    module.hot.accept('./user/reducer', () => {
       // eslint-disable-next-line
-      const nextRootReducer = require('./reducers/index');
+      const nextRootReducer = require('./user/reducer');
       store.replaceReducer(nextRootReducer);
     });
   }
-
+  store.runSaga = sagaMiddleware.run;
   return store;
 }

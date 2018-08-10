@@ -1,4 +1,5 @@
 import React from 'react';
+import PropTypes from 'prop-types';
 
 import './index.css';
 
@@ -27,8 +28,8 @@ export class LoginForm extends React.Component {
       userId: this.state.userId,
       userNick: this.state.userNick
     };
-    this.props.onLogin(formData);
     this.setState({ userId: '', userNick: '' });
+    this.props.onLogin(formData);
   }
 
   render() {
@@ -50,3 +51,6 @@ export class LoginForm extends React.Component {
     );
   }
 }
+LoginForm.propTypes = {
+  onLogin: PropTypes.func.isRequired
+};
