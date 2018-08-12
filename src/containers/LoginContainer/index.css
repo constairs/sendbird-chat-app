@@ -1,6 +1,17 @@
 .login-page {
-  background-color: #80f0c1;
   display: flex;
   justify-content: center;
   align-items: center; 
+}
+
+.preloader {
+  position: fixed;
+  left: 0;
+  top: 0;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background-color: rgba(255,255,255,.7);
+  width: 100%;
+  height: 100vh;
 }

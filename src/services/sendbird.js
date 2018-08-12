@@ -1,7 +1,7 @@
 import SendBird from 'sendbird';
 import { APP_ID, TOKEN } from '../constants';
 
-class SendBirdAction {
+export class SendBirdActions {
   constructor() {
     this.sb = new SendBird({ appId: APP_ID });
   }
@@ -30,32 +30,17 @@ class SendBirdAction {
     });
   }
 
-  createChannel(user, data) {
+  createChannel(user, coverUrl, data) {
     return new Promise((resolve, reject) =>{
       this.sb.OpenChannel.createChannel(user.name, user.coverUrl, data, (createdChannel, error) => {
         if (error) {
           console.error(error);
           reject(error);
         }
-        resolve();
+        resolve(createdChannel);
         // onCreated
         console.log(createdChannel);
       });
     });
   }
 }
-
-export { SendBirdAction };
-
-export const connectToSB = (userId) => {
-  return new Promise((resolve, reject) => {
-    const sb = new SendBird({ appId: APP_ID });
-    sb.connect(userId, TOKEN, (user, error) => {
-      if (error) {
-        reject(error);
-      } else {
-        resolve(user);
-      }
-    });
-  });
-};

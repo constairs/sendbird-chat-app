@@ -17,15 +17,20 @@ class LoginConnected extends React.Component {
     return (
       <div className="page login-page">
         {this.props.user.fetching ?
-          <Spinner
-            color="#FF4601"
-            secondaryColor="#40c9ff"
-            size="100"
-          />
+          <div className="preloader">
+            <Spinner
+              color="#80f0c1"
+              secondaryColor="#f7a2c9"
+              size="200"
+            />
+          </div>
           : null
         }
-        <LoginForm onLogin={this.handleLogin} />
-        {this.props.user.user ? <p>{this.props.user.user}</p> : null}
+        {
+          this.props.user.user ?
+            <p>{this.props.user.user}</p> :
+            <LoginForm onLogin={this.handleLogin} />
+        }
       </div>
     );
   }
