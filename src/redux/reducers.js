@@ -1,6 +1,5 @@
 import { combineReducers } from 'redux';
-import { userReducer } from './user/reducer';
 import { chatReducer } from './chat/reducer';
+import { userReducer } from './user/reducer';
 
-export const reducers = combineReducers({ userReducer, chatReducer });
-// export const reducers = userReducer;
+export const rootReducer = combineReducers({ chatReducer, userReducer });

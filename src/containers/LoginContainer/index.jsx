@@ -38,13 +38,11 @@ class LoginConnected extends React.Component {
 
 LoginConnected.propTypes = {
   userActions: PropTypes.objectOf(PropTypes.func).isRequired,
-  user: PropTypes.shape.isRequired
-
 };
 
 function mapStateToProps(state) {
   return {
-    user: state
+    user: state.userReducer
   };
 }
 

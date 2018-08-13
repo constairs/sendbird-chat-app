@@ -1,12 +1,12 @@
 import { createReducer } from '../../utils/reducerUtils';
-
 import * as TYPES from './types';
 
 const initState = {
   user: '',
   fetching: false,
   error: '',
-  userId: ''
+  userId: '',
+  channelData: ''
 };
 
 const userLoginRequest = (state, userId) => ({
@@ -29,4 +29,4 @@ const handlers = {
   [TYPES.USER_LOGIN_FAILED]: userLoginFailed,
 };
 
-export const reducer = createReducer(initState, handlers);
+export const userReducer = createReducer(initState, handlers);

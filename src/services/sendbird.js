@@ -1,46 +1,55 @@
 import SendBird from 'sendbird';
 import { APP_ID, TOKEN } from '../constants';
 
-export class SendBirdActions {
-  constructor() {
-    this.sb = new SendBird({ appId: APP_ID });
-  }
+const sb = new SendBird({ appId: APP_ID });
 
-  connect(userId) {
-    return new Promise((resolve, reject) => {
-      this.sb.connect(userId, TOKEN, (user, error) => {
+export function connectToSB(userId) {
+  return new Promise((resolve, reject) => {
+    // const sb = new SendBird({ appId: APP_ID });
+    sb.connect(userId, TOKEN, (user, error) => {
+      if (error) {
+        reject(error);
+      } else {
+        resolve(user);
+      }
+    });
+  });
+}
+
+export function disconnectFromSB() {
+  return new Promise((resolve, reject) => {
+    // const sb = new SendBird({ appId: APP_ID });
+    sb.disconnect((response, error) => {
+      if (error) {
+        reject(error);
+      } else {
+        resolve(response);
+      }
+    });
+  });
+}
+
+export function createChannel(
+  channelName,
+  channelUrl,
+  coverUrl,
+  coverFile,
+  customType,
+  channelData,
+  channelOperators) {
+  return new Promise((resolve, reject) => {
+    // const sb = new SendBird({ appId: APP_ID });
+    debugger;
+    sb.OpenChannel.createChannel(
+      channelName,
+      coverUrl,
+      channelData,
+      (response, error) => {
         if (error) {
           reject(error);
-        } else {
-          resolve(user);
         }
-      });
-    });
-  }
-
-  disconnect() {
-    return new Promise((resolve, reject) => {
-      this.sb.disconnect((Response, error) => {
-        if (error) {
-          reject(error);
-        } else {
-          resolve();
-        }
-      });
-    });
-  }
-
-  createChannel(user, coverUrl, data) {
-    return new Promise((resolve, reject) =>{
-      this.sb.OpenChannel.createChannel(user.name, user.coverUrl, data, (createdChannel, error) => {
-        if (error) {
-          console.error(error);
-          reject(error);
-        }
-        resolve(createdChannel);
-        // onCreated
-        console.log(createdChannel);
-      });
-    });
-  }
+        resolve(response);
+      }
+    );
+  });
 }

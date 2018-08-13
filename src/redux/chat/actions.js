@@ -4,8 +4,8 @@ import {
   CREATE_OPEN_CHANNEL_FAILED
 } from './types';
 
-export const createOpenChannel = (channelData) => {
-  return { type: CREATE_OPEN_CHANNEL, payload: channelData };
+export const createOpenChannel = (formData) => {
+  return { type: CREATE_OPEN_CHANNEL, payload: formData };
 };
 
 export const createOpenChannelSuccessed = (channelData) => {
