@@ -5,7 +5,6 @@ const sb = new SendBird({ appId: APP_ID });
 
 export function connectToSB(userId) {
   return new Promise((resolve, reject) => {
-    // const sb = new SendBird({ appId: APP_ID });
     sb.connect(userId, TOKEN, (user, error) => {
       if (error) {
         reject(error);
@@ -18,7 +17,6 @@ export function connectToSB(userId) {
 
 export function disconnectFromSB() {
   return new Promise((resolve, reject) => {
-    // const sb = new SendBird({ appId: APP_ID });
     sb.disconnect((response, error) => {
       if (error) {
         reject(error);
@@ -29,21 +27,15 @@ export function disconnectFromSB() {
   });
 }
 
-export function createChannel(
+export function createOpenChannel(
   channelName,
-  channelUrl,
   coverUrl,
-  coverFile,
-  customType,
-  channelData,
-  channelOperators) {
+  coverFile) {
   return new Promise((resolve, reject) => {
-    // const sb = new SendBird({ appId: APP_ID });
-    debugger;
     sb.OpenChannel.createChannel(
       channelName,
       coverUrl,
-      channelData,
+      coverFile,
       (response, error) => {
         if (error) {
           reject(error);
@@ -51,5 +43,35 @@ export function createChannel(
         resolve(response);
       }
     );
+  });
+}
+
+export function openChannelsList() {
+  return new Promise((resolve, reject) => {
+    const openChannelListQuery = sb.OpenChannel.createOpenChannelListQuery();
+    openChannelListQuery.next((channels, error) => {
+      if (error) {
+        reject(error);
+      }
+      resolve(channels);
+    });
+  });
+}
+
+export function getChannel(channelUrl) {
+  return new Promise((resolve, reject) => {
+    sb.OpenChannel.getChannel(channelUrl, (channel, error) => {
+      if (error) {
+        reject(error);
+      }
+      resolve(new Promise((res, rej) => {
+        channel.enter((response, err) => {
+          if (err) {
+            rej(err);
+          }
+          res(response);
+        });
+      }));
+    });
   });
 }

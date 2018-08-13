@@ -1,6 +1,5 @@
 import React from 'react';
 import { Switch, Route } from 'react-router-dom';
-import { Provider } from 'react-redux';
 import { LoginContainer } from './containers/LoginContainer/';
 import { OpenChannelContainer } from './containers/OpenChannelContainer';
 import { Banner } from './components/Banner';
@@ -12,20 +11,14 @@ export const Navigation = () => (
     <Route
       exact
       path="/login/"
-      render={() => (
-        <Provider store={store}>
-          <LoginContainer />
-        </Provider>
-      )}
+      props={store}
+      component={LoginContainer}
     />
     <Route
       exact
       path="/createChannel"
-      render={() => (
-        <Provider store={store}>
-          <OpenChannelContainer />
-        </Provider>
-      )}
+      props={store}
+      component={OpenChannelContainer}
     />
   </Switch>
 );

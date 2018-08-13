@@ -28,10 +28,14 @@ class OpenChannel extends React.Component {
     this.setState({ modalOpen: false });
   }
 
+  handleOpenChList = () => {
+    this.props.chatActions.openChannelsList();
+  }
+
   render() {
     return (
       <div className="page channel-page">
-        {/* {this.props.chat.fetching ?
+        {this.props.chat.fetching ?
           <div className="preloader">
             <Spinner
               color="#80f0c1"
@@ -40,23 +44,26 @@ class OpenChannel extends React.Component {
             />
           </div>
           : null
-        } */}
+        }
         { this.state.modalOpen ?
-          <div className="modal">
-            <button className="x-btn" onClick={this.handleCloseModal}>x</button>
-            <CreateChannelForm onCreateChannel={this.handleOpenChannel} />
+          <div className="modal-wrap">
+            <div className="modal">
+              <button className="x-btn" onClick={this.handleCloseModal}>x</button>
+              <CreateChannelForm onCreateChannel={this.handleOpenChannel} />
+            </div>
           </div>
           :
           null
         }
         <button onClick={this.handleOpenModal}>Создать открытый канал</button>
+        <button onClick={this.handleOpenChList}>Список открытых каналов</button>
       </div>
     );
   }
 }
 
 OpenChannel.propTypes = {
-  chatActions: PropTypes.objectOf(PropTypes.func).isRequired
+  chatActions: PropTypes.objectOf(PropTypes.func).isRequired,
 };
 
 function mapStateToProps(state) {
