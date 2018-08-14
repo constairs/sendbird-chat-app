@@ -27,8 +27,8 @@ class LoginConnected extends React.Component {
           : null
         }
         {
-          this.props.user.user ?
-            <p>{this.props.user.user}</p> :
+          this.props.user.userName ?
+            <p>{this.props.user.userName}</p> :
             <LoginForm onLogin={this.handleLogin} />
         }
       </div>

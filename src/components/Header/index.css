@@ -1,5 +1,5 @@
 header {
-  background-color: #f7a2c9;
+  background-color: var(--pink);
   display: block;
   padding: 20px 40px;
 }
@@ -20,7 +20,7 @@ nav ul li a {
   border-radius: 3px;
   font-size: 18px;
   text-decoration: none;
-  background-color: #80f0c1;
+  background-color: var(--brand-color);
   color: #ffffff;
   box-shadow: 0 0 10px rgba(0,0,0,.3);
   font-family: var(--font);

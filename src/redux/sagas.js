@@ -4,6 +4,8 @@ import * as userSagas from './user/sagas';
 
 export function* rootSaga() {
   yield spawn(chatSagas.watchCreateChannel);
-  yield spawn(chatSagas.watchOpenChannelListQuery);
+  yield spawn(chatSagas.watchOpenChannels);
+  yield spawn(chatSagas.watchEnterChannel);
+  yield spawn(chatSagas.watchSendMessage);
   yield spawn(userSagas.watchLoginUser);
 }

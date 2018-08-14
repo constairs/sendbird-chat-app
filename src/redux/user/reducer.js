@@ -14,7 +14,9 @@ const userLoginRequest = (state, userId) => ({
   fetching: true,
 });
 const userLoginSuccessed = (state, user) => ({
-  user,
+  ...state,
+  userId: user.userId,
+  userName: user.nickname,
   fetching: false
 });
 const userLoginFailed = (state, error) => ({

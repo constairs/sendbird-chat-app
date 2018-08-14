@@ -5,6 +5,8 @@ import { Spinner } from 'react-preloading-component';
 import PropTypes from 'prop-types';
 import * as chatActions from '../../redux/chat/actions';
 import { CreateChannelForm } from '../../components/CreateChannelForm';
+import { ChannelList } from '../../components/ChannelList';
+import { Channel } from '../../components/Channel';
 
 import './index.css';
 
@@ -20,6 +22,18 @@ class OpenChannel extends React.Component {
     this.props.chatActions.createOpenChannel(formData);
   }
 
+  handleOpenChList = () => {
+    this.props.chatActions.openChannelsList();
+  }
+
+  handleEnterChannel = (channelUrl) => {
+    this.props.chatActions.enterChannel(channelUrl);
+  }
+
+  handleMessageSend = (messageData) => {
+    this.props.chatActions.sendMessage(messageData);
+  }
+
   handleOpenModal = () => {
     this.setState({ modalOpen: true });
   }
@@ -28,11 +42,8 @@ class OpenChannel extends React.Component {
     this.setState({ modalOpen: false });
   }
 
-  handleOpenChList = () => {
-    this.props.chatActions.openChannelsList();
-  }
-
   render() {
+    const { channelsList, channel } = this.props.chat;
     return (
       <div className="page channel-page">
         {this.props.chat.fetching ?
@@ -55,6 +66,21 @@ class OpenChannel extends React.Component {
           :
           null
         }
+        { channelsList ?
+          <ChannelList selectedChan={this.handleEnterChannel} channels={channelsList} />
+          :
+          null
+        }
+        { channel ?
+          <Channel
+            onMessageSend={this.handleMessageSend}
+            onEnter={this.handleEnterChannel}
+            user={this.props.user}
+            channel={channel}
+          />
+        :
+          null
+        }
         <button onClick={this.handleOpenModal}>Создать открытый канал</button>
         <button onClick={this.handleOpenChList}>Список открытых каналов</button>
       </div>
@@ -68,6 +94,7 @@ OpenChannel.propTypes = {
 
 function mapStateToProps(state) {
   return {
+    user: state.userReducer,
     chat: state.chatReducer
   };
 }
@@ -78,7 +105,7 @@ function mapDispatchToProps(dispatch) {
   };
 }
 
-export const OpenChannelContainer = connect(
+export const OpenChannelsContainer = connect(
   mapStateToProps,
   mapDispatchToProps
 )(OpenChannel);

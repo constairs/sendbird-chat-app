@@ -46,7 +46,7 @@ export function createOpenChannel(
   });
 }
 
-export function openChannelsList() {
+export function openChannelList() {
   return new Promise((resolve, reject) => {
     const openChannelListQuery = sb.OpenChannel.createOpenChannelListQuery();
     openChannelListQuery.next((channels, error) => {
@@ -64,14 +64,61 @@ export function getChannel(channelUrl) {
       if (error) {
         reject(error);
       }
-      resolve(new Promise((res, rej) => {
-        channel.enter((response, err) => {
-          if (err) {
-            rej(err);
-          }
-          res(response);
-        });
-      }));
+      resolve(channel);
     });
   });
 }
+
+export function exitChannel(channel) {
+  return new Promise((resolve, reject) => {
+    channel.exit((response, error) => {
+      if (error) {
+        reject(error);
+      }
+      resolve(response);
+    });
+  });
+}
+
+export function enterChannel(channelUrl) {
+  return new Promise((resolve, reject) => {
+    sb.OpenChannel.getChannel(channelUrl, (channel, error) => {
+      if (error) {
+        reject(error);
+      }
+      channel.enter((response, err) => {
+        if (error) {
+          reject(err);
+        }
+        resolve(channel);
+      });
+    });
+  });
+}
+
+export function sendMessage(channelUrl, mType, user, message, data, customType) {
+  return new Promise((resolve, reject) => {
+    sb.OpenChannel.getChannel(channelUrl, (channel, error) => {
+      if (error) {
+        reject(error);
+      }
+      channel.sendUserMessage(mType, user, message, (response, err) => {
+        if (err) {
+          reject(err);
+        }
+        resolve(response);
+      });
+    });
+  });
+}
+
+// const ChannelHandler = new sb.ChannelHandler();
+// export function receiveMessage() {
+//   return new Promise((resolve, reject) => {
+//     ChannelHandler.onMessageReceived = (channel, message) => {
+//       // console.log(channel, message);
+//       resolve({ channel, message });
+//     };
+//     sb.addChannelHandler(UNIQUE_HANDLER_ID, ChannelHandler);
+//   });
+// }

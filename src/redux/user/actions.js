@@ -9,7 +9,7 @@ export const loginUserRequest = (userId) => {
 };
 
 export const loginUserSuccess = (user) => {
-  return { type: USER_LOGIN_SUCCESSED, payload: user.nickname };
+  return { type: USER_LOGIN_SUCCESSED, payload: user };
 };
 
 export const loginUserError = (err) => {

@@ -1,7 +1,7 @@
 import React from 'react';
 import { Switch, Route } from 'react-router-dom';
 import { LoginContainer } from './containers/LoginContainer/';
-import { OpenChannelContainer } from './containers/OpenChannelContainer';
+import { OpenChannelsContainer } from './containers/OpenChannelsContainer';
 import { Banner } from './components/Banner';
 import { store } from './application';
 
@@ -18,7 +18,7 @@ export const Navigation = () => (
       exact
       path="/createChannel"
       props={store}
-      component={OpenChannelContainer}
+      component={OpenChannelsContainer}
     />
   </Switch>
 );
