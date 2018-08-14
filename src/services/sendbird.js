@@ -112,13 +112,31 @@ export function sendMessage(channelUrl, mType, user, message, data, customType) 
   });
 }
 
-// const ChannelHandler = new sb.ChannelHandler();
-// export function receiveMessage() {
-//   return new Promise((resolve, reject) => {
-//     ChannelHandler.onMessageReceived = (channel, message) => {
-//       // console.log(channel, message);
-//       resolve({ channel, message });
-//     };
-//     sb.addChannelHandler(UNIQUE_HANDLER_ID, ChannelHandler);
-//   });
-// }
+const ChannelHandler = new sb.ChannelHandler();
+export function receiveMessage() {
+  return new Promise((resolve, reject) => {
+    ChannelHandler.onMessageReceived = (channel, message) => {
+      // console.log(channel, message);
+      resolve({ channel, message });
+    };
+    sb.addChannelHandler('UNIQUE_HANDLER_ID', ChannelHandler);
+  });
+}
+
+export function getMessages(channelUrl) {
+  return new Promise((resolve, reject) => {
+    sb.OpenChannel.getChannel(channelUrl, (channel, error) => {
+      if (error) {
+        reject(error);
+      }
+      const messageListQuery = channel.createPreviousMessageListQuery();
+      messageListQuery.load(30, true, (messageList, err) => {
+        if (err) {
+          reject(err);
+        }
+        console.log(messageList);
+        resolve(messageList);
+      });
+    });
+  });
+}

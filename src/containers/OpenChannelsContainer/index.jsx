@@ -34,6 +34,14 @@ class OpenChannel extends React.Component {
     this.props.chatActions.sendMessage(messageData);
   }
 
+  heandleGetMessage = (channelUrl) => {
+    this.props.chatActions.getMessages(channelUrl);
+  }
+
+  handleUpdateChannel = (channelUrl) => {
+    // this.props.chatActions.updateMessages(channelUrl);
+  }
+
   handleOpenModal = () => {
     this.setState({ modalOpen: true });
   }
@@ -43,7 +51,7 @@ class OpenChannel extends React.Component {
   }
 
   render() {
-    const { channelsList, channel } = this.props.chat;
+    const { channelsList, channel, messages } = this.props.chat;
     return (
       <div className="page channel-page">
         {this.props.chat.fetching ?
@@ -74,9 +82,12 @@ class OpenChannel extends React.Component {
         { channel ?
           <Channel
             onMessageSend={this.handleMessageSend}
+            onUpdateChannelChat={this.handleUpdateChannel}
+            onGetMessages={this.heandleGetMessage}
             onEnter={this.handleEnterChannel}
             user={this.props.user}
             channel={channel}
+            messages={messages}
           />
         :
           null

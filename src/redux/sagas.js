@@ -7,5 +7,6 @@ export function* rootSaga() {
   yield spawn(chatSagas.watchOpenChannels);
   yield spawn(chatSagas.watchEnterChannel);
   yield spawn(chatSagas.watchSendMessage);
+  yield spawn(chatSagas.watchGetMessages);
   yield spawn(userSagas.watchLoginUser);
 }

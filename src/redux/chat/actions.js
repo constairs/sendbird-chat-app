@@ -11,6 +11,9 @@ import {
   SEND_MESSAGE,
   SEND_MESSAGE_SUCCESSED,
   SEND_MESSAGE_FAILED,
+  GET_MESSAGES,
+  GET_MESSAGES_SUCCESSED,
+  GET_MESSAGES_FAILED,
 } from './types';
 
 export const createOpenChannel = (formData) => {
@@ -59,4 +62,16 @@ export const sendMessageSuccessed = (sendRes) => {
 
 export const sendMessageFailed = (error) => {
   return { type: SEND_MESSAGE_FAILED, payload: error };
+};
+
+export const getMessages = (channelUrl) => {
+  return { type: GET_MESSAGES, channelUrl };
+};
+
+export const getMessagesSuccessed = (messages) => {
+  return { type: GET_MESSAGES_SUCCESSED, payload: messages };
+};
+
+export const getMessagesFailed = (error) => {
+  return { type: GET_MESSAGES_FAILED, payload: error };
 };

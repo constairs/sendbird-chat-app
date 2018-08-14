@@ -4,7 +4,8 @@ import {
   openChannelList,
   getChannel,
   enterChannel,
-  sendMessage
+  sendMessage,
+  getMessages
 } from '../../services/sendbird';
 import {
   CREATE_OPEN_CHANNEL,
@@ -12,6 +13,7 @@ import {
   GET_SELECTED_CHANNEL,
   ENTER_CHANNEL,
   SEND_MESSAGE,
+  GET_MESSAGES,
 } from './types';
 import {
   createOpenChannelSuccessed,
@@ -23,6 +25,8 @@ import {
   enterChannelFailed,
   sendMessageSuccessed,
   sendMessageFailed,
+  getMessagesSuccessed,
+  getMessagesFailed,
 } from './actions';
 
 export function* createChannelAsync(action) {
@@ -88,4 +92,17 @@ export function* sendMessageAsync(action) {
 
 export function* watchSendMessage() {
   yield takeLatest(SEND_MESSAGE, sendMessageAsync);
+}
+
+export function* getMessagesAsync(action) {
+  try {
+    const messages = yield call(getMessages, ...action.messageData);
+    yield put(getMessagesSuccessed(messages));
+  } catch (error) {
+    yield put(getMessagesFailed(error));
+  }
+}
+
+export function* watchGetMessages() {
+  yield takeEvery(GET_MESSAGES, getMessagesAsync);
 }

@@ -71,6 +71,23 @@ const enterChannelFailed = (state, error) => ({
   fetching: false,
 });
 
+const getMessages = state => ({
+  ...state,
+  fetching: true,
+});
+
+const getMessagesSuccessed = (state, messages) => ({
+  ...state,
+  messages,
+  fetching: false,
+});
+
+const getMessagesFailed = (state, error) => ({
+  ...state,
+  error,
+  fetching: false,
+});
+
 const handlers = {
   [TYPES.CREATE_OPEN_CHANNEL]: createOpenChannel,
   [TYPES.CREATE_OPEN_CHANNEL_SUCCESSED]: createOpenChannelSuccessed,
@@ -84,6 +101,9 @@ const handlers = {
   [TYPES.SEND_MESSAGE]: sendMessage,
   [TYPES.SEND_MESSAGE_SUCCESSED]: sendMessageSuccessed,
   [TYPES.SEND_MESSAGE_FAILED]: sendMessageFailed,
+  [TYPES.GET_MESSAGES]: getMessages,
+  [TYPES.GET_MESSAGES_SUCCESSED]: getMessagesSuccessed,
+  [TYPES.GET_MESSAGES_FAILED]: getMessagesFailed,
 };
 
 export const chatReducer = createReducer(initState, handlers);
