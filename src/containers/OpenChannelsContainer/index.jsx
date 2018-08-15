@@ -34,12 +34,8 @@ class OpenChannel extends React.Component {
     this.props.chatActions.sendMessage(messageData);
   }
 
-  heandleGetMessage = (channelUrl) => {
+  heandleGetMessages = (channelUrl) => {
     this.props.chatActions.getMessages(channelUrl);
-  }
-
-  handleUpdateChannel = (channelUrl) => {
-    // this.props.chatActions.updateMessages(channelUrl);
   }
 
   handleOpenModal = () => {
@@ -54,14 +50,15 @@ class OpenChannel extends React.Component {
     const { channelsList, channel, messages } = this.props.chat;
     return (
       <div className="page channel-page">
-        {this.props.chat.fetching ?
-          <div className="preloader">
-            <Spinner
-              color="#80f0c1"
-              secondaryColor="#f7a2c9"
-              size="200"
-            />
-          </div>
+        {
+          this.props.chat.fetching ?
+            <div className="preloader">
+              <Spinner
+                color="#ffffff"
+                secondaryColor="#40c9ff"
+                size={200}
+              />
+            </div>
           : null
         }
         { this.state.modalOpen ?
@@ -82,8 +79,7 @@ class OpenChannel extends React.Component {
         { channel ?
           <Channel
             onMessageSend={this.handleMessageSend}
-            onUpdateChannelChat={this.handleUpdateChannel}
-            onGetMessages={this.heandleGetMessage}
+            onGetMessages={this.heandleGetMessages}
             onEnter={this.handleEnterChannel}
             user={this.props.user}
             channel={channel}
@@ -101,6 +97,8 @@ class OpenChannel extends React.Component {
 
 OpenChannel.propTypes = {
   chatActions: PropTypes.objectOf(PropTypes.func).isRequired,
+  chat: PropTypes.objectOf(PropTypes.any).isRequired,
+  user: PropTypes.objectOf(PropTypes.any).isRequired
 };
 
 function mapStateToProps(state) {

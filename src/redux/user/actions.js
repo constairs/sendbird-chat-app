@@ -4,14 +4,8 @@ import {
   USER_LOGIN_FAILED,
 } from './types';
 
-export const loginUserRequest = (userId) => {
-  return { type: USER_LOGIN_REQUEST, payload: userId };
-};
+export const loginUserRequest = userId => ({ type: USER_LOGIN_REQUEST, payload: userId });
 
-export const loginUserSuccess = (user) => {
-  return { type: USER_LOGIN_SUCCESSED, payload: user };
-};
+export const loginUserSuccess = user => ({ type: USER_LOGIN_SUCCESSED, payload: user });
 
-export const loginUserError = (err) => {
-  return { type: USER_LOGIN_FAILED, payload: err };
-};
+export const loginUserError = err => ({ type: USER_LOGIN_FAILED, payload: err });

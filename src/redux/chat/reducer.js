@@ -41,9 +41,9 @@ const sendMessage = state => ({
   fetching: true,
 });
 
-const sendMessageSuccessed = (state, sendRes) => ({
+const sendMessageSuccessed = (state, updMessages) => ({
   ...state,
-  sendRes,
+  messages: updMessages,
   fetching: false,
 });
 

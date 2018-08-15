@@ -96,7 +96,7 @@ export function* watchSendMessage() {
 
 export function* getMessagesAsync(action) {
   try {
-    const messages = yield call(getMessages, ...action.messageData);
+    const messages = yield call(getMessages, action.channelUrl);
     yield put(getMessagesSuccessed(messages));
   } catch (error) {
     yield put(getMessagesFailed(error));

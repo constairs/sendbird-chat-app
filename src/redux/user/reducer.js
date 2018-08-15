@@ -2,25 +2,23 @@ import { createReducer } from '../../utils/reducerUtils';
 import * as TYPES from './types';
 
 const initState = {
-  user: '',
   fetching: false,
-  error: '',
-  userId: '',
-  channelData: ''
+  error: ''
 };
 
-const userLoginRequest = (state, userId) => ({
-  userId,
+const userLoginRequest = state => ({
+  ...state,
   fetching: true,
 });
 const userLoginSuccessed = (state, user) => ({
   ...state,
+  fetching: false,
   userId: user.userId,
   userName: user.nickname,
-  fetching: false
+  userImg: user.profileUrl,
 });
 const userLoginFailed = (state, error) => ({
-  user: '',
+  ...state,
   fetching: false,
   error
 });

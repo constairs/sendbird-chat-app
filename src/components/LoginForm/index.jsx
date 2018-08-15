@@ -1,7 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 
-import './index.css';
+import './index.scss';
 
 export class LoginForm extends React.Component {
   constructor(props) {

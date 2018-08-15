@@ -1,0 +1,12 @@
+@import '../../assets/scss/variables';
+
+.chat-message-form {
+  textarea {
+    width: 100%;
+    min-width: 100%;
+    max-width: 100%;
+  }
+  .send-message-btn {
+    background-color: $brand-color;
+  }
+}

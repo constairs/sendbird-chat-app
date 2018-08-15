@@ -16,62 +16,46 @@ import {
   GET_MESSAGES_FAILED,
 } from './types';
 
-export const createOpenChannel = (formData) => {
-  return { type: CREATE_OPEN_CHANNEL, payload: formData };
-};
+export const createOpenChannel = formData =>
+  ({ type: CREATE_OPEN_CHANNEL, payload: formData });
 
-export const createOpenChannelSuccessed = (channelData) => {
-  return { type: CREATE_OPEN_CHANNEL_SUCCESSED, payload: channelData };
-};
+export const createOpenChannelSuccessed = channelData =>
+  ({ type: CREATE_OPEN_CHANNEL_SUCCESSED, payload: channelData });
 
-export const createOpenChannelFailed = (error) => {
-  return { type: CREATE_OPEN_CHANNEL_FAILED, payload: error };
-};
+export const createOpenChannelFailed = error =>
+  ({ type: CREATE_OPEN_CHANNEL_FAILED, payload: error });
 
-export const openChannelsList = () => {
-  return { type: OPEN_CHANNELS_LIST };
-};
+export const openChannelsList = () => ({ type: OPEN_CHANNELS_LIST });
 
-export const openChannelsListSuccessed = (channelsList) => {
-  return { type: OPEN_CHANNELS_LIST_SUCCESSED, payload: channelsList };
-};
+export const openChannelsListSuccessed = channelsList =>
+  ({ type: OPEN_CHANNELS_LIST_SUCCESSED, payload: channelsList });
 
-export const openChannelsListFailed = (error) => {
-  return { type: OPEN_CHANNELS_LIST_FAILED, payload: error };
-};
+export const openChannelsListFailed = error =>
+  ({ type: OPEN_CHANNELS_LIST_FAILED, payload: error });
 
-export const enterChannel = (channelUrl) => {
-  return { type: ENTER_CHANNEL, payload: channelUrl };
-};
+export const enterChannel = channelUrl =>
+  ({ type: ENTER_CHANNEL, payload: channelUrl });
 
-export const enterChannelSuccessed = (channel) => {
-  return { type: ENTER_CHANNEL_SUCCESSED, payload: channel };
-};
+export const enterChannelSuccessed = channel =>
+  ({ type: ENTER_CHANNEL_SUCCESSED, payload: channel });
 
-export const enterChannelFailed = (error) => {
-  return { type: ENTER_CHANNEL_FAILED, payload: error };
-};
+export const enterChannelFailed = error =>
+  ({ type: ENTER_CHANNEL_FAILED, payload: error });
 
-export const sendMessage = (messageData) => {
-  return { type: SEND_MESSAGE, messageData };
-};
+export const sendMessage = messageData =>
+  ({ type: SEND_MESSAGE, messageData });
 
-export const sendMessageSuccessed = (sendRes) => {
-  return { type: SEND_MESSAGE_SUCCESSED, payload: sendRes };
-};
+export const sendMessageSuccessed = updMessages =>
+  ({ type: SEND_MESSAGE_SUCCESSED, payload: updMessages });
 
-export const sendMessageFailed = (error) => {
-  return { type: SEND_MESSAGE_FAILED, payload: error };
-};
+export const sendMessageFailed = error =>
+  ({ type: SEND_MESSAGE_FAILED, payload: error });
 
-export const getMessages = (channelUrl) => {
-  return { type: GET_MESSAGES, channelUrl };
-};
+export const getMessages = channelUrl =>
+  ({ type: GET_MESSAGES, channelUrl });
 
-export const getMessagesSuccessed = (messages) => {
-  return { type: GET_MESSAGES_SUCCESSED, payload: messages };
-};
+export const getMessagesSuccessed = messages =>
+  ({ type: GET_MESSAGES_SUCCESSED, payload: messages });
 
-export const getMessagesFailed = (error) => {
-  return { type: GET_MESSAGES_FAILED, payload: error };
-};
+export const getMessagesFailed = error =>
+  ({ type: GET_MESSAGES_FAILED, payload: error });

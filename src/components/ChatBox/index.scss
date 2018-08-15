@@ -1,0 +1,25 @@
+@import '../../assets/scss/variables';
+
+.chat-box {
+  border-radius: 3px;
+  color: #000000;
+  background-color: #fbfbfb;
+  &__update-btn {
+    background-color: $brand-color;
+  }
+}
+
+.chat-user {
+  text-decoration: underline;
+  color: $brand-color;
+  font-weight: bold;
+}
+
+.message-item {
+  border-radius: 3px;
+  padding: 10px;
+  width: 300px;
+  p {
+    margin: 0;
+  }
+}

@@ -96,28 +96,14 @@ export function enterChannel(channelUrl) {
   });
 }
 
-export function sendMessage(channelUrl, mType, user, message, data, customType) {
-  return new Promise((resolve, reject) => {
-    sb.OpenChannel.getChannel(channelUrl, (channel, error) => {
-      if (error) {
-        reject(error);
-      }
-      channel.sendUserMessage(mType, user, message, (response, err) => {
-        if (err) {
-          reject(err);
-        }
-        resolve(response);
-      });
-    });
-  });
-}
-
 const ChannelHandler = new sb.ChannelHandler();
 export function receiveMessage() {
   return new Promise((resolve, reject) => {
     ChannelHandler.onMessageReceived = (channel, message) => {
-      // console.log(channel, message);
-      resolve({ channel, message });
+      if (message) {
+        resolve({ channel, message });
+      }
+      reject(Error.message);
     };
     sb.addChannelHandler('UNIQUE_HANDLER_ID', ChannelHandler);
   });
@@ -134,8 +120,30 @@ export function getMessages(channelUrl) {
         if (err) {
           reject(err);
         }
-        console.log(messageList);
-        resolve(messageList);
+        resolve(messageList.reverse());
+      });
+    });
+  });
+}
+
+export function sendMessage(channelUrl, mType, user, message) {
+  return new Promise((resolve, reject) => {
+    sb.OpenChannel.getChannel(channelUrl, (channel, error) => {
+      if (error) {
+        reject(error);
+      }
+      channel.sendUserMessage(mType, user, message, (response, err) => {
+        if (err) {
+          reject(err);
+        }
+        // resolve(response);
+        const messageListQuery = channel.createPreviousMessageListQuery();
+        messageListQuery.load(30, true, (messageList, e) => {
+          if (e) {
+            reject(e);
+          }
+          resolve(messageList.reverse());
+        });
       });
     });
   });

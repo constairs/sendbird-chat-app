@@ -5,6 +5,7 @@ import { Spinner } from 'react-preloading-component';
 import PropTypes from 'prop-types';
 import * as userActions from '../../redux/user/actions';
 import { LoginForm } from '../../components/LoginForm';
+import { UserProfile } from '../../components/UserProfile';
 
 import './index.css';
 
@@ -16,19 +17,21 @@ class LoginConnected extends React.Component {
   render() {
     return (
       <div className="page login-page">
-        {this.props.user.fetching ?
-          <div className="preloader">
-            <Spinner
-              color="#80f0c1"
-              secondaryColor="#f7a2c9"
-              size="200"
-            />
-          </div>
+        {
+          this.props.user.fetching ?
+            <div className="preloader">
+              <Spinner
+                color="#ffffff"
+                secondaryColor="#40c9ff"
+                size={200}
+              />
+            </div>
           : null
         }
         {
           this.props.user.userName ?
-            <p>{this.props.user.userName}</p> :
+            <UserProfile user={this.props.user} />
+             :
             <LoginForm onLogin={this.handleLogin} />
         }
       </div>
@@ -38,6 +41,7 @@ class LoginConnected extends React.Component {
 
 LoginConnected.propTypes = {
   userActions: PropTypes.objectOf(PropTypes.func).isRequired,
+  user: PropTypes.objectOf(PropTypes.any).isRequired,
 };
 
 function mapStateToProps(state) {

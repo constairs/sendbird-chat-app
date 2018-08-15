@@ -16,7 +16,7 @@ export const Navigation = () => (
     />
     <Route
       exact
-      path="/createChannel"
+      path="/channels"
       props={store}
       component={OpenChannelsContainer}
     />

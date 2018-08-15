@@ -1,5 +1,8 @@
 import React from 'react';
+import PropTypes from 'prop-types';
 import { ChatBox } from '../ChatBox';
+
+import './index.scss';
 
 export class Channel extends React.Component {
   constructor(props) {
@@ -8,6 +11,10 @@ export class Channel extends React.Component {
       message: ''
     };
   }
+  componentDidMount() {
+    this.props.onGetMessages(this.props.channel.url);
+  }
+
   handleTextInput = (e) => {
     this.setState({ message: e.target.value });
   }
@@ -27,14 +34,6 @@ export class Channel extends React.Component {
     this.props.onMessageSend(messageData);
   }
 
-  handleGetMessages = () => {
-    this.props.onGetMessage(this.props.channel.url);
-  }
-
-  componentDidMount() {
-    this.handleGetMessages(this.props.channel.url);
-  }
-
   render() {
     const { name, participantCount } = this.props.channel;
     return (
@@ -46,11 +45,25 @@ export class Channel extends React.Component {
           :
           null
         }
-        <form onSubmit={this.handleSubmit}>
+        <form className="chat-message-form" onSubmit={this.handleSubmit}>
           <textarea onChange={this.handleTextInput} value={this.state.message} />
-          <button>Отправить</button>
+          <button className="send-message-btn">Отправить</button>
         </form>
       </div>
     );
   }
 }
+
+Channel.defaultProps = {
+  messages: [],
+};
+
+Channel.propTypes = {
+  channel: PropTypes.objectOf(PropTypes.any).isRequired,
+  user: PropTypes.objectOf(PropTypes.any).isRequired,
+  onGetMessages: PropTypes.func.isRequired,
+  onMessageSend: PropTypes.func.isRequired,
+  onUpdateChannelChat: PropTypes.func.isRequired,
+  messages: PropTypes.arrayOf(PropTypes.any)
+};
+

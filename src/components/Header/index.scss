@@ -1,5 +1,7 @@
+@import '../../assets/scss/variables';
+
 header {
-  background-color: var(--pink);
+  background-color: $light;
   display: block;
   padding: 20px 40px;
 }
@@ -20,7 +22,7 @@ nav ul li a {
   border-radius: 3px;
   font-size: 18px;
   text-decoration: none;
-  background-color: var(--brand-color);
+  background-color: $brand-color;
   color: #ffffff;
   box-shadow: 0 0 10px rgba(0,0,0,.3);
   font-family: var(--font);
