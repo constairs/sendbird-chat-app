@@ -14,6 +14,14 @@ class LoginConnected extends React.Component {
     this.props.userActions.loginUserRequest(data);
   }
 
+  handleLogout = () => {
+    this.props.userActions.logoutUserRequest();
+  }
+
+  handleChangeProfile = (formData) => {
+    this.props.userActions.changeUserRequest(formData);
+  }
+
   render() {
     return (
       <div className="page login-page">
@@ -30,7 +38,11 @@ class LoginConnected extends React.Component {
         }
         {
           this.props.user.userName ?
-            <UserProfile user={this.props.user} />
+            <UserProfile
+              user={this.props.user}
+              onLogout={this.handleLogout}
+              onChangeProfile={this.handleChangeProfile}
+            />
              :
             <LoginForm onLogin={this.handleLogin} />
         }

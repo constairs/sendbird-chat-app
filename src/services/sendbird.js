@@ -27,6 +27,17 @@ export function disconnectFromSB() {
   });
 }
 
+export function changeProfile(nickname, profileUrl) {
+  return new Promise((resolve, reject) => {
+    sb.updateCurrentUserInfo(nickname, profileUrl, (response, error) => {
+      if (error) {
+        reject(error);
+      }
+      resolve(response);
+    });
+  });
+}
+
 export function createOpenChannel(
   channelName,
   coverUrl,

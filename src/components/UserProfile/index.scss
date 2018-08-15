@@ -1,5 +1,7 @@
 .user-profile {
   display: flex;
+  align-items: center;
+  padding: 10px;
 }
 
 .user-cover {
@@ -8,6 +10,7 @@
   border-radius: 100%;
   position: relative;
   background-color: #ffffff;
+  margin-right: 10px;
   img {
     display: block;
     width: 100%;
@@ -33,4 +36,13 @@
       transform: translateY(0px);   
     }
   }
+}
+
+.user-logout-btn {
+  width: 20px;
+  height: 20px;
+  background-color: #e4dcdc;
+  font-size: 12px;
+  text-align: center;
+  margin: 5px;
 }

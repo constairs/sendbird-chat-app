@@ -3,7 +3,6 @@ import { Switch, Route } from 'react-router-dom';
 import { LoginContainer } from './containers/LoginContainer/';
 import { OpenChannelsContainer } from './containers/OpenChannelsContainer';
 import { Banner } from './components/Banner';
-import { store } from './application';
 
 export const Navigation = () => (
   <Switch>
@@ -11,13 +10,11 @@ export const Navigation = () => (
     <Route
       exact
       path="/login/"
-      props={store}
       component={LoginContainer}
     />
     <Route
       exact
       path="/channels"
-      props={store}
       component={OpenChannelsContainer}
     />
   </Switch>
