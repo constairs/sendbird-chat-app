@@ -1,8 +1,8 @@
 import { createStore, applyMiddleware } from 'redux';
 import { createBrowserHistory } from 'history';
 import { connectRouter, routerMiddleware } from 'connected-react-router';
+import { persistStore } from 'redux-persist';
 import createSagaMiddleware from 'redux-saga';
-import { logger } from 'redux-logger';
 import { rootReducer } from './reducers';
 
 export const history = createBrowserHistory();
@@ -14,11 +14,12 @@ export function configureStore() {
     // eslint-disable-next-line
     window.__REDUX_DEVTOOLS_EXTENSION__ && window.__REDUX_DEVTOOLS_EXTENSION__(),
     applyMiddleware(
-      logger,
       routerMiddleware(history),
       sagaMiddleware
     )
   );
+
+  const persistor = persistStore(store);
 
   if (module.hot) {
     module.hot.accept('./reducers', () => {
@@ -28,5 +29,5 @@ export function configureStore() {
     });
   }
   store.runSaga = sagaMiddleware.run;
-  return store;
+  return { store, persistor };
 }

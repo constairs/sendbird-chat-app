@@ -4,6 +4,7 @@ import { connect } from 'react-redux';
 import { Spinner } from 'react-preloading-component';
 import PropTypes from 'prop-types';
 import * as chatActions from '../../redux/chat/actions';
+import { userLogged } from '../../redux/user/actions';
 import { CreateChannelForm } from '../../components/CreateChannelForm';
 import { ChannelList } from '../../components/ChannelList';
 import { Channel } from '../../components/Channel';
@@ -20,6 +21,8 @@ class OpenChannel extends React.Component {
 
   handleOpenChannel = (formData) => {
     this.props.chatActions.createOpenChannel(formData);
+    this.setState({ modalOpen: false });
+    this.props.chatActions.openChannelsList();
   }
 
   handleOpenChList = () => {
@@ -47,7 +50,12 @@ class OpenChannel extends React.Component {
   }
 
   render() {
-    const { channelsList, channel, messages } = this.props.chat;
+    const {
+      channelsList,
+      channel,
+      messages,
+      sendingMessage
+    } = this.props.chat;
     return (
       <div className="page channel-page">
         {
@@ -56,7 +64,7 @@ class OpenChannel extends React.Component {
               <Spinner
                 color="#ffffff"
                 secondaryColor="#40c9ff"
-                size={200}
+                size={100}
               />
             </div>
           : null
@@ -84,6 +92,7 @@ class OpenChannel extends React.Component {
             user={this.props.user}
             channel={channel}
             messages={messages}
+            sendingMessage={sendingMessage}
           />
         :
           null
@@ -103,14 +112,15 @@ OpenChannel.propTypes = {
 
 function mapStateToProps(state) {
   return {
-    user: state.userReducer,
+    user: state.persistedUserReducer,
     chat: state.chatReducer
   };
 }
 
 function mapDispatchToProps(dispatch) {
   return {
-    chatActions: bindActionCreators(chatActions, dispatch)
+    chatActions: bindActionCreators(chatActions, dispatch),
+    userLogged: bindActionCreators(userLogged, dispatch)
   };
 }
 

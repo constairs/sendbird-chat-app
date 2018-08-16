@@ -7,7 +7,6 @@ import { faSignOutAlt } from '@fortawesome/free-solid-svg-icons';
 import PropTypes from 'prop-types';
 import * as userActions from '../../redux/user/actions';
 import { UserForm } from '../../components/UserForm';
-import { checkLogin } from '../../utils/checkLogin';
 
 import './index.scss';
 
@@ -19,21 +18,8 @@ class UserProfile extends React.Component {
     };
   }
 
-  componentWillMount() {
-    if (!this.props.user.userName) {
-      if (checkLogin()) {
-        this.props.userActions.loginUserRequest(checkLogin());
-      }
-    }
-  }
-
-  componentDidUpdate() {
-    if (!localStorage.getItem('user')) {
-      this.props.history.push('/login/');
-    }
-  }
-
   handleLogout = () => {
+    this.props.history.push('/');
     this.props.userActions.logoutUserRequest();
   }
 
@@ -57,11 +43,13 @@ class UserProfile extends React.Component {
       <div>
         {
           fetching ?
-            <Spinner
-              color="#ffffff"
-              secondaryColor="#40c9ff"
-              size={200}
-            />
+            <div className="preloader">
+              <Spinner
+                color="#ffffff"
+                secondaryColor="#40c9ff"
+                size={100}
+              />
+            </div>
           :
             <div className="user-profile">
               <div className="user-cover">
@@ -83,7 +71,7 @@ class UserProfile extends React.Component {
                 null
               }
             </div>
-      }
+        }
       </div>
     );
   }
@@ -97,7 +85,7 @@ UserProfile.propTypes = {
 
 function mapStateToProps(state) {
   return {
-    user: state.userReducer
+    user: state.persistedUserReducer
   };
 }
 

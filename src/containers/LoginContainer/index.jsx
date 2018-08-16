@@ -38,7 +38,8 @@ class LoginConnected extends React.Component {
         }
         {
           this.props.user.userName ?
-            <Redirect to="/profile" />
+            // <Redirect to="/profile" />
+            <div>dfsd</div>
              :
             <LoginForm onLogin={this.handleLogin} />
         }
@@ -54,7 +55,7 @@ LoginConnected.propTypes = {
 
 function mapStateToProps(state) {
   return {
-    user: state.userReducer
+    user: state.persistedUserReducer
   };
 }
 

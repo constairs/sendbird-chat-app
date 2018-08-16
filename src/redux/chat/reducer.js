@@ -3,54 +3,59 @@ import * as TYPES from './types';
 
 const initState = {
   fetching: false,
-  error: '',
-  formData: ''
+  sendingMessage: false,
 };
 
 const createOpenChannel = (state, formData) => ({
+  ...state,
   formData,
   fetching: true,
 });
 
 const createOpenChannelSuccessed = (state, channelData) => ({
+  ...state,
   channelData,
   fetching: false,
 });
 
 const createOpenChannelFailed = (state, error) => ({
+  ...state,
   error,
   fetching: false,
 });
 
-const openChannelsList = () => ({
+const openChannelsList = state => ({
+  ...state,
   fetching: true,
 });
 
 const openChannelsListSuccessed = (state, channelsList) => ({
+  ...state,
   channelsList,
   fetching: false,
 });
 
 const openChannelsListFailed = (state, error) => ({
+  ...state,
   error,
   fetching: false,
 });
 
 const sendMessage = state => ({
   ...state,
-  fetching: true,
+  sendingMessage: true,
 });
 
 const sendMessageSuccessed = (state, updMessages) => ({
   ...state,
   messages: updMessages,
-  fetching: false,
+  sendingMessage: false
 });
 
 const sendMessageFailed = (state, error) => ({
   ...state,
   error,
-  fetching: false,
+  sendingMessage: false
 });
 
 const enterChannel = (state, channelUrl) => ({

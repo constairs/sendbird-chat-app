@@ -1,5 +1,9 @@
 import { combineReducers } from 'redux';
+import { persistReducer } from 'redux-persist';
+import storage from 'redux-persist/lib/storage';
 import { chatReducer } from './chat/reducer';
 import { userReducer } from './user/reducer';
 
-export const rootReducer = combineReducers({ chatReducer, userReducer });
+const persistedUserReducer = persistReducer({ key: 'user', storage }, userReducer);
+
+export const rootReducer = combineReducers({ chatReducer, persistedUserReducer });

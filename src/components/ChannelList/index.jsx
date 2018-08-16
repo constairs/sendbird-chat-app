@@ -1,4 +1,5 @@
 import React from 'react';
+import PropTypes from 'prop-types';
 
 export class ChannelList extends React.Component {
   handleItemClick = (e) => {
@@ -8,8 +9,8 @@ export class ChannelList extends React.Component {
     return (
       <ul className="list channels-list">
         {
-          this.props.channels.map((cur) => {
-            return (
+          this.props.channels.map(cur =>
+            (
               <li key={cur.createdAt}>
                 <span className="img">
                   <img src={cur.coverUrl ? cur.coverUrl : 'http://dxstmhyqfqr1o.cloudfront.net/images/icon-chat-04.png'} alt={cur.name} />
@@ -19,11 +20,15 @@ export class ChannelList extends React.Component {
                 </button>
                 {cur.name}
               </li>
-            );
-          })
+            )
+          )
         }
       </ul>
     );
   }
 }
 
+ChannelList.propTypes = {
+  selectedChan: PropTypes.func.isRequired,
+  channels: PropTypes.arrayOf(PropTypes.any).isRequired
+};

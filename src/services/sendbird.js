@@ -9,12 +9,22 @@ export function connectToSB(userId) {
       if (error) {
         reject(error);
       } else {
-        localStorage.setItem('user', `{"userId": "${user.userId}", "userName": "${user.nickname}", "userImg": "${user.profileUrl}"}`);
         resolve(user);
       }
     });
   });
 }
+
+// export function reconnectToSB(userId) {
+//   return new Promise((resolve, reject) => {
+//     sb.connect(userId, TOKEN, (user, error) => {
+//       if (error) {
+//         reject(error);
+//       }
+//       resolve(user);
+//     });
+//   });
+// }
 
 export function disconnectFromSB() {
   return new Promise((resolve, reject) => {

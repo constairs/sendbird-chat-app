@@ -19,6 +19,7 @@ import {
   createOpenChannelSuccessed,
   createOpenChannelFailed,
   openChannelsListSuccessed,
+  openChannelsListFailed,
   getSelectedChannelSuccessed,
   getSelectedChannelFailed,
   enterChannelSuccessed,
@@ -47,7 +48,7 @@ export function* openChannels() {
     const channelList = yield call(openChannelList);
     yield put(openChannelsListSuccessed(channelList));
   } catch (error) {
-    yield put(openChannelsListSuccessed(error));
+    yield put(openChannelsListFailed(error));
   }
 }
 

@@ -5,31 +5,16 @@ import { ChatBox } from '../ChatBox';
 import './index.scss';
 
 export class Channel extends React.Component {
-  constructor(props) {
-    super(props);
-    this.state = {
-      message: ''
-    };
-  }
-  componentDidMount() {
+  componentWillMount() {
     this.props.onGetMessages(this.props.channel.url);
   }
 
-  handleTextInput = (e) => {
-    this.setState({ message: e.target.value });
-  }
-
-  updateChannelChat = () => {
-    this.props.onUpdateChannelChat(this.props.channel.url);
-  }
-
-  handleSubmit = (e) => {
-    e.preventDefault();
+  handleMessageSend = (messageText) => {
     const messageData = [
       this.props.channel.url,
       'MESG',
       this.props.user.userId,
-      this.state.message,
+      messageText,
     ];
     this.props.onMessageSend(messageData);
   }
@@ -39,16 +24,16 @@ export class Channel extends React.Component {
     return (
       <div className="channel-item">
         <h1>{name}</h1>
-        <p>{participantCount}</p>
+        <p>Online: {participantCount}</p>
         {this.props.messages ?
-          <ChatBox messages={this.props.messages} onUpdateChat={this.updateChannelChat} />
+          <ChatBox
+            messages={this.props.messages}
+            onMessageSend={this.handleMessageSend}
+            sendingMessage={this.props.sendingMessage}
+          />
           :
           null
         }
-        <form className="chat-message-form" onSubmit={this.handleSubmit}>
-          <textarea onChange={this.handleTextInput} value={this.state.message} />
-          <button className="send-message-btn">Отправить</button>
-        </form>
       </div>
     );
   }
@@ -63,7 +48,7 @@ Channel.propTypes = {
   user: PropTypes.objectOf(PropTypes.any).isRequired,
   onGetMessages: PropTypes.func.isRequired,
   onMessageSend: PropTypes.func.isRequired,
-  onUpdateChannelChat: PropTypes.func.isRequired,
-  messages: PropTypes.arrayOf(PropTypes.any)
+  messages: PropTypes.arrayOf(PropTypes.any),
+  sendingMessage: PropTypes.bool.isRequired
 };
 
