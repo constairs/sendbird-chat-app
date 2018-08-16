@@ -5,6 +5,12 @@ const initState = {
   fetching: false,
 };
 
+const userLogged = (state, userData) => ({
+  ...state,
+  ...userData,
+  fetching: false,
+});
+
 const userLoginRequest = state => ({
   ...state,
   fetching: true,
@@ -52,6 +58,7 @@ const changeUserFailed = (state, error) => ({
 });
 
 const handlers = {
+  [TYPES.USER_LOGGED]: userLogged,
   [TYPES.USER_LOGIN_REQUEST]: userLoginRequest,
   [TYPES.USER_LOGIN_SUCCESSED]: userLoginSuccessed,
   [TYPES.USER_LOGIN_FAILED]: userLoginFailed,

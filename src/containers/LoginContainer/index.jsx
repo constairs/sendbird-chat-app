@@ -3,9 +3,9 @@ import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
 import { Spinner } from 'react-preloading-component';
 import PropTypes from 'prop-types';
+import { Redirect } from 'react-router';
 import * as userActions from '../../redux/user/actions';
 import { LoginForm } from '../../components/LoginForm';
-import { UserProfile } from '../../components/UserProfile';
 
 import './index.css';
 
@@ -38,11 +38,7 @@ class LoginConnected extends React.Component {
         }
         {
           this.props.user.userName ?
-            <UserProfile
-              user={this.props.user}
-              onLogout={this.handleLogout}
-              onChangeProfile={this.handleChangeProfile}
-            />
+            <Redirect to="/profile" />
              :
             <LoginForm onLogin={this.handleLogin} />
         }

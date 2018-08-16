@@ -9,6 +9,7 @@ export function connectToSB(userId) {
       if (error) {
         reject(error);
       } else {
+        localStorage.setItem('user', `{"userId": "${user.userId}", "userName": "${user.nickname}", "userImg": "${user.profileUrl}"}`);
         resolve(user);
       }
     });
@@ -21,6 +22,7 @@ export function disconnectFromSB() {
       if (error) {
         reject(error);
       } else {
+        localStorage.clear();
         resolve(response);
       }
     });

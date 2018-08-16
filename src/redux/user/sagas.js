@@ -29,7 +29,7 @@ export function* watchLoginUser() {
 
 export function* logoutUserAsync(action) {
   try {
-    const res = yield call(disconnectFromSB, action.payload.userId);
+    const res = yield call(disconnectFromSB, action);
     yield put(logoutUserSuccessed(res));
   } catch (err) {
     yield put(logoutUserFailed(err));
