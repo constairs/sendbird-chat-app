@@ -1,8 +1,10 @@
 import {
-  USER_LOGGED,
   USER_LOGIN_REQUEST,
   USER_LOGIN_SUCCESSED,
   USER_LOGIN_FAILED,
+  USER_RECONNECT,
+  USER_RECONNECT_SUCCESSED,
+  USER_RECONNECT_FAILED,
   USER_LOGOUT_REQUEST,
   USER_LOGOUT_SUCCESSED,
   USER_LOGOUT_FAILED,
@@ -11,13 +13,17 @@ import {
   USER_CHANGE_FAILED,
 } from './types';
 
-export const userLogged = userData => ({ type: USER_LOGGED, payload: userData });
-
 export const loginUserRequest = userId => ({ type: USER_LOGIN_REQUEST, payload: userId });
 
 export const loginUserSuccessed = user => ({ type: USER_LOGIN_SUCCESSED, payload: user });
 
 export const loginUserFailed = err => ({ type: USER_LOGIN_FAILED, payload: err });
+
+export const userReconnect = () => ({ type: USER_RECONNECT });
+
+export const userReconnectSuccessed = user => ({ type: USER_RECONNECT_SUCCESSED, payload: user });
+
+export const userReconnectFailed = err => ({ type: USER_RECONNECT_FAILED, payload: err });
 
 export const logoutUserRequest = () => ({ type: USER_LOGOUT_REQUEST });
 

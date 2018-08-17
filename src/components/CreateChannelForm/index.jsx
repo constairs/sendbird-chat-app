@@ -1,6 +1,5 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { FileInput } from '../FileInput';
 
 export class CreateChannelForm extends React.Component {
   constructor(props) {
@@ -50,7 +49,6 @@ export class CreateChannelForm extends React.Component {
             <span>Cover Url</span>
             <input id="coverUrl" name="coverUrl" value={this.state.coverUrl} onChange={this.handleInput} type="text" />
           </label>
-          <FileInput inputName="coverFile" onLoadFiles={this.handleFilesLoad} />
           <button disabled={!this.state.channelName}>Создать</button>
         </form>
       </div>

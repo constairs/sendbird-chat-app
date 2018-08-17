@@ -5,12 +5,6 @@ const initState = {
   fetching: false,
 };
 
-const userLogged = (state, userData) => ({
-  ...state,
-  ...userData,
-  fetching: false,
-});
-
 const userLoginRequest = state => ({
   ...state,
   fetching: true,
@@ -26,6 +20,22 @@ const userLoginFailed = (state, error) => ({
   ...state,
   fetching: false,
   error
+});
+
+const userReconnect = state => ({
+  ...state,
+  fetching: true,
+});
+
+const userReconnectSuccessed = state => ({
+  ...state,
+  fetching: false
+});
+
+const userReconnectFailed = (state, err) => ({
+  ...state,
+  fetching: false,
+  err
 });
 
 const userLogoutRequest = () => ({
@@ -58,7 +68,6 @@ const changeUserFailed = (state, error) => ({
 });
 
 const handlers = {
-  [TYPES.USER_LOGGED]: userLogged,
   [TYPES.USER_LOGIN_REQUEST]: userLoginRequest,
   [TYPES.USER_LOGIN_SUCCESSED]: userLoginSuccessed,
   [TYPES.USER_LOGIN_FAILED]: userLoginFailed,
@@ -68,6 +77,9 @@ const handlers = {
   [TYPES.USER_CHANGE_REQUEST]: changeUserRequest,
   [TYPES.USER_CHANGE_SUCCESSED]: changeUserSuccessed,
   [TYPES.USER_CHANGE_FAILED]: changeUserFailed,
+  [TYPES.USER_RECONNECT]: userReconnect,
+  [TYPES.USER_RECONNECT_SUCCESSED]: userReconnectSuccessed,
+  [TYPES.USER_RECONNECT_FAILED]: userReconnectFailed
 };
 
 export const userReducer = createReducer(initState, handlers);

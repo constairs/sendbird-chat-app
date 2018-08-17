@@ -19,7 +19,45 @@
   border-radius: 3px;
   padding: 10px;
   width: 300px;
+  display: flex;
+  align-items: center;
   p {
     margin: 0;
+  }
+}
+.sender-info {
+  display: flex;
+  align-items: center;
+  span {
+    margin-left: 10px;
+  }
+  .sender-nick {
+    color: $brand-color;
+  }
+  .sending-date {
+    font-size: 12px;
+    font-style: italic;
+  }
+}
+
+.sender-img {
+  width: 40px;
+  height: 40px;
+  img {
+    display: block;
+    width: 100%;
+    border-radius: 100%;
+  }
+}
+
+.message-text {
+  padding: 10px;
+
+}
+
+.send-message-btn {
+  display: flex;
+  span {
+    margin-left: 5px;
   }
 }

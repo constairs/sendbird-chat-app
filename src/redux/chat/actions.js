@@ -14,6 +14,12 @@ import {
   GET_MESSAGES,
   GET_MESSAGES_SUCCESSED,
   GET_MESSAGES_FAILED,
+  LEAVE_CHANNEL,
+  LEAVE_CHANNEL_SUCCESSED,
+  LEAVE_CHANNEL_FAILED,
+  DELETE_MESSAGE,
+  DELETE_MESSAGE_SUCCESSED,
+  DELETE_MESSAGE_FAILED,
 } from './types';
 
 export const createOpenChannel = formData =>
@@ -42,6 +48,15 @@ export const enterChannelSuccessed = channel =>
 export const enterChannelFailed = error =>
   ({ type: ENTER_CHANNEL_FAILED, payload: error });
 
+export const leaveChannel = channelUrl =>
+  ({ type: LEAVE_CHANNEL, payload: channelUrl });
+
+export const leaveChannelSuccessed = response =>
+  ({ type: LEAVE_CHANNEL_SUCCESSED, payload: response });
+
+export const leaveChannelFailed = error =>
+  ({ type: LEAVE_CHANNEL_FAILED, payload: error });
+
 export const sendMessage = messageData =>
   ({ type: SEND_MESSAGE, messageData });
 
@@ -50,6 +65,15 @@ export const sendMessageSuccessed = updMessages =>
 
 export const sendMessageFailed = error =>
   ({ type: SEND_MESSAGE_FAILED, payload: error });
+
+export const deleteMessage = messageData =>
+  ({ type: DELETE_MESSAGE, messageData });
+
+export const deleteMessageSuccessed = delRes =>
+  ({ type: DELETE_MESSAGE_SUCCESSED, payload: delRes });
+
+export const deleteMessageFailed = error =>
+  ({ type: DELETE_MESSAGE_FAILED, payload: error });
 
 export const getMessages = channelUrl =>
   ({ type: GET_MESSAGES, channelUrl });

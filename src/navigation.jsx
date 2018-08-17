@@ -11,7 +11,7 @@ const PrivateRoute = ({ component: Component, ...rest }) => (
   <Route
     {...rest}
     render={props => (
-      checkLogin().userName ? (
+      checkLogin() ? (
         <Component {...props} />
       ) : (
         <Redirect
@@ -47,3 +47,4 @@ export const Navigation = () => (
     <PrivateRoute component={UserProfileContainer} path="/profile/" />
   </Switch>
 );
+

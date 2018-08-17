@@ -1,14 +1,15 @@
 import React from 'react';
-import moment from 'moment';
+import { connect } from 'react-redux';
+import { bindActionCreators } from 'redux';
 import { Spinner } from 'react-preloading-component';
 import PropTypes from 'prop-types';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faUser } from '@fortawesome/free-solid-svg-icons';
+import * as chatActions from '../../redux/chat/actions';
+import { MessageItem } from '../MessageItem';
 
 import './index.scss';
 
 
-export class ChatBox extends React.Component {
+export class Chat extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
@@ -27,20 +28,22 @@ export class ChatBox extends React.Component {
     this.setState({ message: '' });
   }
 
+  handleMessageDelete = (message) => {
+    this.props.chatActions.deleteMessage([this.props.chat.channelUrl, message]);
+  }
+
   render() {
     return (
       <div>
         <div className="chat-box">
           {
-            this.props.messages.map(cur =>
-              (
-                <div className="message-item" key={cur.createdAt} >
-                  <p>
-                    <a href={cur.sender.propfileUrl}><FontAwesomeIcon icon={faUser} /><span className="chat-user"> {cur.sender.nickname}</span></a>
-                    <span> {moment(cur.createdAt).format('DD/MM/YY hh:mm a')}</span>
-                  </p>
-                  <p>{cur.customType}</p>
-                </div>
+            this.props.messages.map(
+              elem => (
+                <MessageItem
+                  cur={elem}
+                  onDeleteMessage={this.handleMessageDelete}
+                  key={elem.messageId}
+                />
               )
             )
           }
@@ -64,8 +67,25 @@ export class ChatBox extends React.Component {
   }
 }
 
-ChatBox.propTypes = {
+function mapStateToProps(state) {
+  return {
+    user: state.persistedUserReducer,
+    chat: state.chatReducer
+  };
+}
+
+function mapDispatchToProps(dispatch) {
+  return {
+    chatActions: bindActionCreators(chatActions, dispatch),
+  };
+}
+
+export const ChatBox = connect(mapStateToProps, mapDispatchToProps)(Chat);
+
+Chat.propTypes = {
   messages: PropTypes.arrayOf(PropTypes.any).isRequired,
   onMessageSend: PropTypes.func.isRequired,
-  sendingMessage: PropTypes.bool.isRequired
+  sendingMessage: PropTypes.bool.isRequired,
+  chatActions: PropTypes.objectOf(PropTypes.any).isRequired,
+  chat: PropTypes.objectOf(PropTypes.any).isRequired,
 };

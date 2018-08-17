@@ -31,15 +31,14 @@ class LoginConnected extends React.Component {
               <Spinner
                 color="#ffffff"
                 secondaryColor="#40c9ff"
-                size={200}
+                size={100}
               />
             </div>
           : null
         }
         {
-          this.props.user.userName ?
-            // <Redirect to="/profile" />
-            <div>dfsd</div>
+          this.props.user.userId ?
+            <Redirect to="/" />
              :
             <LoginForm onLogin={this.handleLogin} />
         }

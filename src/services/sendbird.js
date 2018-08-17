@@ -15,16 +15,16 @@ export function connectToSB(userId) {
   });
 }
 
-// export function reconnectToSB(userId) {
-//   return new Promise((resolve, reject) => {
-//     sb.connect(userId, TOKEN, (user, error) => {
-//       if (error) {
-//         reject(error);
-//       }
-//       resolve(user);
-//     });
-//   });
-// }
+export function reconnectToSB(userId) {
+  return new Promise((resolve, reject) => {
+    sb.connect(userId, TOKEN, (user, error) => {
+      if (error) {
+        reject(error);
+      }
+      resolve(user);
+    });
+  });
+}
 
 export function disconnectFromSB() {
   return new Promise((resolve, reject) => {
@@ -76,7 +76,7 @@ export function openChannelList() {
       if (error) {
         reject(error);
       }
-      resolve(channels);
+      resolve(channels.reverse());
     });
   });
 }
@@ -92,17 +92,6 @@ export function getChannel(channelUrl) {
   });
 }
 
-export function exitChannel(channel) {
-  return new Promise((resolve, reject) => {
-    channel.exit((response, error) => {
-      if (error) {
-        reject(error);
-      }
-      resolve(response);
-    });
-  });
-}
-
 export function enterChannel(channelUrl) {
   return new Promise((resolve, reject) => {
     sb.OpenChannel.getChannel(channelUrl, (channel, error) => {
@@ -114,6 +103,22 @@ export function enterChannel(channelUrl) {
           reject(err);
         }
         resolve(channel);
+      });
+    });
+  });
+}
+
+export function exitChannel(channelUrl) {
+  return new Promise((resolve, reject) => {
+    sb.OpenChannel.getChannel(channelUrl, (channel, error) => {
+      if (error) {
+        reject(error);
+      }
+      channel.exit((response, err) => {
+        if (error) {
+          reject(err);
+        }
+        resolve(response);
       });
     });
   });
@@ -139,7 +144,7 @@ export function getMessages(channelUrl) {
         reject(error);
       }
       const messageListQuery = channel.createPreviousMessageListQuery();
-      messageListQuery.load(30, true, (messageList, err) => {
+      messageListQuery.load(10, true, (messageList, err) => {
         if (err) {
           reject(err);
         }
@@ -159,9 +164,8 @@ export function sendMessage(channelUrl, mType, user, message) {
         if (err) {
           reject(err);
         }
-        // resolve(response);
         const messageListQuery = channel.createPreviousMessageListQuery();
-        messageListQuery.load(30, true, (messageList, e) => {
+        messageListQuery.load(10, true, (messageList, e) => {
           if (e) {
             reject(e);
           }
@@ -171,3 +175,26 @@ export function sendMessage(channelUrl, mType, user, message) {
     });
   });
 }
+
+export function deleteMessage(channelUrl, message) {
+  return new Promise((resolve, reject) => {
+    sb.OpenChannel.getChannel(channelUrl, (channel, error) => {
+      if (error) {
+        reject(error);
+      }
+      channel.deleteMessage(message, (response, err) => {
+        if (err) {
+          reject(err);
+        }
+        const messageListQuery = channel.createPreviousMessageListQuery();
+        messageListQuery.load(10, true, (messageList, e) => {
+          if (e) {
+            reject(e);
+          }
+          resolve(messageList.reverse());
+        });
+      });
+    });
+  });
+}
+

@@ -4,7 +4,6 @@ import { connect } from 'react-redux';
 import { Spinner } from 'react-preloading-component';
 import PropTypes from 'prop-types';
 import * as chatActions from '../../redux/chat/actions';
-import { userLogged } from '../../redux/user/actions';
 import { CreateChannelForm } from '../../components/CreateChannelForm';
 import { ChannelList } from '../../components/ChannelList';
 import { Channel } from '../../components/Channel';
@@ -33,6 +32,10 @@ class OpenChannel extends React.Component {
     this.props.chatActions.enterChannel(channelUrl);
   }
 
+  handleLeaveChannel = (channelUrl) => {
+    this.props.chatActions.leaveChannel(channelUrl);
+  }
+
   handleMessageSend = (messageData) => {
     this.props.chatActions.sendMessage(messageData);
   }
@@ -59,7 +62,7 @@ class OpenChannel extends React.Component {
     return (
       <div className="page channel-page">
         {
-          this.props.chat.fetching ?
+          this.props.chat.fetching || this.props.user.fetching ?
             <div className="preloader">
               <Spinner
                 color="#ffffff"
@@ -79,6 +82,8 @@ class OpenChannel extends React.Component {
           :
           null
         }
+        <button onClick={this.handleOpenModal}>Создать открытый канал</button>
+        <button onClick={this.handleOpenChList}>Список открытых каналов</button>
         { channelsList ?
           <ChannelList selectedChan={this.handleEnterChannel} channels={channelsList} />
           :
@@ -89,6 +94,7 @@ class OpenChannel extends React.Component {
             onMessageSend={this.handleMessageSend}
             onGetMessages={this.heandleGetMessages}
             onEnter={this.handleEnterChannel}
+            onLeave={this.handleLeaveChannel}
             user={this.props.user}
             channel={channel}
             messages={messages}
@@ -97,8 +103,6 @@ class OpenChannel extends React.Component {
         :
           null
         }
-        <button onClick={this.handleOpenModal}>Создать открытый канал</button>
-        <button onClick={this.handleOpenChList}>Список открытых каналов</button>
       </div>
     );
   }
@@ -120,7 +124,6 @@ function mapStateToProps(state) {
 function mapDispatchToProps(dispatch) {
   return {
     chatActions: bindActionCreators(chatActions, dispatch),
-    userLogged: bindActionCreators(userLogged, dispatch)
   };
 }
 

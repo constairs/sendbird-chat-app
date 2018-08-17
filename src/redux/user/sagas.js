@@ -4,11 +4,13 @@ import {
   USER_LOGIN_REQUEST,
   USER_LOGOUT_REQUEST,
   USER_CHANGE_REQUEST,
-  USER_LOGGED,
 } from './types';
 import {
   loginUserSuccessed,
   loginUserError,
+  userReconnect,
+  userReconnectSuccessed,
+  userReconnectFailed,
   logoutUserSuccessed,
   logoutUserFailed,
   changeUserSuccessed,
@@ -28,18 +30,21 @@ export function* watchLoginUser() {
   yield takeLatest(USER_LOGIN_REQUEST, loginUserAsync);
 }
 
-// export function* userReconnectAsync(action) {
-//   try {
-//     yield call(reconnectToSB, action.payload.userId);
-//     yield put(loginUserSuccessed({ ...action.payload }));
-//   } catch (err) {
-//     yield put(loginUserError(err));
-//   }
-// }
+export function* userReconnectAsync(action) {
+  if (action.payload.userId) {
+    try {
+      yield put(userReconnect());
+      yield call(reconnectToSB, action.payload.userId);
+      yield put(userReconnectSuccessed(action.payload));
+    } catch (err) {
+      yield put(userReconnectFailed(err));
+    }
+  }
+}
 
-// export function* weatchReconnect() {
-//   yield takeLatest(USER_LOGGED, userReconnectAsync);
-// }
+export function* weatchReconnect() {
+  yield takeLatest('persist/REHYDRATE', userReconnectAsync);
+}
 
 export function* logoutUserAsync(action) {
   try {

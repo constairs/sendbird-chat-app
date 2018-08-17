@@ -4,7 +4,9 @@ import {
   openChannelList,
   getChannel,
   enterChannel,
+  exitChannel,
   sendMessage,
+  deleteMessage,
   getMessages
 } from '../../services/sendbird';
 import {
@@ -12,7 +14,9 @@ import {
   OPEN_CHANNELS_LIST,
   GET_SELECTED_CHANNEL,
   ENTER_CHANNEL,
+  LEAVE_CHANNEL,
   SEND_MESSAGE,
+  DELETE_MESSAGE,
   GET_MESSAGES,
 } from './types';
 import {
@@ -26,8 +30,12 @@ import {
   enterChannelFailed,
   sendMessageSuccessed,
   sendMessageFailed,
+  deleteMessageSuccessed,
+  deleteMessageFailed,
   getMessagesSuccessed,
   getMessagesFailed,
+  leaveChannelSuccessed,
+  leaveChannelFailed,
 } from './actions';
 
 export function* createChannelAsync(action) {
@@ -82,6 +90,19 @@ export function* watchEnterChannel() {
   yield takeLatest(ENTER_CHANNEL, enterSelectedChannel);
 }
 
+export function* leaveChannel(action) {
+  try {
+    const res = yield call(exitChannel, action.payload);
+    yield put(leaveChannelSuccessed(res));
+  } catch (error) {
+    yield put(leaveChannelFailed(error));
+  }
+}
+
+export function* watchLeaveChannel() {
+  yield takeLatest(LEAVE_CHANNEL, leaveChannel);
+}
+
 export function* sendMessageAsync(action) {
   try {
     const sendRes = yield call(sendMessage, ...action.messageData);
@@ -93,6 +114,19 @@ export function* sendMessageAsync(action) {
 
 export function* watchSendMessage() {
   yield takeLatest(SEND_MESSAGE, sendMessageAsync);
+}
+
+export function* deleteMessageAsync(action) {
+  try {
+    const delRes = yield call(deleteMessage, ...action.messageData);
+    yield put(deleteMessageSuccessed(delRes));
+  } catch (error) {
+    yield put(deleteMessageFailed(error));
+  }
+}
+
+export function* watchDeleteMessage() {
+  yield takeLatest(DELETE_MESSAGE, deleteMessageAsync);
 }
 
 export function* getMessagesAsync(action) {

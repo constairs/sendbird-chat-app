@@ -5,6 +5,7 @@ import { persistStore } from 'redux-persist';
 import createSagaMiddleware from 'redux-saga';
 import { rootReducer } from './reducers';
 
+
 export const history = createBrowserHistory();
 
 export function configureStore() {
