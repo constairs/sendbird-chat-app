@@ -12,3 +12,12 @@ body {
   position: relative;
   padding: 40px;
 }
+
+.img-place {
+  display: block;
+  img {
+    border-radius: 100%;
+    width: 100%;
+    display: block;
+  }
+}

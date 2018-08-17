@@ -1,6 +1,7 @@
 import { call, put, takeLatest, takeEvery } from 'redux-saga/effects';
 import {
   createOpenChannel,
+  updateChannel,
   openChannelList,
   getChannel,
   enterChannel,
@@ -11,6 +12,7 @@ import {
 } from '../../services/sendbird';
 import {
   CREATE_OPEN_CHANNEL,
+  UPDATE_CHANNEL,
   OPEN_CHANNELS_LIST,
   GET_SELECTED_CHANNEL,
   ENTER_CHANNEL,
@@ -22,6 +24,8 @@ import {
 import {
   createOpenChannelSuccessed,
   createOpenChannelFailed,
+  updateChannelSuccessed,
+  updateChannelFailed,
   openChannelsListSuccessed,
   openChannelsListFailed,
   getSelectedChannelSuccessed,
@@ -49,6 +53,19 @@ export function* createChannelAsync(action) {
 
 export function* watchCreateChannel() {
   yield takeLatest(CREATE_OPEN_CHANNEL, createChannelAsync);
+}
+
+export function* updateChannelAsync(action) {
+  try {
+    const updatedChannel = yield call(updateChannel, ...action.payload);
+    yield put(updateChannelSuccessed(updatedChannel));
+  } catch (error) {
+    yield put(updateChannelFailed(error));
+  }
+}
+
+export function* watchUpdateChannel() {
+  yield takeLatest(UPDATE_CHANNEL, updateChannelAsync);
 }
 
 export function* openChannels() {

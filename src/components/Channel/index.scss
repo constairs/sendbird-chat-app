@@ -10,3 +10,40 @@
     background-color: $brand-color;
   }
 }
+
+.channel-info {
+  display: flex;
+  align-items: center;
+  .img-place {
+    margin-right: 10px;
+    .edit-btn {
+      font-size: 14px;
+      color: #ffffff;
+      opacity: 0;
+      border-radius: 3px;
+      transition: all .2s;
+      display: block;
+      padding: 2px 5px; 
+    }
+    &:hover {
+      .edit-btn {
+        opacity: 1;
+      }
+    }
+  }
+  .channel-name {
+    margin-bottom: 5px;
+    display: flex;
+    align-items: flex-start;
+  }
+  button {
+    margin-left: 10px;
+  }
+}
+
+.channel-item {
+  .img-place {
+    width: 100px;
+    height: 100px;
+  }
+}

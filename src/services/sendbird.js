@@ -69,6 +69,35 @@ export function createOpenChannel(
   });
 }
 
+
+export function updateChannel(channel, newCover) {
+  return new Promise((resolve, reject) => {
+    channel.update(newCover, (response, err) => {
+      if (error) {
+        reject(err);
+      }
+      resolve(response);
+    });
+  });
+}
+
+// export function updateChannel(channelUrl, newName, newCover) {
+//   debugger;
+//   return new Promise((resolve, reject) => {
+//     sb.OpenChannel.getChannel(channelUrl, (channel, error) => {
+//       if (error) {
+//         reject(error);
+//       }
+//       channel.update(newName, newCover, (response, err) => {
+//         if (error) {
+//           reject(err);
+//         }
+//         resolve(response);
+//       });
+//     });
+//   });
+// }
+
 export function openChannelList() {
   return new Promise((resolve, reject) => {
     const openChannelListQuery = sb.OpenChannel.createOpenChannelListQuery();
@@ -102,6 +131,7 @@ export function enterChannel(channelUrl) {
         if (error) {
           reject(err);
         }
+        console.dir(channel);
         resolve(channel);
       });
     });

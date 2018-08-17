@@ -34,7 +34,7 @@ export class CreateChannelForm extends React.Component {
       coverUrl: '',
       coverFile: '',
     });
-    this.props.onCreateChannel(formData);
+    this.props.onSubmitForm(formData);
   }
 
   render() {
@@ -57,5 +57,5 @@ export class CreateChannelForm extends React.Component {
 }
 
 CreateChannelForm.propTypes = {
-  onCreateChannel: PropTypes.func.isRequired
+  onSubmitForm: PropTypes.func.isRequired
 };

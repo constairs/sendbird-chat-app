@@ -8,8 +8,6 @@ import { CreateChannelForm } from '../../components/CreateChannelForm';
 import { ChannelList } from '../../components/ChannelList';
 import { Channel } from '../../components/Channel';
 
-import './index.css';
-
 class OpenChannel extends React.Component {
   constructor(props) {
     super(props);
@@ -18,14 +16,19 @@ class OpenChannel extends React.Component {
     };
   }
 
+  componentWillMount() {
+    this.props.chatActions.openChannelsList();
+  }
+
   handleOpenChannel = (formData) => {
     this.props.chatActions.createOpenChannel(formData);
     this.setState({ modalOpen: false });
     this.props.chatActions.openChannelsList();
   }
 
-  handleOpenChList = () => {
-    this.props.chatActions.openChannelsList();
+  handleUpdateChannel = (formData) => {
+    this.props.chatActions.updateChannel(formData);
+    // this.props.chatActions.openChannelsList();
   }
 
   handleEnterChannel = (channelUrl) => {
@@ -76,14 +79,13 @@ class OpenChannel extends React.Component {
           <div className="modal-wrap">
             <div className="modal">
               <button className="x-btn" onClick={this.handleCloseModal}>x</button>
-              <CreateChannelForm onCreateChannel={this.handleOpenChannel} />
+              <CreateChannelForm onSubmitForm={this.handleOpenChannel} />
             </div>
           </div>
           :
           null
         }
         <button onClick={this.handleOpenModal}>Создать открытый канал</button>
-        <button onClick={this.handleOpenChList}>Список открытых каналов</button>
         { channelsList ?
           <ChannelList selectedChan={this.handleEnterChannel} channels={channelsList} />
           :
@@ -93,6 +95,7 @@ class OpenChannel extends React.Component {
           <Channel
             onMessageSend={this.handleMessageSend}
             onGetMessages={this.heandleGetMessages}
+            onUpdateChannel={this.handleUpdateChannel}
             onEnter={this.handleEnterChannel}
             onLeave={this.handleLeaveChannel}
             user={this.props.user}
