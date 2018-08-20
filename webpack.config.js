@@ -142,7 +142,8 @@ module.exports = (releaseStage) => {
   rules.push({
     test: /\.css$/,
     loaders: [
-      MiniCssExtractPlugin.loader,
+      // MiniCssExtractPlugin.loader,
+      'style-loader',
       {
         loader: 'css-loader',
         options: {
@@ -158,7 +159,8 @@ module.exports = (releaseStage) => {
     test: /\.scss$/,
     exclude: /node_modules/,
     loaders: [
-      MiniCssExtractPlugin.loader,
+      // MiniCssExtractPlugin.loader,
+      'style-loader',
       {
         loader: 'css-loader',
         options: {

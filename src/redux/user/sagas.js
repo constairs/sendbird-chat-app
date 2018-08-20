@@ -1,5 +1,6 @@
 import { call, put, takeLatest } from 'redux-saga/effects';
-import { connectToSB, disconnectFromSB, changeProfile, reconnectToSB } from '../../services/sendbird';
+import { REHYDRATE } from 'redux-persist';
+import { connectToSB, disconnectFromSB, changeProfile } from '../../services/sendbird';
 import {
   USER_LOGIN_REQUEST,
   USER_LOGOUT_REQUEST,
@@ -34,7 +35,7 @@ export function* userReconnectAsync(action) {
   if (action.payload.userId) {
     try {
       yield put(userReconnect());
-      yield call(reconnectToSB, action.payload.userId);
+      yield call(connectToSB, action.payload.userId);
       yield put(userReconnectSuccessed(action.payload));
     } catch (err) {
       yield put(userReconnectFailed(err));
@@ -43,7 +44,7 @@ export function* userReconnectAsync(action) {
 }
 
 export function* weatchReconnect() {
-  yield takeLatest('persist/REHYDRATE', userReconnectAsync);
+  yield takeLatest(REHYDRATE, userReconnectAsync);
 }
 
 export function* logoutUserAsync(action) {

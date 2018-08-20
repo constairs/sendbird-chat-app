@@ -1,12 +1,15 @@
 import React from 'react';
 import PropTypes from 'prop-types';
+import { connect } from 'react-redux';
+import { bindActionCreators } from 'redux';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faSignOutAlt } from '@fortawesome/free-solid-svg-icons';
 import { UserForm } from '../../components/UserForm';
+import * as userActions from '../../redux/user/actions';
 
 import './index.scss';
 
-export class UserProfile extends React.Component {
+class Profile extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
@@ -19,7 +22,7 @@ export class UserProfile extends React.Component {
   }
 
   handleChangeProfile = (formData) => {
-    this.props.onChangeProfile(formData);
+    this.props.userActions.changeUserRequest(formData);
     this.setState({ showModal: false });
   }
 
@@ -35,7 +38,7 @@ export class UserProfile extends React.Component {
         <h2 className="user-nickname">
           {userName}
         </h2>
-        <button className="user-logout-btn" title="logout" onClick={this.props.onLogout}><FontAwesomeIcon icon={faSignOutAlt} size="xs" /></button>
+        <button className="user-logout-btn" title="logout" onClick={this.props.userActions.logoutUserRequest}><FontAwesomeIcon icon={faSignOutAlt} size="xs" /></button>
         {
           this.state.showModal ?
             <div className="modal-wrap">
@@ -51,8 +54,25 @@ export class UserProfile extends React.Component {
   }
 }
 
-UserProfile.propTypes = {
+Profile.propTypes = {
   user: PropTypes.objectOf(PropTypes.any).isRequired,
-  onLogout: PropTypes.func.isRequired,
-  onChangeProfile: PropTypes.func.isRequired,
+  userActions: PropTypes.objectOf(PropTypes.any).isRequired
 };
+
+
+function mapStateToProps(state) {
+  return {
+    user: state.persistedUserReducer
+  };
+}
+
+function mapDispatchToProps(dispatch) {
+  return {
+    userActions: bindActionCreators(userActions, dispatch),
+  };
+}
+
+export const UserProfile = connect(
+  mapStateToProps,
+  mapDispatchToProps
+)(Profile);

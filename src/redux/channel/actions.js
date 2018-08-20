@@ -11,23 +11,11 @@ import {
   ENTER_CHANNEL,
   ENTER_CHANNEL_SUCCESSED,
   ENTER_CHANNEL_FAILED,
-  SEND_MESSAGE,
-  SEND_MESSAGE_SUCCESSED,
-  SEND_MESSAGE_FAILED,
-  GET_MESSAGES,
-  GET_MESSAGES_SUCCESSED,
-  GET_MESSAGES_FAILED,
   LEAVE_CHANNEL,
   LEAVE_CHANNEL_SUCCESSED,
   LEAVE_CHANNEL_FAILED,
-  DELETE_MESSAGE,
-  DELETE_MESSAGE_SUCCESSED,
-  DELETE_MESSAGE_FAILED,
-  CREATE_CHAT_HANDLER,
-  CREATE_CHAT_HANDLER_SUCCESSED,
-  CREATE_CHAT_HANDLER_FAILED,
-  MESSAGE_RECEIVED,
 } from './types';
+
 
 export const createOpenChannel = formData =>
   ({ type: CREATE_OPEN_CHANNEL, payload: formData });
@@ -63,35 +51,3 @@ export const leaveChannelSuccessed = response =>
   ({ type: LEAVE_CHANNEL_SUCCESSED, payload: response });
 export const leaveChannelFailed = error =>
   ({ type: LEAVE_CHANNEL_FAILED, payload: error });
-
-export const sendMessage = messageData =>
-  ({ type: SEND_MESSAGE, messageData });
-export const sendMessageSuccessed = updMessages =>
-  ({ type: SEND_MESSAGE_SUCCESSED, payload: updMessages });
-export const sendMessageFailed = error =>
-  ({ type: SEND_MESSAGE_FAILED, payload: error });
-
-export const deleteMessage = messageData =>
-  ({ type: DELETE_MESSAGE, messageData });
-export const deleteMessageSuccessed = delRes =>
-  ({ type: DELETE_MESSAGE_SUCCESSED, payload: delRes });
-export const deleteMessageFailed = error =>
-  ({ type: DELETE_MESSAGE_FAILED, payload: error });
-
-export const getMessages = channelUrl =>
-  ({ type: GET_MESSAGES, channelUrl });
-export const getMessagesSuccessed = messages =>
-  ({ type: GET_MESSAGES_SUCCESSED, payload: messages });
-export const getMessagesFailed = error =>
-  ({ type: GET_MESSAGES_FAILED, payload: error });
-
-
-export const createChatHandler = channelUrl =>
-  ({ type: CREATE_CHAT_HANDLER, channelUrl });
-export const createChatHandlerSuccessed = () =>
-  ({ type: CREATE_CHAT_HANDLER_SUCCESSED });
-export const createChatHandlerFailed = error =>
-  ({ type: CREATE_CHAT_HANDLER_FAILED, error });
-
-export const messageReceived = message =>
-  ({ type: MESSAGE_RECEIVED, payload: message });

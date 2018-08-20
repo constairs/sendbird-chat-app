@@ -1,4 +1,4 @@
-import { call, put, takeLatest, takeEvery } from 'redux-saga/effects';
+import { call, put, takeLatest } from 'redux-saga/effects';
 import {
   createOpenChannel,
   updateChannel,
@@ -6,21 +6,13 @@ import {
   getChannel,
   enterChannel,
   exitChannel,
-  sendMessage,
-  deleteMessage,
-  getMessages,
-  registerChatHandler,
 } from '../../services/sendbird';
 import {
   CREATE_OPEN_CHANNEL,
   UPDATE_CHANNEL,
   GET_SELECTED_CHANNEL,
   ENTER_CHANNEL,
-  ENTER_CHANNEL_SUCCESSED,
   LEAVE_CHANNEL,
-  SEND_MESSAGE,
-  DELETE_MESSAGE,
-  CREATE_CHAT_HANDLER,
 } from './types';
 import {
   createOpenChannelSuccessed,
@@ -33,16 +25,8 @@ import {
   getSelectedChannelFailed,
   enterChannelSuccessed,
   enterChannelFailed,
-  sendMessageSuccessed,
-  sendMessageFailed,
-  deleteMessageSuccessed,
-  deleteMessageFailed,
-  getMessagesSuccessed,
-  getMessagesFailed,
   leaveChannelSuccessed,
   leaveChannelFailed,
-  createChatHandlerSuccessed,
-  createChatHandlerFailed,
 } from './actions';
 
 import { USER_RECONNECT_SUCCESSED } from '../user/types';
@@ -123,57 +107,4 @@ export function* leaveChannel(action) {
 
 export function* watchLeaveChannel() {
   yield takeLatest(LEAVE_CHANNEL, leaveChannel);
-}
-
-export function* sendMessageAsync(action) {
-  try {
-    const sendRes = yield call(sendMessage, ...action.messageData);
-    yield put(sendMessageSuccessed(sendRes));
-  } catch (error) {
-    yield put(sendMessageFailed(error));
-  }
-}
-
-export function* watchSendMessage() {
-  yield takeLatest(SEND_MESSAGE, sendMessageAsync);
-}
-
-export function* deleteMessageAsync(action) {
-  try {
-    const delRes = yield call(deleteMessage, ...action.messageData);
-    yield put(deleteMessageSuccessed(delRes));
-  } catch (error) {
-    yield put(deleteMessageFailed(error));
-  }
-}
-
-export function* watchDeleteMessage() {
-  yield takeLatest(DELETE_MESSAGE, deleteMessageAsync);
-}
-
-export function* getMessagesAsync(action) {
-  try {
-    const messages = yield call(getMessages, action.payload.url);
-    yield put(getMessagesSuccessed(messages));
-  } catch (error) {
-    yield put(getMessagesFailed(error));
-  }
-}
-
-export function* watchGetMessages() {
-  yield takeEvery(ENTER_CHANNEL_SUCCESSED, getMessagesAsync);
-}
-
-
-export function* createChatHandlerReceiveSaga(action) {
-  try {
-    const data = yield call(registerChatHandler, action.channelUrl);
-    yield put(createChatHandlerSuccessed(data));
-  } catch (error) {
-    yield put(createChatHandlerFailed(error));
-  }
-}
-
-export function* watchCreateChatHandler() {
-  yield takeEvery(CREATE_CHAT_HANDLER, createChatHandlerReceiveSaga);
 }

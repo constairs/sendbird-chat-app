@@ -16,19 +16,10 @@ class OpenChannel extends React.Component {
     };
   }
 
-  componentWillMount() {
-    this.props.chatActions.openChannelsList();
-  }
-
   handleOpenChannel = (formData) => {
     this.props.chatActions.createOpenChannel(formData);
     this.setState({ modalOpen: false });
     this.props.chatActions.openChannelsList();
-  }
-
-  handleUpdateChannel = (formData) => {
-    this.props.chatActions.updateChannel(formData);
-    // this.props.chatActions.openChannelsList();
   }
 
   handleEnterChannel = (channelUrl) => {
@@ -95,7 +86,6 @@ class OpenChannel extends React.Component {
           <Channel
             onMessageSend={this.handleMessageSend}
             onGetMessages={this.heandleGetMessages}
-            onUpdateChannel={this.handleUpdateChannel}
             onEnter={this.handleEnterChannel}
             onLeave={this.handleLeaveChannel}
             user={this.props.user}

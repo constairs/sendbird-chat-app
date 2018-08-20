@@ -23,13 +23,18 @@ export class Chat extends React.Component {
 
   handleSubmit = (e) => {
     e.preventDefault();
-    const messageText = this.state.message;
-    this.props.onMessageSend(messageText);
+    const messageData = [
+      this.props.chat.channel.url,
+      'MESG',
+      this.props.user.userId,
+      this.state.message,
+    ];
+    this.props.chatActions.sendMessage(messageData);
     this.setState({ message: '' });
   }
 
   handleMessageDelete = (message) => {
-    this.props.chatActions.deleteMessage([this.props.chat.channelUrl, message]);
+    this.props.chatActions.deleteMessage([this.props.chat.channel.url, message]);
   }
 
   render() {
@@ -84,8 +89,8 @@ export const ChatBox = connect(mapStateToProps, mapDispatchToProps)(Chat);
 
 Chat.propTypes = {
   messages: PropTypes.arrayOf(PropTypes.any).isRequired,
-  onMessageSend: PropTypes.func.isRequired,
   sendingMessage: PropTypes.bool.isRequired,
   chatActions: PropTypes.objectOf(PropTypes.any).isRequired,
   chat: PropTypes.objectOf(PropTypes.any).isRequired,
+  user: PropTypes.objectOf(PropTypes.any).isRequired
 };

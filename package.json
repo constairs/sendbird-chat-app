@@ -39,6 +39,7 @@
     "redux": "3.7.2",
     "redux-persist": "^5.10.0",
     "redux-saga": "^0.16.0",
+    "redux-thunk": "^2.3.0",
     "sendbird": "^3.0.70"
   },
   "devDependencies": {

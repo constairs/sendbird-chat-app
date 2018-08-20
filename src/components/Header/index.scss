@@ -4,6 +4,8 @@ header {
   background-color: $light;
   display: block;
   padding: 20px 40px;
+  display: flex;
+  justify-content: space-around;
 }
 
 nav ul {
