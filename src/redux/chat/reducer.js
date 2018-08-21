@@ -134,6 +134,12 @@ const messageReceived = (state, message) => ({
   messages: [...state.messages, message]
 });
 
+const messageDeleted = (state, messageId) => ({
+  ...state,
+  messageDeleted: state.messages.splice(state.messages.indexOf(messageId), 1),
+  messages: state.messages
+});
+
 const handlers = {
   [TYPES.CREATE_OPEN_CHANNEL]: createOpenChannel,
   [TYPES.CREATE_OPEN_CHANNEL_SUCCESSED]: createOpenChannelSuccessed,
@@ -170,6 +176,7 @@ const handlers = {
   [TYPES.GET_PARTICIPANTS]: getParticipants,
 
   [TYPES.MESSAGE_RECEIVED]: messageReceived,
+  [TYPES.MESSAGE_DELETED]: messageDeleted,
 };
 
 export const chatReducer = createReducer(initState, handlers);

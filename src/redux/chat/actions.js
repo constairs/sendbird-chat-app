@@ -27,6 +27,7 @@ import {
   CREATE_CHAT_HANDLER_SUCCESSED,
   CREATE_CHAT_HANDLER_FAILED,
   MESSAGE_RECEIVED,
+  MESSAGE_DELETED,
   GET_PARTICIPANTS
 } from './types';
 
@@ -99,3 +100,9 @@ export const createChatHandlerFailed = error =>
 
 export const messageReceived = (channel, message) =>
   ({ type: MESSAGE_RECEIVED, payload: message });
+
+export const messageDeleted = (channel, messageId) =>
+  ({ type: MESSAGE_DELETED, payload: messageId });
+
+export const messageUpdated = () =>
+  ({});

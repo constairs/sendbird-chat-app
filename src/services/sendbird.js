@@ -1,7 +1,7 @@
 import SendBird from 'sendbird';
 import { APP_ID, TOKEN } from '../constants';
 import { store } from '../application';
-import { messageReceived } from '../redux/chat/actions';
+import { messageReceived, messageDeleted, messageUpdated } from '../redux/chat/actions';
 
 export const sb = new SendBird({ appId: APP_ID });
 
@@ -9,6 +9,14 @@ const ChannelHandler = new sb.ChannelHandler();
 
 ChannelHandler.onMessageReceived = function (channel, message) {
   store.store.dispatch(messageReceived(channel, message));
+};
+
+ChannelHandler.onMessageUpdated = function (channel, message) {
+  store.store.dispatch(messageUpdated(channel, message));
+};
+
+ChannelHandler.onMessageDeleted = function (channel, messageId) {
+  store.store.dispatch(messageDeleted(channel, messageId));
 };
 
 ChannelHandler.onChannelChanged = function (channel) {
@@ -21,22 +29,21 @@ sb.addChannelHandler('HANDLER', ChannelHandler);
 //   const ChannelHandler = new sb.ChannelHandler();
 //   ChannelHandler.onMessageReceived = function (channel, message) {
 //     // if (channel.url === channelUrl) {
-//     store.dispatch();
+//     store.store.dispatch(messageUpdated(channel, message));
 //     // }
 //   };
 
 // ChannelHandler.onMessageUpdated = function (channel, message) {
 //   if (channel.url === channelUrl) {
-//     store.dispatch();
+//     store.store.dispatch(messageUpdated(channel, message));
 //   }
 // };
 // ChannelHandler.onMessageDeleted = function (channel, messageId) {
 //   if (channel.url === channelUrl) {
-//     store.dispatch();
+//     store.store.dispatch(messageDeleted(channel, messageId));
 //   }
 // };
 //   sb.addChannelHandler('MESSAGE_HANDLER', ChannelHandler);
-//   console.dir(sb);
 // }
 
 export function connectToSB(userId) {
