@@ -28,7 +28,9 @@ import {
   CREATE_CHAT_HANDLER_FAILED,
   MESSAGE_RECEIVED,
   MESSAGE_DELETED,
-  GET_PARTICIPANTS
+  GET_PARTICIPANTS,
+  GHANNEL_UPDATED,
+  NEW_USER_ENTERED
 } from './types';
 
 export const createOpenChannel = formData =>
@@ -106,3 +108,9 @@ export const messageDeleted = (channel, messageId) =>
 
 export const messageUpdated = () =>
   ({});
+
+export const channelUpdated = channel =>
+  ({ type: GHANNEL_UPDATED, payload: channel });
+
+export const userEntered = data =>
+  ({ type: NEW_USER_ENTERED, payload: data });

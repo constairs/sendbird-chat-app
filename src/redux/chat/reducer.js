@@ -136,8 +136,19 @@ const messageReceived = (state, message) => ({
 
 const messageDeleted = (state, messageId) => ({
   ...state,
-  messageDeleted: state.messages.splice(state.messages.indexOf(messageId), 1),
+  messageDeleted: state.messages.splice(state.messages.indexOf(messageId)),
   messages: state.messages
+});
+
+const channelUpdated = (state, channel) => ({
+  ...state,
+  channel
+});
+
+const userEntered = (state, action) => ({
+  ...state,
+  userEntered: action.user,
+  channel: action.channel
 });
 
 const handlers = {
@@ -177,6 +188,9 @@ const handlers = {
 
   [TYPES.MESSAGE_RECEIVED]: messageReceived,
   [TYPES.MESSAGE_DELETED]: messageDeleted,
+  [TYPES.GHANNEL_UPDATED]: channelUpdated,
+
+  [TYPES.NEW_USER_ENTERED]: userEntered,
 };
 
 export const chatReducer = createReducer(initState, handlers);

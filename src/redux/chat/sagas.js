@@ -10,6 +10,7 @@ import {
   deleteMessage,
   getMessages,
   registerChatHandler,
+  getParticipantsReq,
 } from '../../services/sendbird';
 import {
   CREATE_OPEN_CHANNEL,
@@ -21,6 +22,7 @@ import {
   SEND_MESSAGE,
   DELETE_MESSAGE,
   CREATE_CHAT_HANDLER,
+  NEW_USER_ENTERED
 } from './types';
 import {
   createOpenChannelSuccessed,
@@ -113,6 +115,20 @@ export function* enterSelectedChannel(action) {
 export function* watchEnterChannel() {
   yield takeLatest(ENTER_CHANNEL, enterSelectedChannel);
 }
+
+// export function* getParticipantsSaga(action) {
+//   try {
+//     const data = yield call(enterChannel, action.payload);
+//     yield put(enterChannelSuccessed(data.channel));
+//     yield put(getParticipants(data.participantList));
+//   } catch (error) {
+//     yield put(enterChannelFailed(error));
+//   }
+// }
+
+// export function* watchGetParticipants() {
+//   yield takeLatest(ENTER_CHANNEL || NEW_USER_ENTERED, getParticipantsSaga);
+// }
 
 export function* leaveChannel(action) {
   try {

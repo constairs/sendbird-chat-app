@@ -1,7 +1,7 @@
 import SendBird from 'sendbird';
 import { APP_ID, TOKEN } from '../constants';
 import { store } from '../application';
-import { messageReceived, messageDeleted, messageUpdated } from '../redux/chat/actions';
+import { messageReceived, messageDeleted, messageUpdated, channelUpdated, userEntered } from '../redux/chat/actions';
 
 export const sb = new SendBird({ appId: APP_ID });
 
@@ -20,7 +20,11 @@ ChannelHandler.onMessageDeleted = function (channel, messageId) {
 };
 
 ChannelHandler.onChannelChanged = function (channel) {
-  console.log(channel);
+  store.store.dispatch(channelUpdated(channel));
+};
+
+ChannelHandler.onUserEntered = function (channel, user) {
+  store.store.dispatch(userEntered({ channel, user }));
 };
 
 sb.addChannelHandler('HANDLER', ChannelHandler);
@@ -158,6 +162,23 @@ export function enterChannel(channelUrl) {
           }
           resolve({ channel, participantList });
         });
+      });
+    });
+  });
+}
+
+export function getParticipantsReq(channelUrl) {
+  return new Promise((resolve, reject) => {
+    sb.OpenChannel.getChannel(channelUrl, (channel, error) => {
+      if (error) {
+        reject(error);
+      }
+      const participantListQuery = channel.createParticipantListQuery();
+      participantListQuery.next((participantList, err) => {
+        if (err) {
+          reject(err);
+        }
+        resolve(participantList);
       });
     });
   });

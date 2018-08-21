@@ -10,7 +10,9 @@ export class MessageItem extends React.Component {
     const { cur } = this.props;
     return (
       <div className="message-item" id={cur.messageId} key={cur.createdAt} >
-        <div className="sender-img"><img src={cur.sender.profileUrl ? cur.sender.profileUrl : 'http://dxstmhyqfqr1o.cloudfront.net/images/icon-chat-04.png'} alt={cur.nickname} /></div>
+        <div className="sender-img">
+          <img src={cur.sender.profileUrl ? cur.sender.profileUrl : 'http://dxstmhyqfqr1o.cloudfront.net/images/icon-chat-04.png'} alt={cur.nickname} />
+        </div>
         <div>
           <p className="sender-info">
             <span className="sender-nick">{cur.sender.nickname ? cur.sender.nickname : 'noname' }</span>

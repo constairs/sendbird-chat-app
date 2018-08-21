@@ -1,12 +1,20 @@
 import React from 'react';
 import PropTypes from 'prop-types';
+import Modal from 'react-modal';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faPen } from '@fortawesome/free-solid-svg-icons';
 import { ChatBox } from '../ChatBox';
+import { UpdateChannelForm } from '../UpdateChannelForm';
 
 import './index.scss';
 
 export class Channel extends React.Component {
+  constructor(props) {
+    super(props);
+    this.state = {
+      modalIsOpen: false,
+    };
+  }
   handleMessageSend = (messageText) => {
     const messageData = [
       this.props.channel.url,
@@ -19,6 +27,21 @@ export class Channel extends React.Component {
 
   handleLeaveBtn = () => {
     this.props.onLeave(this.props.channel.url);
+  }
+
+  closeModal = () => {
+    this.setState({ modalIsOpen: false });
+  }
+
+  handleEditBtnClick = () => {
+    this.setState({
+      modalIsOpen: true,
+    });
+  }
+
+  handleUpdateChannel = (formData) => {
+    // debugger;
+    this.props.channel.update(formData[1]);
   }
 
   render() {
@@ -51,6 +74,17 @@ export class Channel extends React.Component {
           :
           null
         }
+        <Modal
+          className="modal"
+          isOpen={this.state.modalIsOpen}
+          onAfterOpen={this.afterOpenModal}
+          onRequestClose={this.closeModal}
+          contentLabel="Example Modal"
+          ariaHideApp={false}
+        >
+          <button className="x-btn" onClick={this.closeModal}>x</button>
+          <UpdateChannelForm onSubmitForm={this.handleUpdateChannel} />
+        </Modal>
       </div>
     );
   }
