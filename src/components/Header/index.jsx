@@ -1,4 +1,5 @@
 import React from 'react';
+import PropTypes from 'prop-types';
 import { Link } from 'react-router-dom';
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
@@ -20,18 +21,28 @@ class Head extends React.Component {
           <ul>
             <li><Link href="/" to="/">Home</Link></li>
             <li><Link href="/profile" to="/profile">Profile</Link></li>
-            <li><Link href="/channels" to="/channels">Channels</Link></li>
+            {this.props.user.logged ?
+              <li><Link href="/channels" to="/channels">Channels</Link></li>
+            :
+            null
+            }
           </ul>
         </nav>
-        {this.props.user ?
+        {this.props.user.logged ?
           <UserProfile />
         :
-        null
+          <div>
+            <Link href="/login" to="/login">Войти</Link>
+          </div>
         }
       </header>
     );
   }
 }
+
+Head.propTypes = {
+  user: PropTypes.objectOf(PropTypes.any).isRequired
+};
 
 function mapStateToProps(state) {
   return {

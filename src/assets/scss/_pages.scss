@@ -21,3 +21,15 @@ body {
     display: block;
   }
 }
+
+.flex-container {
+  display: flex;
+  padding: 40px 0;
+  width: 100%;
+}
+
+.channel-page {
+  .channels-list {
+    margin-right: 40px;
+  }
+}

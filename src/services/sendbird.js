@@ -1,51 +1,38 @@
 import SendBird from 'sendbird';
 import { APP_ID, TOKEN } from '../constants';
-import { dispatch } from '../redux/store';
-import { MESSAGE_RECEIVED } from '../redux/chat/types';
+import { store } from '../application';
+import { messageReceived } from '../redux/chat/actions';
 
 export const sb = new SendBird({ appId: APP_ID });
 
 const ChannelHandler = new sb.ChannelHandler();
-ChannelHandler.onMessageReceived = (channel, message) => {
-  dispatch({
-    type: MESSAGE_RECEIVED,
-    payload: { channel, message }
-  });
-  console.log(channel, message);
+
+ChannelHandler.onMessageReceived = function (channel, message) {
+  store.store.dispatch(messageReceived(channel, message));
 };
 
 ChannelHandler.onChannelChanged = function (channel) {
   console.log(channel);
- };
+};
 
 sb.addChannelHandler('HANDLER', ChannelHandler);
 
-console.dir(sb);
 // export function addChatHandlers(channelUrl) {
 //   const ChannelHandler = new sb.ChannelHandler();
-//   ChannelHandler.onMessageReceived = (channel, message) => {
+//   ChannelHandler.onMessageReceived = function (channel, message) {
 //     // if (channel.url === channelUrl) {
-//     dispatch({
-//       type: MESSAGE_RECEIVED,
-//       payload: { channel, message }
-//     });
+//     store.dispatch();
 //     // }
 //   };
 
-// ChannelHandler.onMessageUpdated = (channel, message) => {
+// ChannelHandler.onMessageUpdated = function (channel, message) {
 //   if (channel.url === channelUrl) {
-//     dispatch({
-//       type: MESSAGE_UPDATED,
-//       payload: message
-//     });
+//     store.dispatch();
 //   }
 // };
-// ChannelHandler.onMessageDeleted = (channel, messageId) => {
+// ChannelHandler.onMessageDeleted = function (channel, messageId) {
 //   if (channel.url === channelUrl) {
-//     dispatch({
-//       type: MESSAGE_DELETED,
-//       payload: messageId
-//     });
+//     store.dispatch();
 //   }
 // };
 //   sb.addChannelHandler('MESSAGE_HANDLER', ChannelHandler);
@@ -157,7 +144,13 @@ export function enterChannel(channelUrl) {
         if (error) {
           reject(err);
         }
-        resolve(channel);
+        const participantListQuery = channel.createParticipantListQuery();
+        participantListQuery.next((participantList, e) => {
+          if (e) {
+            reject(e);
+          }
+          resolve({ channel, participantList });
+        });
       });
     });
   });

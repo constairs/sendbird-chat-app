@@ -95,6 +95,11 @@ const enterChannelFailed = (state, error) => ({
   fetching: false,
 });
 
+const getParticipants = (state, data) => ({
+  ...state,
+  participants: data
+});
+
 const leaveChannel = state => ({
   ...state,
   fetching: true,
@@ -126,7 +131,7 @@ const getMessagesFailed = (state, error) => ({
 
 const messageReceived = (state, message) => ({
   ...state,
-  message
+  messages: [...state.messages, message]
 });
 
 const handlers = {
@@ -161,6 +166,8 @@ const handlers = {
   [TYPES.LEAVE_CHANNEL]: leaveChannel,
   [TYPES.LEAVE_CHANNEL_SUCCESSED]: leaveChannelSuccessed,
   [TYPES.LEAVE_CHANNEL_FAILED]: leaveChannelFailed,
+
+  [TYPES.GET_PARTICIPANTS]: getParticipants,
 
   [TYPES.MESSAGE_RECEIVED]: messageReceived,
 };

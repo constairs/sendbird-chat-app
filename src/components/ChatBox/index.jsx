@@ -48,13 +48,15 @@ export class Chat extends React.Component {
                   cur={elem}
                   onDeleteMessage={this.handleMessageDelete}
                   key={elem.messageId}
+                  userId={this.props.user.userId}
                 />
               )
             )
           }
         </div>
         <form className="chat-message-form" onSubmit={this.handleSubmit}>
-          <textarea onChange={this.handleTextInput} value={this.state.message} />
+          {/* <textarea onChange={this.handleTextInput} value={this.state.message} /> */}
+          <input type="text" onChange={this.handleTextInput} value={this.state.message} />
           <button className="send-message-btn">
             Отправить{
               this.props.sendingMessage ? <Spinner

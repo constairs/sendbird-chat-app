@@ -15,6 +15,7 @@ const userLoginSuccessed = (state, user) => ({
   userId: user.userId,
   userName: user.nickname,
   userImg: user.profileUrl,
+  logged: true,
 });
 const userLoginFailed = (state, error) => ({
   ...state,
@@ -41,9 +42,9 @@ const userReconnectFailed = (state, err) => ({
 const userLogoutRequest = () => ({
   fetching: false,
 });
-const userLogoutSuccessed = res => ({
-  res,
+const userLogoutSuccessed = () => ({
   fetching: false,
+  logged: false,
 });
 const userLogoutFailed = (state, error) => ({
   ...state,

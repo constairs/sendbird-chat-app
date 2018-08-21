@@ -1,29 +1,24 @@
 @import '../../assets/scss/variables';
 
-.chat-message-form {
-  textarea {
-    width: 100%;
-    min-width: 100%;
-    max-width: 100%;
-  }
-  .send-message-btn {
-    background-color: $brand-color;
-  }
-}
-
 .channel-info {
   display: flex;
   align-items: center;
+  padding: 15px;
   .img-place {
     margin-right: 10px;
+    position: relative;
     .edit-btn {
-      font-size: 14px;
+      font-size: 10px;
       color: #ffffff;
       opacity: 0;
       border-radius: 3px;
       transition: all .2s;
       display: block;
-      padding: 2px 5px; 
+      padding: 4px 5px; 
+      position: absolute;
+      background-color: #cacaca;
+      top: 0px;
+      right: 0px;
     }
     &:hover {
       .edit-btn {
@@ -42,8 +37,38 @@
 }
 
 .channel-item {
+  width: 75%;
   .img-place {
     width: 100px;
     height: 100px;
+  }
+}
+
+.users-list {
+  list-style-type: none;
+  padding-left: 0;
+  li {
+    display: inline-block;
+  }
+  .img-place {
+    width: 40px;
+    height: 40px;
+    position: relative;
+    .connection-status {
+      position: absolute;
+      top: 0;
+      right: 0;
+    }
+  }
+}
+
+.connection-status {
+  width: 10px;
+  height: 10px;
+  border: 2px solid #fff;
+  border-radius: 100%;
+  background-color: #cccccc;
+  &.online {
+    background-color: #1ce01c;
   }
 }

@@ -3,22 +3,24 @@ import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
 import { Spinner } from 'react-preloading-component';
 import PropTypes from 'prop-types';
+import Modal from 'react-modal';
 import * as chatActions from '../../redux/chat/actions';
 import { CreateChannelForm } from '../../components/CreateChannelForm';
 import { ChannelList } from '../../components/ChannelList';
 import { Channel } from '../../components/Channel';
 
+
 class OpenChannel extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      modalOpen: false,
+      modalIsOpen: false,
     };
   }
 
   handleOpenChannel = (formData) => {
     this.props.chatActions.createOpenChannel(formData);
-    this.setState({ modalOpen: false });
+    this.setState({ modalIsOpen: false });
     this.props.chatActions.openChannelsList();
   }
 
@@ -39,11 +41,11 @@ class OpenChannel extends React.Component {
   }
 
   handleOpenModal = () => {
-    this.setState({ modalOpen: true });
+    this.setState({ modalIsOpen: true });
   }
 
-  handleCloseModal = () => {
-    this.setState({ modalOpen: false });
+  closeModal = () => {
+    this.setState({ modalIsOpen: false });
   }
 
   render() {
@@ -66,36 +68,40 @@ class OpenChannel extends React.Component {
             </div>
           : null
         }
-        { this.state.modalOpen ?
-          <div className="modal-wrap">
-            <div className="modal">
-              <button className="x-btn" onClick={this.handleCloseModal}>x</button>
-              <CreateChannelForm onSubmitForm={this.handleOpenChannel} />
-            </div>
-          </div>
-          :
-          null
-        }
         <button onClick={this.handleOpenModal}>Создать открытый канал</button>
-        { channelsList ?
-          <ChannelList selectedChan={this.handleEnterChannel} channels={channelsList} />
+        <div className="flex-container">
+          { channelsList ?
+            <ChannelList selectedChan={this.handleEnterChannel} channels={channelsList} />
+            :
+            null
+          }
+          { channel ?
+            <Channel
+              onMessageSend={this.handleMessageSend}
+              onGetMessages={this.heandleGetMessages}
+              onEnter={this.handleEnterChannel}
+              onLeave={this.handleLeaveChannel}
+              user={this.props.user}
+              channel={channel}
+              participants={this.props.chat.participants}
+              messages={messages}
+              sendingMessage={sendingMessage}
+            />
           :
-          null
-        }
-        { channel ?
-          <Channel
-            onMessageSend={this.handleMessageSend}
-            onGetMessages={this.heandleGetMessages}
-            onEnter={this.handleEnterChannel}
-            onLeave={this.handleLeaveChannel}
-            user={this.props.user}
-            channel={channel}
-            messages={messages}
-            sendingMessage={sendingMessage}
-          />
-        :
-          null
-        }
+            null
+          }
+        </div>
+        <Modal
+          className="modal"
+          isOpen={this.state.modalIsOpen}
+          onAfterOpen={this.afterOpenModal}
+          onRequestClose={this.closeModal}
+          contentLabel="Example Modal"
+          ariaHideApp={false}
+        >
+          <button className="x-btn" onClick={this.closeModal}>x</button>
+          <CreateChannelForm onSubmitForm={this.handleOpenChannel} />
+        </Modal>
       </div>
     );
   }

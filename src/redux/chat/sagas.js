@@ -31,6 +31,7 @@ import {
   openChannelsListFailed,
   getSelectedChannelSuccessed,
   getSelectedChannelFailed,
+  getParticipants,
   enterChannelSuccessed,
   enterChannelFailed,
   sendMessageSuccessed,
@@ -45,7 +46,7 @@ import {
   createChatHandlerFailed,
 } from './actions';
 
-import { USER_RECONNECT_SUCCESSED } from '../user/types';
+import { USER_LOGIN_SUCCESSED, USER_RECONNECT_SUCCESSED } from '../user/types';
 
 export function* createChannelAsync(action) {
   try {
@@ -83,7 +84,7 @@ export function* openChannels() {
 }
 
 export function* watchOpenChannels() {
-  yield takeLatest(USER_RECONNECT_SUCCESSED, openChannels);
+  yield takeLatest(USER_RECONNECT_SUCCESSED || USER_LOGIN_SUCCESSED, openChannels);
 }
 
 export function* selectChannel(action) {
@@ -101,8 +102,9 @@ export function* watchGetChannel() {
 
 export function* enterSelectedChannel(action) {
   try {
-    const channel = yield call(enterChannel, action.payload);
-    yield put(enterChannelSuccessed(channel));
+    const data = yield call(enterChannel, action.payload);
+    yield put(enterChannelSuccessed(data.channel));
+    yield put(getParticipants(data.participantList));
   } catch (error) {
     yield put(enterChannelFailed(error));
   }

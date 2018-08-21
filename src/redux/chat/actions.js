@@ -27,6 +27,7 @@ import {
   CREATE_CHAT_HANDLER_SUCCESSED,
   CREATE_CHAT_HANDLER_FAILED,
   MESSAGE_RECEIVED,
+  GET_PARTICIPANTS
 } from './types';
 
 export const createOpenChannel = formData =>
@@ -56,6 +57,9 @@ export const enterChannelSuccessed = channel =>
   ({ type: ENTER_CHANNEL_SUCCESSED, payload: channel });
 export const enterChannelFailed = error =>
   ({ type: ENTER_CHANNEL_FAILED, payload: error });
+
+export const getParticipants = data =>
+  ({ type: GET_PARTICIPANTS, payload: data });
 
 export const leaveChannel = channelUrl =>
   ({ type: LEAVE_CHANNEL, payload: channelUrl });
@@ -93,5 +97,5 @@ export const createChatHandlerSuccessed = () =>
 export const createChatHandlerFailed = error =>
   ({ type: CREATE_CHAT_HANDLER_FAILED, error });
 
-export const messageReceived = message =>
+export const messageReceived = (channel, message) =>
   ({ type: MESSAGE_RECEIVED, payload: message });

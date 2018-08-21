@@ -2,6 +2,7 @@ import React from 'react';
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
 import { Spinner } from 'react-preloading-component';
+import Modal from 'react-modal';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faSignOutAlt } from '@fortawesome/free-solid-svg-icons';
 import PropTypes from 'prop-types';
@@ -14,7 +15,7 @@ class UserProfile extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      showModal: false,
+      modalIsOpen: false,
     };
   }
 
@@ -28,12 +29,18 @@ class UserProfile extends React.Component {
   }
 
   handleOpenModal = () => {
-    this.setState({ showModal: true });
+    this.setState({ modalIsOpen: true });
   }
 
   handleChangeProfile = (formData) => {
     this.props.userActions.changeUserRequest(formData);
-    this.setState({ showModal: false });
+    this.setState({ modalIsOpen: false });
+  }
+
+  closeModal = () => {
+    this.setState({
+      modalIsOpen: false
+    });
   }
 
   render() {
@@ -60,7 +67,7 @@ class UserProfile extends React.Component {
                 {userName}
               </h2>
               <button className="user-logout-btn" title="logout" onClick={this.handleLogout}><FontAwesomeIcon icon={faSignOutAlt} size="xs" /></button>
-              {
+              {/* {
                 this.state.showModal ?
                   <div className="modal-wrap">
                     <div className="modal">
@@ -69,7 +76,18 @@ class UserProfile extends React.Component {
                   </div>
                 :
                 null
-              }
+              } */}
+              <Modal
+                className="modal"
+                isOpen={this.state.modalIsOpen}
+                onAfterOpen={this.afterOpenModal}
+                onRequestClose={this.closeModal}
+                contentLabel="Example Modal"
+                ariaHideApp={false}
+              >
+                <button className="x-btn" onClick={this.closeModal}>x</button>
+                <UserForm onChangeProfile={this.handleChangeProfile} />
+              </Modal>
             </div>
         }
       </div>

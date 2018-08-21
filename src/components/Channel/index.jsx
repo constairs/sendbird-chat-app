@@ -3,15 +3,10 @@ import PropTypes from 'prop-types';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faPen } from '@fortawesome/free-solid-svg-icons';
 import { ChatBox } from '../ChatBox';
-import { addChatHandlers } from '../../services/sendbird';
 
 import './index.scss';
 
 export class Channel extends React.Component {
-  componentWillMount() {
-    // addChatHandlers(this.props.channel.url);
-  }
-
   handleMessageSend = (messageText) => {
     const messageData = [
       this.props.channel.url,
@@ -35,6 +30,14 @@ export class Channel extends React.Component {
           <div>
             <h1 className="channel-name">{name}</h1>
             <p className="channel-users">Online: {participantCount}</p>
+            <ul className="users-list">
+              {
+                this.props.participants.map(cur => (
+                  <li key={cur.userId}><div className="img-place"><img src={cur.profileUrl} title={cur.nickname} alt={cur.nickname} /> {cur.connectionStatus === 'online' ? <span className="connection-status online" /> : <span className="connection-status" />}</div></li>
+                )
+              )
+              }
+            </ul>
           </div>
           <button onClick={this.handleLeaveBtn}>Покинуть канал</button>
         </div>
@@ -55,6 +58,7 @@ export class Channel extends React.Component {
 
 Channel.defaultProps = {
   messages: [],
+  participants: [],
 };
 
 Channel.propTypes = {
@@ -63,6 +67,7 @@ Channel.propTypes = {
   onMessageSend: PropTypes.func.isRequired,
   onLeave: PropTypes.func.isRequired,
   messages: PropTypes.arrayOf(PropTypes.any),
+  participants: PropTypes.arrayOf(PropTypes.any),
   sendingMessage: PropTypes.bool.isRequired,
 };
 

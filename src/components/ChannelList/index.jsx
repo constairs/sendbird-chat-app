@@ -1,6 +1,8 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 
+import './index.scss';
+
 export class ChannelList extends React.Component {
   handleItemClick = (e) => {
     this.props.selectedChan(e.target.id);
@@ -18,7 +20,7 @@ export class ChannelList extends React.Component {
                 <button id={cur.url} onClick={this.handleItemClick}>
                   Войти
                 </button>
-                {cur.name}
+                <span className="channel-item-name">{cur.name}</span>
               </li>
             )
           )

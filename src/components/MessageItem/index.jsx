@@ -13,12 +13,16 @@ export class MessageItem extends React.Component {
         <div className="sender-img"><img src={cur.sender.profileUrl ? cur.sender.profileUrl : 'http://dxstmhyqfqr1o.cloudfront.net/images/icon-chat-04.png'} alt={cur.nickname} /></div>
         <div>
           <p className="sender-info">
-            <span className="sender-nick">{cur.sender.nickname}</span>
+            <span className="sender-nick">{cur.sender.nickname ? cur.sender.nickname : 'noname' }</span>
             <span className="sending-date">{moment(cur.createdAt).format('DD/MM/YY hh:mm a')}</span>
           </p>
           <p className="message-text">{cur.customType}</p>
         </div>
-        <button onClick={this.handleDeleteBtn} className="x-btn">x</button>
+        { this.props.userId === cur.sender.userId ?
+          <button onClick={this.handleDeleteBtn} className="x-btn">x</button>
+          :
+          null
+      }
       </div>
     );
   }
@@ -26,5 +30,6 @@ export class MessageItem extends React.Component {
 
 MessageItem.propTypes = {
   onDeleteMessage: PropTypes.func.isRequired,
-  cur: PropTypes.objectOf(PropTypes.any).isRequired
+  cur: PropTypes.objectOf(PropTypes.any).isRequired,
+  userId: PropTypes.string.isRequired
 };
