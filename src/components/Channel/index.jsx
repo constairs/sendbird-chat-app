@@ -15,15 +15,6 @@ export class Channel extends React.Component {
       modalIsOpen: false,
     };
   }
-  handleMessageSend = (messageText) => {
-    const messageData = [
-      this.props.channel.url,
-      'MESG',
-      this.props.user.userId,
-      messageText,
-    ];
-    this.props.onMessageSend(messageData);
-  }
 
   handleLeaveBtn = () => {
     this.props.onLeave(this.props.channel.url);
@@ -40,7 +31,6 @@ export class Channel extends React.Component {
   }
 
   handleUpdateChannel = (formData) => {
-    // debugger;
     this.props.channel.update(formData[1]);
   }
 
@@ -64,16 +54,7 @@ export class Channel extends React.Component {
           </div>
           <button onClick={this.handleLeaveBtn}>Покинуть канал</button>
         </div>
-        {
-          this.props.messages ?
-            <ChatBox
-              messages={this.props.messages}
-              onMessageSend={this.handleMessageSend}
-              sendingMessage={this.props.sendingMessage}
-            />
-          :
-          null
-        }
+        <ChatBox />
         <Modal
           className="modal"
           isOpen={this.state.modalIsOpen}
@@ -91,17 +72,12 @@ export class Channel extends React.Component {
 }
 
 Channel.defaultProps = {
-  messages: [],
   participants: [],
 };
 
 Channel.propTypes = {
   channel: PropTypes.objectOf(PropTypes.any).isRequired,
-  user: PropTypes.objectOf(PropTypes.any).isRequired,
-  onMessageSend: PropTypes.func.isRequired,
   onLeave: PropTypes.func.isRequired,
-  messages: PropTypes.arrayOf(PropTypes.any),
   participants: PropTypes.arrayOf(PropTypes.any),
-  sendingMessage: PropTypes.bool.isRequired,
 };
 

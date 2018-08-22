@@ -1,7 +1,8 @@
 import SendBird from 'sendbird';
 import { APP_ID, TOKEN } from '../constants';
 import { store } from '../application';
-import { messageReceived, messageDeleted, messageUpdated, channelUpdated, userEntered } from '../redux/chat/actions';
+import { messageReceived, messageDeleted, messageUpdated } from '../redux/chat/actions';
+import { channelUpdated, userEntered, userExited } from '../redux/openChannels/actions';
 
 export const sb = new SendBird({ appId: APP_ID });
 
@@ -12,6 +13,7 @@ ChannelHandler.onMessageReceived = function (channel, message) {
 };
 
 ChannelHandler.onMessageUpdated = function (channel, message) {
+  console.log(message);
   store.store.dispatch(messageUpdated(channel, message));
 };
 
@@ -25,6 +27,10 @@ ChannelHandler.onChannelChanged = function (channel) {
 
 ChannelHandler.onUserEntered = function (channel, user) {
   store.store.dispatch(userEntered({ channel, user }));
+};
+
+ChannelHandler.onUserExited = function (channel, user) {
+  store.store.dispatch(userExited({ channel, user }));
 };
 
 sb.addChannelHandler('HANDLER', ChannelHandler);
@@ -152,16 +158,10 @@ export function enterChannel(channelUrl) {
         reject(error);
       }
       channel.enter((response, err) => {
-        if (error) {
+        if (err) {
           reject(err);
         }
-        const participantListQuery = channel.createParticipantListQuery();
-        participantListQuery.next((participantList, e) => {
-          if (e) {
-            reject(e);
-          }
-          resolve({ channel, participantList });
-        });
+        resolve(channel);
       });
     });
   });
@@ -227,7 +227,6 @@ export function sendMessage(channelUrl, mType, user, message) {
         if (err) {
           reject(err);
         }
-        // resolve(response);
         const messageListQuery = channel.createPreviousMessageListQuery();
         messageListQuery.load(10, true, (messageList, e) => {
           if (e) {
@@ -257,6 +256,23 @@ export function deleteMessage(channelUrl, message) {
           }
           resolve(messageList.reverse());
         });
+      });
+    });
+  });
+}
+
+
+export function editMessage(channelUrl, messageId, message, data, customType) {
+  return new Promise((resolve, reject) => {
+    sb.OpenChannel.getChannel(channelUrl, (channel, error) => {
+      if (error) {
+        reject(error);
+      }
+      channel.updateUserMessage(messageId, message, data, customType, (userMessage, err) => {
+        if (err) {
+          reject(err);
+        }
+        resolve(userMessage);
       });
     });
   });

@@ -14,8 +14,14 @@ import {
   LEAVE_CHANNEL,
   LEAVE_CHANNEL_SUCCESSED,
   LEAVE_CHANNEL_FAILED,
+  GET_PARTICIPANTS,
+  GET_PARTICIPANTS_SUCCESSED,
+  GET_PARTICIPANTS_FAILED,
+  GHANNEL_UPDATED,
+  NEW_USER_ENTERED,
+  USER_EXITED,
+  UPDATE_PARTICIPANTS_STATUS
 } from './types';
-
 
 export const createOpenChannel = formData =>
   ({ type: CREATE_OPEN_CHANNEL, payload: formData });
@@ -45,9 +51,28 @@ export const enterChannelSuccessed = channel =>
 export const enterChannelFailed = error =>
   ({ type: ENTER_CHANNEL_FAILED, payload: error });
 
+export const getParticipants = data =>
+  ({ type: GET_PARTICIPANTS, payload: data });
+export const getParticipantsSuccessed = data =>
+  ({ type: GET_PARTICIPANTS_SUCCESSED, payload: data });
+export const getParticipantsFailed = error =>
+  ({ type: GET_PARTICIPANTS_FAILED, payload: error });
+
 export const leaveChannel = channelUrl =>
   ({ type: LEAVE_CHANNEL, payload: channelUrl });
 export const leaveChannelSuccessed = response =>
   ({ type: LEAVE_CHANNEL_SUCCESSED, payload: response });
 export const leaveChannelFailed = error =>
   ({ type: LEAVE_CHANNEL_FAILED, payload: error });
+
+export const channelUpdated = channel =>
+  ({ type: GHANNEL_UPDATED, payload: channel });
+
+export const userEntered = data =>
+  ({ type: NEW_USER_ENTERED, payload: data });
+
+export const userExited = data =>
+  ({ type: USER_EXITED, payload: data });
+
+export const updateParticipantsStatus = () =>
+  ({ type: UPDATE_PARTICIPANTS_STATUS });

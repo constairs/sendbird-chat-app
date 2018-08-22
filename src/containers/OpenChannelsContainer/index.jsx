@@ -4,7 +4,7 @@ import { connect } from 'react-redux';
 import { Spinner } from 'react-preloading-component';
 import PropTypes from 'prop-types';
 import Modal from 'react-modal';
-import * as chatActions from '../../redux/chat/actions';
+import * as openChannelsActions from '../../redux/openChannels/actions';
 import { CreateChannelForm } from '../../components/CreateChannelForm';
 import { ChannelList } from '../../components/ChannelList';
 import { Channel } from '../../components/Channel';
@@ -19,25 +19,17 @@ class OpenChannel extends React.Component {
   }
 
   handleOpenChannel = (formData) => {
-    this.props.chatActions.createOpenChannel(formData);
+    this.props.openChannelsActions.createOpenChannel(formData);
     this.setState({ modalIsOpen: false });
-    this.props.chatActions.openChannelsList();
+    this.props.openChannelsActions.openChannelsList();
   }
 
   handleEnterChannel = (channelUrl) => {
-    this.props.chatActions.enterChannel(channelUrl);
+    this.props.openChannelsActions.enterChannel(channelUrl);
   }
 
   handleLeaveChannel = (channelUrl) => {
-    this.props.chatActions.leaveChannel(channelUrl);
-  }
-
-  handleMessageSend = (messageData) => {
-    this.props.chatActions.sendMessage(messageData);
-  }
-
-  heandleGetMessages = (channelUrl) => {
-    this.props.chatActions.getMessages(channelUrl);
+    this.props.openChannelsActions.leaveChannel(channelUrl);
   }
 
   handleOpenModal = () => {
@@ -49,16 +41,11 @@ class OpenChannel extends React.Component {
   }
 
   render() {
-    const {
-      channelsList,
-      channel,
-      messages,
-      sendingMessage
-    } = this.props.chat;
+    const { channelsList, channel } = this.props.openChannels;
     return (
       <div className="page channel-page">
         {
-          this.props.chat.fetching || this.props.user.fetching ?
+          this.props.openChannels.fetching || this.props.user.fetching ?
             <div className="preloader">
               <Spinner
                 color="#ffffff"
@@ -77,15 +64,11 @@ class OpenChannel extends React.Component {
           }
           { channel ?
             <Channel
-              onMessageSend={this.handleMessageSend}
-              onGetMessages={this.heandleGetMessages}
               onEnter={this.handleEnterChannel}
               onLeave={this.handleLeaveChannel}
               user={this.props.user}
               channel={channel}
-              participants={this.props.chat.participants}
-              messages={messages}
-              sendingMessage={sendingMessage}
+              participants={this.props.openChannels.participants}
             />
           :
             null
@@ -108,21 +91,21 @@ class OpenChannel extends React.Component {
 }
 
 OpenChannel.propTypes = {
-  chatActions: PropTypes.objectOf(PropTypes.func).isRequired,
-  chat: PropTypes.objectOf(PropTypes.any).isRequired,
-  user: PropTypes.objectOf(PropTypes.any).isRequired
+  openChannelsActions: PropTypes.objectOf(PropTypes.func).isRequired,
+  user: PropTypes.objectOf(PropTypes.any).isRequired,
+  openChannels: PropTypes.objectOf(PropTypes.any).isRequired,
 };
 
 function mapStateToProps(state) {
   return {
     user: state.persistedUserReducer,
-    chat: state.chatReducer
+    openChannels: state.openChannelsReducer
   };
 }
 
 function mapDispatchToProps(dispatch) {
   return {
-    chatActions: bindActionCreators(chatActions, dispatch),
+    openChannelsActions: bindActionCreators(openChannelsActions, dispatch)
   };
 }
 

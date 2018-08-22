@@ -1,0 +1,14 @@
+@import '../../assets/scss/variables';
+
+.edit-message-form {
+  display: flex;
+  input {
+    font-size: 14px;
+    height: 30px;
+    border-radius: 3px;
+    border: 1px solid $brand-color;
+  }
+  button {
+    font-size: 12px;
+  }
+}

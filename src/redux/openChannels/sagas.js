@@ -1,4 +1,4 @@
-import { call, put, takeLatest } from 'redux-saga/effects';
+import { call, put, takeLatest, takeEvery } from 'redux-saga/effects';
 import {
   createOpenChannel,
   updateChannel,
@@ -6,13 +6,16 @@ import {
   getChannel,
   enterChannel,
   exitChannel,
+  getParticipantsReq,
 } from '../../services/sendbird';
 import {
   CREATE_OPEN_CHANNEL,
   UPDATE_CHANNEL,
   GET_SELECTED_CHANNEL,
   ENTER_CHANNEL,
+  ENTER_CHANNEL_SUCCESSED,
   LEAVE_CHANNEL,
+  NEW_USER_ENTERED,
 } from './types';
 import {
   createOpenChannelSuccessed,
@@ -23,13 +26,15 @@ import {
   openChannelsListFailed,
   getSelectedChannelSuccessed,
   getSelectedChannelFailed,
+  getParticipantsSuccessed,
+  getParticipantsFailed,
   enterChannelSuccessed,
   enterChannelFailed,
   leaveChannelSuccessed,
   leaveChannelFailed,
 } from './actions';
 
-import { USER_RECONNECT_SUCCESSED } from '../user/types';
+import { USER_LOGIN_SUCCESSED, USER_RECONNECT_SUCCESSED } from '../user/types';
 
 export function* createChannelAsync(action) {
   try {
@@ -67,7 +72,7 @@ export function* openChannels() {
 }
 
 export function* watchOpenChannels() {
-  yield takeLatest(USER_RECONNECT_SUCCESSED, openChannels);
+  yield takeLatest(USER_RECONNECT_SUCCESSED || USER_LOGIN_SUCCESSED, openChannels);
 }
 
 export function* selectChannel(action) {
@@ -85,8 +90,9 @@ export function* watchGetChannel() {
 
 export function* enterSelectedChannel(action) {
   try {
-    const channel = yield call(enterChannel, action.payload);
-    yield put(enterChannelSuccessed(channel));
+    const data = yield call(enterChannel, action.payload);
+    yield put(enterChannelSuccessed(data));
+    // yield put(getParticipants(data.participantList));
   } catch (error) {
     yield put(enterChannelFailed(error));
   }
@@ -94,6 +100,19 @@ export function* enterSelectedChannel(action) {
 
 export function* watchEnterChannel() {
   yield takeLatest(ENTER_CHANNEL, enterSelectedChannel);
+}
+
+export function* getParticipantsSaga(action) {
+  try {
+    const participants = yield call(getParticipantsReq, action.payload.channel.url);
+    yield put(getParticipantsSuccessed(participants));
+  } catch (error) {
+    yield put(getParticipantsFailed(error));
+  }
+}
+
+export function* watchGetParticipants() {
+  yield takeEvery(NEW_USER_ENTERED, getParticipantsSaga);
 }
 
 export function* leaveChannel(action) {

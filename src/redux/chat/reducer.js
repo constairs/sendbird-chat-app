@@ -4,54 +4,10 @@ import * as TYPES from './types';
 const initState = {
   fetching: false,
   sendingMessage: false,
+  error: '',
+  messages: [],
+
 };
-
-const createOpenChannel = (state, formData) => ({
-  ...state,
-  formData,
-  fetching: true,
-});
-const createOpenChannelSuccessed = (state, channelData) => ({
-  ...state,
-  channelData,
-  fetching: false,
-});
-const createOpenChannelFailed = (state, error) => ({
-  ...state,
-  error,
-  fetching: false,
-});
-
-const updateChannel = (state, formData) => ({
-  ...state,
-  formData,
-  fetching: true,
-});
-const updateChannelSuccessed = (state, updatedData) => ({
-  ...state,
-  updatedData,
-  fetching: false,
-});
-const updateChannelFailed = (state, error) => ({
-  ...state,
-  error,
-  fetching: false,
-});
-
-const openChannelsList = state => ({
-  ...state,
-  fetching: true,
-});
-const openChannelsListSuccessed = (state, channelsList) => ({
-  ...state,
-  channelsList,
-  fetching: false,
-});
-const openChannelsListFailed = (state, error) => ({
-  ...state,
-  error,
-  fetching: false,
-});
 
 const sendMessage = state => ({
   ...state,
@@ -80,38 +36,21 @@ const deleteMessageFailed = (state, error) => ({
   error
 });
 
-const enterChannel = state => ({
+const editMessage = state => ({
   ...state,
-  fetching: true,
 });
-const enterChannelSuccessed = (state, channel) => ({
+const editMessageSuccessed = (state, editRes) => ({
   ...state,
-  channel,
-  fetching: false,
+  messages: state.messages.map((cur, i) => {
+    if (cur.messageId === editRes.messageId) {
+      return editRes;
+    }
+    return cur;
+  }),
 });
-const enterChannelFailed = (state, error) => ({
+const editMessageFailed = (state, error) => ({
   ...state,
-  error,
-  fetching: false,
-});
-
-const getParticipants = (state, data) => ({
-  ...state,
-  participants: data
-});
-
-const leaveChannel = state => ({
-  ...state,
-  fetching: true,
-});
-const leaveChannelSuccessed = state => ({
-  ...state,
-  channel: '',
-  fetching: false,
-});
-const leaveChannelFailed = state => ({
-  ...state,
-  fetching: false,
+  error
 });
 
 const getMessages = state => ({
@@ -134,39 +73,22 @@ const messageReceived = (state, message) => ({
   messages: [...state.messages, message]
 });
 
+const messageUpdated = (state, message) => ({
+  ...state,
+  messages: state.messages.map((cur, i) => {
+    if (cur.messageId === message.messageId) {
+      return message;
+    }
+    return cur;
+  }),
+});
+
 const messageDeleted = (state, messageId) => ({
   ...state,
-  messageDeleted: state.messages.splice(state.messages.indexOf(messageId)),
-  messages: state.messages
-});
-
-const channelUpdated = (state, channel) => ({
-  ...state,
-  channel
-});
-
-const userEntered = (state, action) => ({
-  ...state,
-  userEntered: action.user,
-  channel: action.channel
+  messages: state.messages.filter(cur => cur.messageId !== messageId),
 });
 
 const handlers = {
-  [TYPES.CREATE_OPEN_CHANNEL]: createOpenChannel,
-  [TYPES.CREATE_OPEN_CHANNEL_SUCCESSED]: createOpenChannelSuccessed,
-  [TYPES.CREATE_OPEN_CHANNEL_FAILED]: createOpenChannelFailed,
-
-  [TYPES.UPDATE_CHANNEL]: updateChannel,
-  [TYPES.UPDATE_CHANNEL_SUCCESSED]: updateChannelSuccessed,
-  [TYPES.UPDATE_CHANNEL_FAILED]: updateChannelFailed,
-
-  [TYPES.OPEN_CHANNELS_LIST]: openChannelsList,
-  [TYPES.OPEN_CHANNELS_LIST_SUCCESSED]: openChannelsListSuccessed,
-  [TYPES.OPEN_CHANNELS_LIST_FAILED]: openChannelsListFailed,
-
-  [TYPES.ENTER_CHANNEL]: enterChannel,
-  [TYPES.ENTER_CHANNEL_SUCCESSED]: enterChannelSuccessed,
-  [TYPES.ENTER_CHANNEL_FAILED]: enterChannelFailed,
 
   [TYPES.SEND_MESSAGE]: sendMessage,
   [TYPES.SEND_MESSAGE_SUCCESSED]: sendMessageSuccessed,
@@ -176,21 +98,18 @@ const handlers = {
   [TYPES.DELETE_MESSAGE_SUCCESSED]: deleteMessageSuccessed,
   [TYPES.DELETE_MESSAGE_FAILED]: deleteMessageFailed,
 
+  [TYPES.EDIT_MESSAGE]: editMessage,
+  [TYPES.EDIT_MESSAGE_SUCCESSED]: editMessageSuccessed,
+  [TYPES.EDIT_MESSAGE_FAILED]: editMessageFailed,
+
   [TYPES.GET_MESSAGES]: getMessages,
   [TYPES.GET_MESSAGES_SUCCESSED]: getMessagesSuccessed,
   [TYPES.GET_MESSAGES_FAILED]: getMessagesFailed,
 
-  [TYPES.LEAVE_CHANNEL]: leaveChannel,
-  [TYPES.LEAVE_CHANNEL_SUCCESSED]: leaveChannelSuccessed,
-  [TYPES.LEAVE_CHANNEL_FAILED]: leaveChannelFailed,
-
-  [TYPES.GET_PARTICIPANTS]: getParticipants,
-
   [TYPES.MESSAGE_RECEIVED]: messageReceived,
+  [TYPES.MESSAGE_UPDATED]: messageUpdated,
   [TYPES.MESSAGE_DELETED]: messageDeleted,
-  [TYPES.GHANNEL_UPDATED]: channelUpdated,
 
-  [TYPES.NEW_USER_ENTERED]: userEntered,
 };
 
 export const chatReducer = createReducer(initState, handlers);

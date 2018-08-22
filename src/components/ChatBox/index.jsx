@@ -13,7 +13,7 @@ export class Chat extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      message: ''
+      message: '',
     };
   }
 
@@ -24,7 +24,7 @@ export class Chat extends React.Component {
   handleSubmit = (e) => {
     e.preventDefault();
     const messageData = [
-      this.props.chat.channel.url,
+      this.props.currentChannel.url,
       'MESG',
       this.props.user.userId,
       this.state.message,
@@ -34,7 +34,11 @@ export class Chat extends React.Component {
   }
 
   handleMessageDelete = (message) => {
-    this.props.chatActions.deleteMessage([this.props.chat.channel.url, message]);
+    this.props.chatActions.deleteMessage([this.props.currentChannel.url, message]);
+  }
+
+  handleMessageEdit = (newMessage) => {
+    this.props.chatActions.editMessage([this.props.currentChannel.url, ...newMessage]);
   }
 
   render() {
@@ -47,7 +51,8 @@ export class Chat extends React.Component {
                 <MessageItem
                   cur={elem}
                   onDeleteMessage={this.handleMessageDelete}
-                  key={elem.messageId}
+                  onEditMessage={this.handleMessageEdit}
+                  key={elem.createdAt}
                   userId={this.props.user.userId}
                 />
               )
@@ -55,11 +60,11 @@ export class Chat extends React.Component {
           }
         </div>
         <form className="chat-message-form" onSubmit={this.handleSubmit}>
-          {/* <textarea onChange={this.handleTextInput} value={this.state.message} /> */}
           <input type="text" onChange={this.handleTextInput} value={this.state.message} />
-          <button className="send-message-btn">
-            Отправить{
-              this.props.sendingMessage ? <Spinner
+          <button className="send-message-btn" disabled={!this.state.message}>
+            Отправить
+            {
+              this.props.chat.sendingMessage ? <Spinner
                 color="#ffffff"
                 secondaryColor="#40c9ff"
                 size={10}
@@ -77,7 +82,9 @@ export class Chat extends React.Component {
 function mapStateToProps(state) {
   return {
     user: state.persistedUserReducer,
-    chat: state.chatReducer
+    chat: state.chatReducer,
+    currentChannel: state.openChannelsReducer.channel,
+    messages: state.chatReducer.messages,
   };
 }
 
@@ -90,9 +97,16 @@ function mapDispatchToProps(dispatch) {
 export const ChatBox = connect(mapStateToProps, mapDispatchToProps)(Chat);
 
 Chat.propTypes = {
-  messages: PropTypes.arrayOf(PropTypes.any).isRequired,
-  sendingMessage: PropTypes.bool.isRequired,
+  messages: PropTypes.arrayOf(PropTypes.any),
+  sendingMessage: PropTypes.bool,
   chatActions: PropTypes.objectOf(PropTypes.any).isRequired,
   chat: PropTypes.objectOf(PropTypes.any).isRequired,
-  user: PropTypes.objectOf(PropTypes.any).isRequired
+  user: PropTypes.objectOf(PropTypes.any).isRequired,
+  currentChannel: PropTypes.objectOf(PropTypes.any).isRequired,
 };
+
+Chat.defaultProps = {
+  messages: [],
+  sendingMessage: false,
+};
+

@@ -1,17 +1,21 @@
 import { spawn } from 'redux-saga/effects';
 import * as chatSagas from './chat/sagas';
 import * as userSagas from './user/sagas';
+import * as openChannelSagas from './openChannels/sagas';
 
 export function* rootSaga() {
-  yield spawn(chatSagas.watchCreateChannel);
-  yield spawn(chatSagas.watchUpdateChannel);
-  yield spawn(chatSagas.watchOpenChannels);
-  yield spawn(chatSagas.watchEnterChannel);
-  yield spawn(chatSagas.watchLeaveChannel);
+  yield spawn(openChannelSagas.watchCreateChannel);
+  yield spawn(openChannelSagas.watchUpdateChannel);
+  yield spawn(openChannelSagas.watchOpenChannels);
+  yield spawn(openChannelSagas.watchEnterChannel);
+  yield spawn(openChannelSagas.watchLeaveChannel);
+  yield spawn(openChannelSagas.watchGetParticipants);
+
   yield spawn(chatSagas.watchSendMessage);
   yield spawn(chatSagas.watchDeleteMessage);
+  yield spawn(chatSagas.watchEditMessage);
   yield spawn(chatSagas.watchGetMessages);
-  yield spawn(chatSagas.watchCreateChatHandler);
+
   yield spawn(userSagas.watchLoginUser);
   yield spawn(userSagas.watchLogoutUser);
   yield spawn(userSagas.watchChangeUser);

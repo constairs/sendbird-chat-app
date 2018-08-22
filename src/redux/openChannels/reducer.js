@@ -3,7 +3,7 @@ import * as TYPES from './types';
 
 const initState = {
   fetching: false,
-  sendingMessage: false,
+  participants: []
 };
 
 const createOpenChannel = (state, formData) => ({
@@ -68,6 +68,23 @@ const enterChannelFailed = (state, error) => ({
   fetching: false,
 });
 
+const getParticipants = (state, data) => ({
+  ...state,
+  participants: data
+});
+
+const getParticipantsSuccessed = (state, participantList) => ({
+  ...state,
+  participants: participantList,
+  fetching: false,
+});
+
+const getParticipantsFailed = (state, error) => ({
+  ...state,
+  error,
+  fetching: false,
+});
+
 const leaveChannel = state => ({
   ...state,
   fetching: true,
@@ -80,6 +97,27 @@ const leaveChannelSuccessed = state => ({
 const leaveChannelFailed = state => ({
   ...state,
   fetching: false,
+});
+
+const channelUpdated = (state, channel) => ({
+  ...state,
+  channel
+});
+
+const userEntered = (state, action) => ({
+  ...state,
+  userEntered: action.user,
+  // channel: { ...state.channel, participantCount: action.participantCount },
+  channel: action.channel,
+  newUser: state.participants.push(action.user),
+  participants: [...state.participants]
+});
+
+const userExited = (state, action) => ({
+  ...state,
+  channel: action.channel,
+  exitedUser: state.participants.indexOf(action.user.userId),
+  participants: [...state.participants.filter(cur => cur.userId !== action.user.userId)]
 });
 
 const handlers = {
@@ -103,6 +141,15 @@ const handlers = {
   [TYPES.LEAVE_CHANNEL_SUCCESSED]: leaveChannelSuccessed,
   [TYPES.LEAVE_CHANNEL_FAILED]: leaveChannelFailed,
 
+  [TYPES.GET_PARTICIPANTS]: getParticipants,
+  [TYPES.GET_PARTICIPANTS_SUCCESSED]: getParticipantsSuccessed,
+  [TYPES.GET_PARTICIPANTS_FAILED]: getParticipantsFailed,
+
+  [TYPES.GHANNEL_UPDATED]: channelUpdated,
+
+  [TYPES.NEW_USER_ENTERED]: userEntered,
+
+  [TYPES.USER_EXITED]: userExited,
 };
 
-export const chatReducer = createReducer(initState, handlers);
+export const openChannelsReducer = createReducer(initState, handlers);
