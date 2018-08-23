@@ -5,9 +5,9 @@ import { Spinner } from 'react-preloading-component';
 import PropTypes from 'prop-types';
 import * as chatActions from '../../redux/chat/actions';
 import { MessageItem } from '../MessageItem';
+import { scrollToBottom } from '../../utils/scrollToBottom';
 
 import './index.scss';
-
 
 export class Chat extends React.Component {
   constructor(props) {
@@ -15,6 +15,11 @@ export class Chat extends React.Component {
     this.state = {
       message: '',
     };
+    this.ref = React.createRef();
+  }
+
+  componentDidUpdate() {
+    scrollToBottom(this.ref.current);
   }
 
   handleTextInput = (e) => {
@@ -44,7 +49,7 @@ export class Chat extends React.Component {
   render() {
     return (
       <div>
-        <div className="chat-box">
+        <div className="chat-box" ref={this.ref}>
           {
             this.props.chat.messFetching ?
               <div className="preloader">

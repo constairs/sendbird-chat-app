@@ -32,7 +32,7 @@ export function* watchLoginUser() {
 }
 
 export function* userReconnectAsync(action) {
-  if (action.payload.userId) {
+  if (action.payload && action.payload.userId) {
     try {
       yield put(userReconnect());
       yield call(connectToSB, action.payload.userId);

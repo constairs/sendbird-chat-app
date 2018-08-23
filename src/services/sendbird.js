@@ -136,6 +136,7 @@ export function openChannelList() {
       if (error) {
         reject(error);
       }
+
       resolve(channels.reverse());
     });
   });
@@ -209,6 +210,23 @@ export function getMessages(channelUrl) {
       }
       const messageListQuery = channel.createPreviousMessageListQuery();
       messageListQuery.load(10, true, (messageList, err) => {
+        if (err) {
+          reject(err);
+        }
+        resolve(messageList.reverse());
+      });
+    });
+  });
+}
+
+export function getRecentlyMessages(channelUrl, quantity) {
+  return new Promise((resolve, reject) => {
+    sb.OpenChannel.getChannel(channelUrl, (channel, error) => {
+      if (error) {
+        reject(error);
+      }
+      const messageListQuery = channel.createPreviousMessageListQuery();
+      messageListQuery.load(quantity, true, (messageList, err) => {
         if (err) {
           reject(err);
         }

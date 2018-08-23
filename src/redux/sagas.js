@@ -5,11 +5,11 @@ import * as openChannelSagas from './openChannels/sagas';
 
 export function* rootSaga() {
   yield spawn(openChannelSagas.watchCreateChannel);
-  yield spawn(openChannelSagas.watchUpdateChannel);
   yield spawn(openChannelSagas.watchOpenChannels);
   yield spawn(openChannelSagas.watchEnterChannel);
   yield spawn(openChannelSagas.watchLeaveChannel);
   yield spawn(openChannelSagas.watchGetParticipants);
+  yield spawn(openChannelSagas.watchGetRecentMessages);
 
   yield spawn(chatSagas.watchSendMessage);
   yield spawn(chatSagas.watchDeleteMessage);

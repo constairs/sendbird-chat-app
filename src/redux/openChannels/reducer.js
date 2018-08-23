@@ -3,7 +3,9 @@ import * as TYPES from './types';
 
 const initState = {
   fetching: false,
-  participants: []
+  participants: [],
+  channelsList: [],
+  messages: [],
 };
 
 const createOpenChannel = (state, formData) => ({
@@ -101,6 +103,28 @@ const userExited = (state, action) => ({
   participants: [...state.participants.filter(cur => cur.userId !== action.user.userId)]
 });
 
+const getRecentlyMessages = (state, reqParams) => ({
+  ...state,
+  reqParams,
+  fetching: true,
+});
+const getRecentlyMessagesSuccessed = (state, messages) => ({
+  ...state,
+  channelsList: state.channelsList.map((cur, i) => {
+    if (cur.url === messages.channel) {
+      return { ...cur, messages: messages.messages };
+    }
+    return cur;
+  }),
+  // messages,
+  fetching: false,
+});
+const getRecentlyMessagesFailed = (state, error) => ({
+  ...state,
+  error,
+  fetching: false,
+});
+
 const handlers = {
   [TYPES.CREATE_OPEN_CHANNEL]: createOpenChannel,
   [TYPES.CREATE_OPEN_CHANNEL_SUCCESSED]: createOpenChannelSuccessed,
@@ -127,6 +151,10 @@ const handlers = {
   [TYPES.NEW_USER_ENTERED]: userEntered,
 
   [TYPES.USER_EXITED]: userExited,
+
+  [TYPES.GET_RECENTLY_MESSAGES]: getRecentlyMessages,
+  [TYPES.GET_RECENTLY_MESSAGES_SUCCESSED]: getRecentlyMessagesSuccessed,
+  [TYPES.GET_RECENTLY_MESSAGES_FAILED]: getRecentlyMessagesFailed,
 };
 
 export const openChannelsReducer = createReducer(initState, handlers);

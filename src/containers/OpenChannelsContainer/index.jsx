@@ -56,7 +56,7 @@ class OpenChannel extends React.Component {
           : null
         }
         <div className="flex-container">
-          <div>
+          <div className="channel-sidebar">
             <button onClick={this.handleOpenModal}>Создать открытый канал</button>
             { channelsList ?
               <ChannelList

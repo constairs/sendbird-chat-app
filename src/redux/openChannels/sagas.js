@@ -1,4 +1,4 @@
-import { call, put, takeLatest } from 'redux-saga/effects';
+import { call, put, takeLatest, takeEvery } from 'redux-saga/effects';
 import {
   createOpenChannel,
   openChannelList,
@@ -6,12 +6,14 @@ import {
   enterChannel,
   exitChannel,
   getParticipantsReq,
+  getRecentlyMessages,
 } from '../../services/sendbird';
 import {
   CREATE_OPEN_CHANNEL,
   GET_SELECTED_CHANNEL,
   ENTER_CHANNEL,
   LEAVE_CHANNEL,
+  GET_RECENTLY_MESSAGES,
 } from './types';
 import {
   createOpenChannelSuccessed,
@@ -26,6 +28,8 @@ import {
   enterChannelFailed,
   leaveChannelSuccessed,
   leaveChannelFailed,
+  getRecentlyMessagesSuccessed,
+  getRecentlyMessagesFailed,
 } from './actions';
 
 import { USER_LOGIN_SUCCESSED, USER_RECONNECT_SUCCESSED } from '../user/types';
@@ -106,4 +110,19 @@ export function* leaveChannel(action) {
 
 export function* watchLeaveChannel() {
   yield takeLatest(LEAVE_CHANNEL, leaveChannel);
+}
+
+
+export function* getRecentMessages(action) {
+  try {
+    let messages = yield call(getRecentlyMessages, ...action.payload);
+    messages = { messages, channel: action.payload[0] };
+    yield put(getRecentlyMessagesSuccessed(messages));
+  } catch (error) {
+    yield put(getRecentlyMessagesFailed(error));
+  }
+}
+
+export function* watchGetRecentMessages() {
+  yield takeEvery(GET_RECENTLY_MESSAGES, getRecentMessages);
 }

@@ -17,7 +17,10 @@ import {
   GHANNEL_UPDATED,
   NEW_USER_ENTERED,
   USER_EXITED,
-  UPDATE_PARTICIPANTS_STATUS
+  UPDATE_PARTICIPANTS_STATUS,
+  GET_RECENTLY_MESSAGES,
+  GET_RECENTLY_MESSAGES_SUCCESSED,
+  GET_RECENTLY_MESSAGES_FAILED,
 } from './types';
 
 export const createOpenChannel = formData =>
@@ -66,3 +69,10 @@ export const userExited = data =>
 
 export const updateParticipantsStatus = () =>
   ({ type: UPDATE_PARTICIPANTS_STATUS });
+
+export const getRecentlyMessages = reqParams =>
+  ({ type: GET_RECENTLY_MESSAGES, payload: reqParams });
+export const getRecentlyMessagesSuccessed = messages =>
+  ({ type: GET_RECENTLY_MESSAGES_SUCCESSED, payload: messages });
+export const getRecentlyMessagesFailed = error =>
+  ({ type: GET_RECENTLY_MESSAGES_FAILED, payload: error });

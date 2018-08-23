@@ -86,7 +86,8 @@ const messageUpdated = (state, message) => ({
 
 const messageDeleted = (state, messageId) => ({
   ...state,
-  messages: state.messages.filter(cur => cur.messageId !== messageId),
+  messageDeleted: messageId,
+  messages: [...state.messages.filter(cur => `${cur.messageId}` !== messageId)],
 });
 
 const handlers = {
