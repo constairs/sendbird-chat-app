@@ -1,8 +1,9 @@
 import { createReducer } from '../../utils/reducerUtils';
+import { ENTER_CHANNEL_SUCCESSED } from '../openChannels/types';
 import * as TYPES from './types';
 
 const initState = {
-  fetching: false,
+  messFetching: false,
   sendingMessage: false,
   error: '',
   messages: [],
@@ -29,7 +30,7 @@ const deleteMessage = state => ({
 });
 const deleteMessageSuccessed = (state, delRes) => ({
   ...state,
-  messages: delRes
+  messages: state.messages.filter(cur => cur.messageId !== delRes.messageId),
 });
 const deleteMessageFailed = (state, error) => ({
   ...state,
@@ -55,17 +56,17 @@ const editMessageFailed = (state, error) => ({
 
 const getMessages = state => ({
   ...state,
-  fetching: true,
+  messFetching: true,
 });
 const getMessagesSuccessed = (state, messages) => ({
   ...state,
   messages,
-  fetching: false,
+  messFetching: false,
 });
 const getMessagesFailed = (state, error) => ({
   ...state,
   error,
-  fetching: false,
+  messFetching: false,
 });
 
 const messageReceived = (state, message) => ({
@@ -102,7 +103,7 @@ const handlers = {
   [TYPES.EDIT_MESSAGE_SUCCESSED]: editMessageSuccessed,
   [TYPES.EDIT_MESSAGE_FAILED]: editMessageFailed,
 
-  [TYPES.GET_MESSAGES]: getMessages,
+  [ENTER_CHANNEL_SUCCESSED]: getMessages,
   [TYPES.GET_MESSAGES_SUCCESSED]: getMessagesSuccessed,
   [TYPES.GET_MESSAGES_FAILED]: getMessagesFailed,
 

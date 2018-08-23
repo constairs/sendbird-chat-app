@@ -1,7 +1,6 @@
-import { call, put, takeLatest, takeEvery } from 'redux-saga/effects';
+import { call, put, takeLatest } from 'redux-saga/effects';
 import {
   createOpenChannel,
-  updateChannel,
   openChannelList,
   getChannel,
   enterChannel,
@@ -10,18 +9,13 @@ import {
 } from '../../services/sendbird';
 import {
   CREATE_OPEN_CHANNEL,
-  UPDATE_CHANNEL,
   GET_SELECTED_CHANNEL,
   ENTER_CHANNEL,
-  ENTER_CHANNEL_SUCCESSED,
   LEAVE_CHANNEL,
-  NEW_USER_ENTERED,
 } from './types';
 import {
   createOpenChannelSuccessed,
   createOpenChannelFailed,
-  updateChannelSuccessed,
-  updateChannelFailed,
   openChannelsListSuccessed,
   openChannelsListFailed,
   getSelectedChannelSuccessed,
@@ -47,19 +41,6 @@ export function* createChannelAsync(action) {
 
 export function* watchCreateChannel() {
   yield takeLatest(CREATE_OPEN_CHANNEL, createChannelAsync);
-}
-
-export function* updateChannelAsync(action) {
-  try {
-    const updatedChannel = yield call(updateChannel, ...action.payload);
-    yield put(updateChannelSuccessed(updatedChannel));
-  } catch (error) {
-    yield put(updateChannelFailed(error));
-  }
-}
-
-export function* watchUpdateChannel() {
-  yield takeLatest(UPDATE_CHANNEL, updateChannelAsync);
 }
 
 export function* openChannels() {
@@ -92,7 +73,6 @@ export function* enterSelectedChannel(action) {
   try {
     const data = yield call(enterChannel, action.payload);
     yield put(enterChannelSuccessed(data));
-    // yield put(getParticipants(data.participantList));
   } catch (error) {
     yield put(enterChannelFailed(error));
   }
@@ -112,7 +92,7 @@ export function* getParticipantsSaga(action) {
 }
 
 export function* watchGetParticipants() {
-  yield takeEvery(NEW_USER_ENTERED, getParticipantsSaga);
+  // yield takeEvery(NEW_USER_ENTERED, getParticipantsSaga);
 }
 
 export function* leaveChannel(action) {

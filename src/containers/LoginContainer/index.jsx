@@ -26,7 +26,7 @@ class LoginConnected extends React.Component {
     return (
       <div className="page login-page">
         {
-          this.props.user.fetching ?
+          this.props.user.userFetching ?
             <div className="preloader">
               <Spinner
                 color="#ffffff"

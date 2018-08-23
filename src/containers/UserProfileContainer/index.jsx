@@ -44,12 +44,12 @@ class UserProfile extends React.Component {
   }
 
   render() {
-    const { userName, userImg, fetching } = this.props.user;
+    const { userName, userImg, userFetching } = this.props.user;
 
     return (
       <div>
         {
-          fetching ?
+          userFetching ?
             <div className="preloader">
               <Spinner
                 color="#ffffff"

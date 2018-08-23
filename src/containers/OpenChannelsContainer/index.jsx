@@ -45,7 +45,7 @@ class OpenChannel extends React.Component {
     return (
       <div className="page channel-page">
         {
-          this.props.openChannels.fetching || this.props.user.fetching ?
+          this.props.openChannels.fetching || this.props.user.userFetching ?
             <div className="preloader">
               <Spinner
                 color="#ffffff"
@@ -55,13 +55,19 @@ class OpenChannel extends React.Component {
             </div>
           : null
         }
-        <button onClick={this.handleOpenModal}>Создать открытый канал</button>
         <div className="flex-container">
-          { channelsList ?
-            <ChannelList selectedChan={this.handleEnterChannel} channels={channelsList} />
+          <div>
+            <button onClick={this.handleOpenModal}>Создать открытый канал</button>
+            { channelsList ?
+              <ChannelList
+                selectedChan={this.handleEnterChannel}
+                channels={channelsList}
+                fetching={this.props.openChannels.fetching}
+              />
             :
-            null
-          }
+              null
+            }
+          </div>
           { channel ?
             <Channel
               onEnter={this.handleEnterChannel}

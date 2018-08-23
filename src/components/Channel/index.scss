@@ -3,9 +3,8 @@
 .channel-info {
   display: flex;
   align-items: center;
-  padding: 15px;
   .img-place {
-    margin-right: 10px;
+    margin-right: 15px;
     position: relative;
     .edit-btn {
       font-size: 10px;
@@ -27,6 +26,7 @@
     }
   }
   .channel-name {
+    margin-top: 0;
     margin-bottom: 5px;
     display: flex;
     align-items: flex-start;

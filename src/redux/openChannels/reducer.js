@@ -22,22 +22,6 @@ const createOpenChannelFailed = (state, error) => ({
   fetching: false,
 });
 
-const updateChannel = (state, formData) => ({
-  ...state,
-  formData,
-  fetching: true,
-});
-const updateChannelSuccessed = (state, updatedData) => ({
-  ...state,
-  updatedData,
-  fetching: false,
-});
-const updateChannelFailed = (state, error) => ({
-  ...state,
-  error,
-  fetching: false,
-});
-
 const openChannelsList = state => ({
   ...state,
   fetching: true,
@@ -107,10 +91,7 @@ const channelUpdated = (state, channel) => ({
 const userEntered = (state, action) => ({
   ...state,
   userEntered: action.user,
-  // channel: { ...state.channel, participantCount: action.participantCount },
   channel: action.channel,
-  newUser: state.participants.push(action.user),
-  participants: [...state.participants]
 });
 
 const userExited = (state, action) => ({
@@ -124,10 +105,6 @@ const handlers = {
   [TYPES.CREATE_OPEN_CHANNEL]: createOpenChannel,
   [TYPES.CREATE_OPEN_CHANNEL_SUCCESSED]: createOpenChannelSuccessed,
   [TYPES.CREATE_OPEN_CHANNEL_FAILED]: createOpenChannelFailed,
-
-  [TYPES.UPDATE_CHANNEL]: updateChannel,
-  [TYPES.UPDATE_CHANNEL_SUCCESSED]: updateChannelSuccessed,
-  [TYPES.UPDATE_CHANNEL_FAILED]: updateChannelFailed,
 
   [TYPES.OPEN_CHANNELS_LIST]: openChannelsList,
   [TYPES.OPEN_CHANNELS_LIST_SUCCESSED]: openChannelsListSuccessed,

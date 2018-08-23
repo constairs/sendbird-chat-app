@@ -2,10 +2,19 @@
 
 .chat-box {
   border-radius: 3px;
+  height: 388px;
+  overflow-y: scroll;
   color: #000000;
   background-color: #eeeeee;
+  position: relative;
   &__update-btn {
     background-color: $brand-color;
+  }
+  .preloader {
+    width: 100%;
+    height: 100%;
+    position: absolute;
+    z-index: 1;
   }
 }
 

@@ -2,16 +2,16 @@ import { createReducer } from '../../utils/reducerUtils';
 import * as TYPES from './types';
 
 const initState = {
-  fetching: false,
+  userFetching: false,
 };
 
 const userLoginRequest = state => ({
   ...state,
-  fetching: true,
+  userFetching: true,
 });
 const userLoginSuccessed = (state, user) => ({
   ...state,
-  fetching: false,
+  userFetching: false,
   userId: user.userId,
   userName: user.nickname,
   userImg: user.profileUrl,
@@ -19,52 +19,52 @@ const userLoginSuccessed = (state, user) => ({
 });
 const userLoginFailed = (state, error) => ({
   ...state,
-  fetching: false,
+  userFetching: false,
   error
 });
 
 const userReconnect = state => ({
   ...state,
-  fetching: true,
+  userFetching: true,
 });
 
 const userReconnectSuccessed = state => ({
   ...state,
-  fetching: false
+  userFetching: false
 });
 
 const userReconnectFailed = (state, err) => ({
   ...state,
-  fetching: false,
+  userFetching: false,
   err
 });
 
 const userLogoutRequest = () => ({
-  fetching: false,
+  userFetching: false,
 });
 const userLogoutSuccessed = () => ({
-  fetching: false,
+  userFetching: false,
   logged: false,
 });
 const userLogoutFailed = (state, error) => ({
   ...state,
-  fetching: false,
+  userFetching: false,
   error
 });
 
 const changeUserRequest = state => ({
   ...state,
-  fetching: true,
+  userFetching: true,
 });
 const changeUserSuccessed = (state, newData) => ({
   ...state,
-  fetching: false,
+  userFetching: false,
   userName: newData.nickname,
   userImg: newData.profileUrl
 });
 const changeUserFailed = (state, error) => ({
   ...state,
-  fetching: false,
+  userFetching: false,
   error
 });
 

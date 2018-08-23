@@ -46,6 +46,18 @@ export class Chat extends React.Component {
       <div>
         <div className="chat-box">
           {
+            this.props.chat.messFetching ?
+              <div className="preloader">
+                <Spinner
+                  color="#ffffff"
+                  secondaryColor="#40c9ff"
+                  size={50}
+                />
+              </div>
+              :
+              null
+          }
+          {
             this.props.messages.map(
               elem => (
                 <MessageItem
@@ -84,6 +96,7 @@ function mapStateToProps(state) {
     user: state.persistedUserReducer,
     chat: state.chatReducer,
     currentChannel: state.openChannelsReducer.channel,
+    chatParticipants: state.openChannelsReducer.participants,
     messages: state.chatReducer.messages,
   };
 }

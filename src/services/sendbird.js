@@ -2,18 +2,33 @@ import SendBird from 'sendbird';
 import { APP_ID, TOKEN } from '../constants';
 import { store } from '../application';
 import { messageReceived, messageDeleted, messageUpdated } from '../redux/chat/actions';
-import { channelUpdated, userEntered, userExited } from '../redux/openChannels/actions';
+import {
+  channelUpdated,
+  userEntered,
+  userExited,
+  getParticipantsSuccessed,
+  getParticipantsFailed
+} from '../redux/openChannels/actions';
 
 export const sb = new SendBird({ appId: APP_ID });
 
 const ChannelHandler = new sb.ChannelHandler();
+
+function getPatticipants(channel) {
+  const participantListQuery = channel.createParticipantListQuery();
+  participantListQuery.next((participantList, err) => {
+    if (err) {
+      store.store.dispatch(getParticipantsFailed(err));
+    }
+    store.store.dispatch(getParticipantsSuccessed(participantList));
+  });
+}
 
 ChannelHandler.onMessageReceived = function (channel, message) {
   store.store.dispatch(messageReceived(channel, message));
 };
 
 ChannelHandler.onMessageUpdated = function (channel, message) {
-  console.log(message);
   store.store.dispatch(messageUpdated(channel, message));
 };
 
@@ -27,10 +42,12 @@ ChannelHandler.onChannelChanged = function (channel) {
 
 ChannelHandler.onUserEntered = function (channel, user) {
   store.store.dispatch(userEntered({ channel, user }));
+  getPatticipants(channel);
 };
 
 ChannelHandler.onUserExited = function (channel, user) {
   store.store.dispatch(userExited({ channel, user }));
+  getPatticipants(channel);
 };
 
 sb.addChannelHandler('HANDLER', ChannelHandler);
@@ -108,22 +125,6 @@ export function createOpenChannel(
         resolve(response);
       }
     );
-  });
-}
-
-export function updateChannel(channelUrl, newName, newCover) {
-  return new Promise((resolve, reject) => {
-    sb.OpenChannel.getChannel(channelUrl, (channel, error) => {
-      if (error) {
-        reject(error);
-      }
-      channel.update(newName, newCover, (response, err) => {
-        if (err) {
-          reject(err);
-        }
-        resolve(response);
-      });
-    });
   });
 }
 
@@ -249,13 +250,7 @@ export function deleteMessage(channelUrl, message) {
         if (err) {
           reject(err);
         }
-        const messageListQuery = channel.createPreviousMessageListQuery();
-        messageListQuery.load(10, true, (messageList, e) => {
-          if (e) {
-            reject(e);
-          }
-          resolve(messageList.reverse());
-        });
+        resolve(message);
       });
     });
   });
