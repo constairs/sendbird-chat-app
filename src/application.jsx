@@ -5,7 +5,8 @@ import { Provider } from 'react-redux';
 import { BrowserRouter as Router } from 'react-router-dom';
 import { ConnectedRouter } from 'connected-react-router';
 import { PersistGate } from 'redux-persist/integration/react';
-import { AppBody } from './components/AppBody';
+import { Navigation } from './navigation';
+import { Header } from './components/Header';
 import { configureStore, history } from './redux/store';
 import { rootSaga } from './redux/sagas';
 
@@ -17,11 +18,14 @@ store.store.runSaga(rootSaga);
 
 export const Application = hot(module)(() => (
   <Provider store={store.store}>
-    <PersistGate loading={null} persistor={store.persistor} >
+    <PersistGate loading={null} persistor={store.persistor}>
       <React.Fragment>
-        <ConnectedRouter history={history} >
+        <ConnectedRouter history={history}>
           <Router>
-            <AppBody />
+            <div>
+              <Header />
+              <Navigation />
+            </div>
           </Router>
         </ConnectedRouter>
       </React.Fragment>

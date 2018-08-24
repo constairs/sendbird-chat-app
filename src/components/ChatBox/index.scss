@@ -107,3 +107,12 @@
     padding-top: 5px;
   }
 }
+
+.typing-indicator {
+  display: flex;
+  align-items: center;
+  margin-right: 8px;
+  .PreLoading-Text {
+    margin-left: 6px;
+  }
+}

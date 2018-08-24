@@ -15,9 +15,11 @@ export function* rootSaga() {
   yield spawn(chatSagas.watchDeleteMessage);
   yield spawn(chatSagas.watchEditMessage);
   yield spawn(chatSagas.watchGetMessages);
+  yield spawn(chatSagas.onMessageTypeWatch);
 
   yield spawn(userSagas.watchLoginUser);
   yield spawn(userSagas.watchLogoutUser);
   yield spawn(userSagas.watchChangeUser);
   yield spawn(userSagas.weatchReconnect);
+  yield spawn(userSagas.watchLogoutComplete);
 }

@@ -13,27 +13,56 @@ import {
   USER_CHANGE_FAILED,
 } from './types';
 
-export const loginUserRequest = userId => ({ type: USER_LOGIN_REQUEST, payload: userId });
+export const loginUserRequest = userId => ({
+  type: USER_LOGIN_REQUEST,
+  payload: userId,
+});
 
-export const loginUserSuccessed = user => ({ type: USER_LOGIN_SUCCESSED, payload: user });
+export const loginUserSuccessed = user => ({
+  type: USER_LOGIN_SUCCESSED,
+  payload: user,
+});
 
-export const loginUserFailed = err => ({ type: USER_LOGIN_FAILED, payload: err });
+export const loginUserFailed = err => ({
+  type: USER_LOGIN_FAILED,
+  payload: err,
+});
 
 export const userReconnect = () => ({ type: USER_RECONNECT });
 
-export const userReconnectSuccessed = user => ({ type: USER_RECONNECT_SUCCESSED, payload: user });
+export const userReconnectSuccessed = user => ({
+  type: USER_RECONNECT_SUCCESSED,
+  payload: user,
+});
 
-export const userReconnectFailed = err => ({ type: USER_RECONNECT_FAILED, payload: err });
+export const userReconnectFailed = err => ({
+  type: USER_RECONNECT_FAILED,
+  payload: err,
+});
 
 export const logoutUserRequest = () => ({ type: USER_LOGOUT_REQUEST });
 
-export const logoutUserSuccessed = res => ({ type: USER_LOGOUT_SUCCESSED, payload: res });
+export const logoutUserSuccessed = res => ({
+  type: USER_LOGOUT_SUCCESSED,
+  payload: res,
+});
 
-export const logoutUserFailed = error => ({ type: USER_LOGOUT_FAILED, payload: error });
+export const logoutUserFailed = error => ({
+  type: USER_LOGOUT_FAILED,
+  payload: error,
+});
 
-export const changeUserRequest = formData => ({ type: USER_CHANGE_REQUEST, newUserData: formData });
+export const changeUserRequest = formData => ({
+  type: USER_CHANGE_REQUEST,
+  newUserData: formData,
+});
 
-export const changeUserSuccessed = newData =>
-  ({ type: USER_CHANGE_SUCCESSED, payload: newData });
+export const changeUserSuccessed = newData => ({
+  type: USER_CHANGE_SUCCESSED,
+  payload: newData,
+});
 
-export const changeUserFailed = err => ({ type: USER_CHANGE_FAILED, payload: err });
+export const changeUserFailed = err => ({
+  type: USER_CHANGE_FAILED,
+  payload: err,
+});

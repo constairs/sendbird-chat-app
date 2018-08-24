@@ -31,4 +31,11 @@ body {
   .channels-list {
     margin-right: 40px;
   }
+  .channel-sidebar {
+    width: 40%;
+    transition: .2s;
+    &.min {
+      width: 35%;
+    }
+  }
 }

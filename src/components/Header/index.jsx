@@ -11,37 +11,48 @@ import './index.scss';
 class Head extends React.Component {
   constructor(props) {
     super(props);
-    this.state = {
-    };
+    this.state = {};
   }
   render() {
     return (
       <header>
         <nav>
           <ul>
-            <li><Link href="/" to="/">Home</Link></li>
-            <li><Link href="/profile" to="/profile">Profile</Link></li>
-            {this.props.user.logged ?
-              <li><Link href="/channels" to="/channels">Channels</Link></li>
-            :
-            null
-            }
+            <li>
+              <Link href="/" to="/">
+                Home
+              </Link>
+            </li>
+            <li>
+              <Link href="/profile" to="/profile">
+                Profile
+              </Link>
+            </li>
+            {this.props.user.logged ? (
+              <li>
+                <Link href="/channels" to="/channels">
+                  Channels
+                </Link>
+              </li>
+            ) : null}
           </ul>
         </nav>
-        {this.props.user.logged ?
+        {this.props.user.logged ? (
           <UserProfile />
-        :
+        ) : (
           <div>
-            <Link href="/login" to="/login">Войти</Link>
+            <Link href="/login" to="/login">
+              Войти
+            </Link>
           </div>
-        }
+        )}
       </header>
     );
   }
 }
 
 Head.propTypes = {
-  user: PropTypes.objectOf(PropTypes.any).isRequired
+  user: PropTypes.objectOf(PropTypes.any).isRequired,
 };
 
 function mapStateToProps(state) {

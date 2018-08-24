@@ -6,6 +6,7 @@ const initState = {
   participants: [],
   channelsList: [],
   messages: [],
+  typedMessage: '',
 };
 
 const createOpenChannel = (state, formData) => ({
@@ -56,7 +57,7 @@ const enterChannelFailed = (state, error) => ({
 
 const getParticipants = (state, data) => ({
   ...state,
-  participants: data
+  participants: data,
 });
 
 const getParticipantsSuccessed = (state, participantList) => ({
@@ -87,7 +88,7 @@ const leaveChannelFailed = state => ({
 
 const channelUpdated = (state, channel) => ({
   ...state,
-  channel
+  channel,
 });
 
 const userEntered = (state, action) => ({
@@ -100,7 +101,9 @@ const userExited = (state, action) => ({
   ...state,
   channel: action.channel,
   exitedUser: state.participants.indexOf(action.user.userId),
-  participants: [...state.participants.filter(cur => cur.userId !== action.user.userId)]
+  participants: [
+    ...state.participants.filter(cur => cur.userId !== action.user.userId),
+  ],
 });
 
 const getRecentlyMessages = (state, reqParams) => ({
@@ -116,7 +119,6 @@ const getRecentlyMessagesSuccessed = (state, messages) => ({
     }
     return cur;
   }),
-  // messages,
   fetching: false,
 });
 const getRecentlyMessagesFailed = (state, error) => ({

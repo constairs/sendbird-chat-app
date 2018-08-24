@@ -1,13 +1,18 @@
 import SendBird from 'sendbird';
 import { APP_ID, TOKEN } from '../constants';
 import { store } from '../application';
-import { messageReceived, messageDeleted, messageUpdated } from '../redux/chat/actions';
+import {
+  messageReceived,
+  messageDeleted,
+  messageUpdated,
+  userTyping,
+} from '../redux/chat/actions';
 import {
   channelUpdated,
   userEntered,
   userExited,
   getParticipantsSuccessed,
-  getParticipantsFailed
+  getParticipantsFailed,
 } from '../redux/openChannels/actions';
 
 export const sb = new SendBird({ appId: APP_ID });
@@ -23,65 +28,53 @@ function getPatticipants(channel) {
     store.store.dispatch(getParticipantsSuccessed(participantList));
   });
 }
-
-ChannelHandler.onMessageReceived = function (channel, message) {
+/* eslint-disable */
+ChannelHandler.onMessageReceived = function(channel, message) {
   store.store.dispatch(messageReceived(channel, message));
 };
 
-ChannelHandler.onMessageUpdated = function (channel, message) {
+ChannelHandler.onMessageUpdated = function(channel, message) {
   store.store.dispatch(messageUpdated(channel, message));
 };
 
-ChannelHandler.onMessageDeleted = function (channel, messageId) {
+ChannelHandler.onMessageDeleted = function(channel, messageId) {
   store.store.dispatch(messageDeleted(channel, messageId));
 };
 
-ChannelHandler.onChannelChanged = function (channel) {
+ChannelHandler.onChannelChanged = function(channel) {
   store.store.dispatch(channelUpdated(channel));
 };
 
-ChannelHandler.onUserEntered = function (channel, user) {
+ChannelHandler.onUserEntered = function(channel, user) {
   store.store.dispatch(userEntered({ channel, user }));
   getPatticipants(channel);
 };
 
-ChannelHandler.onUserExited = function (channel, user) {
+ChannelHandler.onUserExited = function(channel, user) {
   store.store.dispatch(userExited({ channel, user }));
   getPatticipants(channel);
 };
 
+ChannelHandler.onMetaDataUpdated = function(channel, metaData) {
+  store.store.dispatch(userTyping(metaData));
+};
+/* eslint-disable */
+
 sb.addChannelHandler('HANDLER', ChannelHandler);
-
-// export function addChatHandlers(channelUrl) {
-//   const ChannelHandler = new sb.ChannelHandler();
-//   ChannelHandler.onMessageReceived = function (channel, message) {
-//     // if (channel.url === channelUrl) {
-//     store.store.dispatch(messageUpdated(channel, message));
-//     // }
-//   };
-
-// ChannelHandler.onMessageUpdated = function (channel, message) {
-//   if (channel.url === channelUrl) {
-//     store.store.dispatch(messageUpdated(channel, message));
-//   }
-// };
-// ChannelHandler.onMessageDeleted = function (channel, messageId) {
-//   if (channel.url === channelUrl) {
-//     store.store.dispatch(messageDeleted(channel, messageId));
-//   }
-// };
-//   sb.addChannelHandler('MESSAGE_HANDLER', ChannelHandler);
-// }
 
 export function connectToSB(userId) {
   return new Promise((resolve, reject) => {
-    sb.connect(userId, TOKEN, (user, error) => {
-      if (error) {
-        reject(error);
-      } else {
-        resolve(user);
+    sb.connect(
+      userId,
+      TOKEN,
+      (user, error) => {
+        if (error) {
+          reject(error);
+        } else {
+          resolve(user);
+        }
       }
-    });
+    );
   });
 }
 
@@ -109,20 +102,22 @@ export function changeProfile(nickname, profileUrl) {
   });
 }
 
-export function createOpenChannel(
-  channelName,
-  coverUrl,
-  coverFile) {
+export function createOpenChannel(channelName, coverUrl, coverFile) {
   return new Promise((resolve, reject) => {
     sb.OpenChannel.createChannel(
       channelName,
       coverUrl,
       coverFile,
-      (response, error) => {
+      (channel, error) => {
         if (error) {
           reject(error);
         }
-        resolve(response);
+        channel.createMetaData({ userTyping: '' }, (response, err) => {
+          if (err) {
+            reject(err);
+          }
+          resolve(channel);
+        });
       }
     );
   });
@@ -274,18 +269,40 @@ export function deleteMessage(channelUrl, message) {
   });
 }
 
-
 export function editMessage(channelUrl, messageId, message, data, customType) {
   return new Promise((resolve, reject) => {
     sb.OpenChannel.getChannel(channelUrl, (channel, error) => {
       if (error) {
         reject(error);
       }
-      channel.updateUserMessage(messageId, message, data, customType, (userMessage, err) => {
+      channel.updateUserMessage(
+        messageId,
+        message,
+        data,
+        customType,
+        (userMessage, err) => {
+          if (err) {
+            reject(err);
+          }
+          resolve(userMessage);
+        }
+      );
+    });
+  });
+}
+
+export function onMessageTyping(channelUrl, userNickname) {
+  return new Promise((resolve, reject) => {
+    sb.OpenChannel.getChannel(channelUrl, (channel, error) => {
+      if (error) {
+        reject(error);
+      }
+
+      channel.updateMetaData({ userTyping: userNickname }, (response, err) => {
         if (err) {
           reject(err);
         }
-        resolve(userMessage);
+        resolve(response);
       });
     });
   });

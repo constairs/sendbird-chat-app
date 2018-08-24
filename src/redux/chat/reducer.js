@@ -7,7 +7,8 @@ const initState = {
   sendingMessage: false,
   error: '',
   messages: [],
-
+  userTyping: '',
+  typedMessage: '',
 };
 
 const sendMessage = state => ({
@@ -17,12 +18,12 @@ const sendMessage = state => ({
 const sendMessageSuccessed = (state, updMessages) => ({
   ...state,
   messages: updMessages,
-  sendingMessage: false
+  sendingMessage: false,
 });
 const sendMessageFailed = (state, error) => ({
   ...state,
   error,
-  sendingMessage: false
+  sendingMessage: false,
 });
 
 const deleteMessage = state => ({
@@ -34,7 +35,7 @@ const deleteMessageSuccessed = (state, delRes) => ({
 });
 const deleteMessageFailed = (state, error) => ({
   ...state,
-  error
+  error,
 });
 
 const editMessage = state => ({
@@ -51,7 +52,7 @@ const editMessageSuccessed = (state, editRes) => ({
 });
 const editMessageFailed = (state, error) => ({
   ...state,
-  error
+  error,
 });
 
 const getMessages = state => ({
@@ -71,7 +72,7 @@ const getMessagesFailed = (state, error) => ({
 
 const messageReceived = (state, message) => ({
   ...state,
-  messages: [...state.messages, message]
+  messages: [...state.messages, message],
 });
 
 const messageUpdated = (state, message) => ({
@@ -90,8 +91,31 @@ const messageDeleted = (state, messageId) => ({
   messages: [...state.messages.filter(cur => `${cur.messageId}` !== messageId)],
 });
 
-const handlers = {
+const onMessageTyping = (state, messageData) => ({
+  ...state,
+  typedMessage: messageData[2],
+});
 
+const messageTypingSet = state => ({
+  ...state,
+});
+
+const messageTypingError = (state, error) => ({
+  ...state,
+  error,
+});
+
+const messageTypingEnd = state => ({
+  ...state,
+  userTyping: '',
+});
+
+const userTyping = (state, user) => ({
+  ...state,
+  ...user,
+});
+
+const handlers = {
   [TYPES.SEND_MESSAGE]: sendMessage,
   [TYPES.SEND_MESSAGE_SUCCESSED]: sendMessageSuccessed,
   [TYPES.SEND_MESSAGE_FAILED]: sendMessageFailed,
@@ -112,6 +136,12 @@ const handlers = {
   [TYPES.MESSAGE_UPDATED]: messageUpdated,
   [TYPES.MESSAGE_DELETED]: messageDeleted,
 
+  [TYPES.ON_MESSAGE_TYPING]: onMessageTyping,
+  [TYPES.MESSAGE_TYPING_SET]: messageTypingSet,
+  [TYPES.MESSAGE_TYPING_ERROR]: messageTypingError,
+
+  [TYPES.USER_TYPING]: userTyping,
+  [TYPES.MESSAGE_TYPING_END]: messageTypingEnd,
 };
 
 export const chatReducer = createReducer(initState, handlers);

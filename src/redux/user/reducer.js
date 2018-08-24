@@ -3,6 +3,7 @@ import * as TYPES from './types';
 
 const initState = {
   userFetching: false,
+  logged: false,
 };
 
 const userLoginRequest = state => ({
@@ -20,7 +21,7 @@ const userLoginSuccessed = (state, user) => ({
 const userLoginFailed = (state, error) => ({
   ...state,
   userFetching: false,
-  error
+  error,
 });
 
 const userReconnect = state => ({
@@ -30,13 +31,13 @@ const userReconnect = state => ({
 
 const userReconnectSuccessed = state => ({
   ...state,
-  userFetching: false
+  userFetching: false,
 });
 
 const userReconnectFailed = (state, err) => ({
   ...state,
   userFetching: false,
-  err
+  err,
 });
 
 const userLogoutRequest = () => ({
@@ -49,7 +50,7 @@ const userLogoutSuccessed = () => ({
 const userLogoutFailed = (state, error) => ({
   ...state,
   userFetching: false,
-  error
+  error,
 });
 
 const changeUserRequest = state => ({
@@ -60,12 +61,12 @@ const changeUserSuccessed = (state, newData) => ({
   ...state,
   userFetching: false,
   userName: newData.nickname,
-  userImg: newData.profileUrl
+  userImg: newData.profileUrl,
 });
 const changeUserFailed = (state, error) => ({
   ...state,
   userFetching: false,
-  error
+  error,
 });
 
 const handlers = {
@@ -80,7 +81,7 @@ const handlers = {
   [TYPES.USER_CHANGE_FAILED]: changeUserFailed,
   [TYPES.USER_RECONNECT]: userReconnect,
   [TYPES.USER_RECONNECT_SUCCESSED]: userReconnectSuccessed,
-  [TYPES.USER_RECONNECT_FAILED]: userReconnectFailed
+  [TYPES.USER_RECONNECT_FAILED]: userReconnectFailed,
 };
 
 export const userReducer = createReducer(initState, handlers);

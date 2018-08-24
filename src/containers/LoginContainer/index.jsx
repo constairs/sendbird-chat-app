@@ -12,36 +12,30 @@ import './index.css';
 class LoginConnected extends React.Component {
   handleLogin = (data) => {
     this.props.userActions.loginUserRequest(data);
-  }
+  };
 
   handleLogout = () => {
     this.props.userActions.logoutUserRequest();
-  }
+  };
 
   handleChangeProfile = (formData) => {
     this.props.userActions.changeUserRequest(formData);
-  }
+  };
 
   render() {
     return (
       <div className="page login-page">
-        {
-          this.props.user.userFetching ?
-            <div className="preloader">
-              <Spinner
-                color="#ffffff"
-                secondaryColor="#40c9ff"
-                size={100}
-              />
-            </div>
-          : null
-        }
-        {
-          this.props.user.userId ?
-            <Redirect to="/" />
-             :
-            <LoginForm onLogin={this.handleLogin} />
-        }
+        {this.props.user.userFetching ? (
+          <div className="preloader">
+            <Spinner color="#ffffff" secondaryColor="#40c9ff" size={100} />
+          </div>
+        ) : null}
+        {this.props.user.logged ? (
+          // <Redirect to="/channels" />
+          <span>s</span>
+        ) : (
+          <LoginForm onLogin={this.handleLogin} />
+        )}
       </div>
     );
   }
@@ -54,13 +48,13 @@ LoginConnected.propTypes = {
 
 function mapStateToProps(state) {
   return {
-    user: state.persistedUserReducer
+    user: state.persistedUserReducer,
   };
 }
 
 function mapDispatchToProps(dispatch) {
   return {
-    userActions: bindActionCreators(userActions, dispatch)
+    userActions: bindActionCreators(userActions, dispatch),
   };
 }
 

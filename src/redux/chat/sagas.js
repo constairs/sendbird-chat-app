@@ -4,11 +4,13 @@ import {
   deleteMessage,
   editMessage,
   getMessages,
+  onMessageTyping,
 } from '../../services/sendbird';
 import {
   SEND_MESSAGE,
   DELETE_MESSAGE,
   EDIT_MESSAGE,
+  ON_MESSAGE_TYPING,
 } from './types';
 import { ENTER_CHANNEL_SUCCESSED } from '../openChannels/types';
 import {
@@ -20,8 +22,10 @@ import {
   editMessageFailed,
   getMessagesSuccessed,
   getMessagesFailed,
+  messageTypingSet,
+  messageTypingError,
+  messageTypingEnd,
 } from './actions';
-
 
 export function* sendMessageAsync(action) {
   try {
@@ -73,4 +77,18 @@ export function* getMessagesAsync(action) {
 
 export function* watchGetMessages() {
   yield takeEvery(ENTER_CHANNEL_SUCCESSED, getMessagesAsync);
+}
+
+export function* onMessageTypingSaga(action) {
+  try {
+    const response = yield call(onMessageTyping, ...action.payload);
+    yield put(messageTypingSet(response));
+    yield put(messageTypingEnd());
+  } catch (error) {
+    yield put(messageTypingError(error));
+  }
+}
+
+export function* onMessageTypeWatch() {
+  yield takeLatest(ON_MESSAGE_TYPING, onMessageTypingSaga);
 }

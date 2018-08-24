@@ -6,20 +6,17 @@ import thunk from 'redux-thunk';
 import createSagaMiddleware from 'redux-saga';
 import { rootReducer } from './reducers';
 
-
 export const history = createBrowserHistory();
 
 export function configureStore() {
   const sagaMiddleware = createSagaMiddleware();
   const store = createStore(
     connectRouter(history)(rootReducer),
-    // eslint-disable-next-line
-    window.__REDUX_DEVTOOLS_EXTENSION__ && window.__REDUX_DEVTOOLS_EXTENSION__(),
-    applyMiddleware(
-      routerMiddleware(history),
-      sagaMiddleware,
-      thunk
-    )
+    /* eslint-disable */
+    window.__REDUX_DEVTOOLS_EXTENSION__ &&
+      window.__REDUX_DEVTOOLS_EXTENSION__(),
+    /* eslint-disable */
+    applyMiddleware(routerMiddleware(history), sagaMiddleware, thunk)
   );
 
   const persistor = persistStore(store);

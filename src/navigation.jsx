@@ -10,18 +10,17 @@ import { checkLogin } from './utils/checkLogin';
 const PrivateRoute = ({ component: Component, ...rest }) => (
   <Route
     {...rest}
-    render={props => (
-      checkLogin() ? (
+    render={props =>
+      (checkLogin() ? (
         <Component {...props} />
       ) : (
         <Redirect
           to={{
             pathname: '/login',
-            state: { from: props.location }
+            state: { from: props.location },
           }}
         />
-      )
-    )
+      ))
     }
   />
 );
@@ -32,19 +31,14 @@ PrivateRoute.propTypes = {
 };
 
 PrivateRoute.defaultProps = {
-  location: {}
+  location: {},
 };
 
 export const Navigation = () => (
   <Switch>
     <Route exact path="/" component={Banner} />
-    <Route
-      exact
-      path="/login/"
-      component={LoginContainer}
-    />
+    <Route exact path="/login/" component={LoginContainer} />
     <PrivateRoute component={OpenChannelsContainer} path="/channels/" />
     <PrivateRoute component={UserProfileContainer} path="/profile/" />
   </Switch>
 );
-

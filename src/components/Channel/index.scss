@@ -50,10 +50,6 @@
   }
 }
 
-.channel-sidebar {
-  width: 35%;
-}
-
 .users-list {
   list-style-type: none;
   padding-left: 0;
@@ -62,7 +58,7 @@
   li {
     display: inline-block;
     transition: all .2s;
-    &:hover ~li {
+    &:hover +li {
       margin-right: 18px;
     }
   }

@@ -1,10 +1,16 @@
 import { call, put, takeLatest } from 'redux-saga/effects';
 import { REHYDRATE } from 'redux-persist';
-import { connectToSB, disconnectFromSB, changeProfile } from '../../services/sendbird';
+import { push } from 'connected-react-router';
+import {
+  connectToSB,
+  disconnectFromSB,
+  changeProfile,
+} from '../../services/sendbird';
 import {
   USER_LOGIN_REQUEST,
   USER_LOGOUT_REQUEST,
   USER_CHANGE_REQUEST,
+  USER_LOGOUT_SUCCESSED,
 } from './types';
 import {
   loginUserSuccessed,
@@ -22,6 +28,7 @@ export function* loginUserAsync(action) {
   try {
     const user = yield call(connectToSB, action.payload.userId);
     yield put(loginUserSuccessed(user));
+    yield put(push('/'));
   } catch (err) {
     yield put(loginUserError(err));
   }
@@ -58,6 +65,14 @@ export function* logoutUserAsync(action) {
 
 export function* watchLogoutUser() {
   yield takeLatest(USER_LOGOUT_REQUEST, logoutUserAsync);
+}
+
+export function* logoutUserComplete() {
+  yield put(push('/'));
+}
+
+export function* watchLogoutComplete() {
+  yield takeLatest(USER_LOGOUT_SUCCESSED, logoutUserComplete);
 }
 
 export function* changeUserAsync(action) {

@@ -11,6 +11,7 @@ import {
 import {
   CREATE_OPEN_CHANNEL,
   GET_SELECTED_CHANNEL,
+  CREATE_OPEN_CHANNEL_SUCCESSED,
   ENTER_CHANNEL,
   LEAVE_CHANNEL,
   GET_RECENTLY_MESSAGES,
@@ -57,7 +58,14 @@ export function* openChannels() {
 }
 
 export function* watchOpenChannels() {
-  yield takeLatest(USER_RECONNECT_SUCCESSED || USER_LOGIN_SUCCESSED, openChannels);
+  yield takeLatest(
+    [
+      USER_RECONNECT_SUCCESSED,
+      USER_LOGIN_SUCCESSED,
+      CREATE_OPEN_CHANNEL_SUCCESSED,
+    ],
+    openChannels
+  );
 }
 
 export function* selectChannel(action) {
@@ -88,7 +96,10 @@ export function* watchEnterChannel() {
 
 export function* getParticipantsSaga(action) {
   try {
-    const participants = yield call(getParticipantsReq, action.payload.channel.url);
+    const participants = yield call(
+      getParticipantsReq,
+      action.payload.channel.url
+    );
     yield put(getParticipantsSuccessed(participants));
   } catch (error) {
     yield put(getParticipantsFailed(error));
@@ -111,7 +122,6 @@ export function* leaveChannel(action) {
 export function* watchLeaveChannel() {
   yield takeLatest(LEAVE_CHANNEL, leaveChannel);
 }
-
 
 export function* getRecentMessages(action) {
   try {

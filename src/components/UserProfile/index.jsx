@@ -6,7 +6,6 @@ import Modal from 'react-modal';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faSignOutAlt } from '@fortawesome/free-solid-svg-icons';
 import { UserForm } from '../../components/UserForm';
-import { history } from '../../redux/store';
 import * as userActions from '../../redux/user/actions';
 
 import './index.scss';
@@ -21,21 +20,20 @@ class Profile extends React.Component {
 
   handleOpenModal = () => {
     this.setState({ modalIsOpen: true });
-  }
+  };
 
   handleChangeProfile = (formData) => {
     this.props.userActions.changeUserRequest(formData);
     this.setState({ modalIsOpen: false });
-  }
+  };
 
   closeModal = () => {
     this.setState({ modalIsOpen: false });
-  }
+  };
 
   handleLogout = () => {
     this.props.userActions.logoutUserRequest();
-    this.props.history.push('/');
-  }
+  };
 
   render() {
     const { userName, userImg } = this.props.user;
@@ -44,12 +42,18 @@ class Profile extends React.Component {
       <div className="user-profile">
         <div className="user-cover">
           <img src={userImg} alt="user-img" />
-          <button onClick={this.handleOpenModal} title="Change profile data">Change</button>
+          <button onClick={this.handleOpenModal} title="Change profile data">
+            Change
+          </button>
         </div>
-        <h2 className="user-nickname">
-          {userName}
-        </h2>
-        <button className="user-logout-btn" title="Logout" onClick={this.handleLogout}><FontAwesomeIcon icon={faSignOutAlt} size="xs" /></button>
+        <h2 className="user-nickname">{userName}</h2>
+        <button
+          className="user-logout-btn"
+          title="Logout"
+          onClick={this.handleLogout}
+        >
+          <FontAwesomeIcon icon={faSignOutAlt} size="xs" />
+        </button>
         <Modal
           className="modal"
           isOpen={this.state.modalIsOpen}
@@ -58,7 +62,9 @@ class Profile extends React.Component {
           contentLabel="Example Modal"
           ariaHideApp={false}
         >
-          <button className="x-btn" onClick={this.closeModal}>x</button>
+          <button className="x-btn" onClick={this.closeModal}>
+            x
+          </button>
           <UserForm onChangeProfile={this.handleChangeProfile} />
         </Modal>
       </div>
@@ -69,16 +75,15 @@ class Profile extends React.Component {
 Profile.propTypes = {
   user: PropTypes.objectOf(PropTypes.any).isRequired,
   userActions: PropTypes.objectOf(PropTypes.any).isRequired,
-  history: PropTypes.objectOf(PropTypes.any)
 };
 
 Profile.defaultProps = {
-  history
+  history,
 };
 
 function mapStateToProps(state) {
   return {
-    user: state.persistedUserReducer
+    user: state.persistedUserReducer,
   };
 }
 
