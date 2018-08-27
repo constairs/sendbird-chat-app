@@ -5,8 +5,8 @@ import {
   getChannel,
   enterChannel,
   exitChannel,
-  getParticipantsReq,
   getRecentlyMessages,
+  createGroupChannel,
 } from '../../services/sendbird';
 import {
   CREATE_OPEN_CHANNEL,
@@ -23,8 +23,6 @@ import {
   openChannelsListFailed,
   getSelectedChannelSuccessed,
   getSelectedChannelFailed,
-  getParticipantsSuccessed,
-  getParticipantsFailed,
   enterChannelSuccessed,
   enterChannelFailed,
   leaveChannelSuccessed,
@@ -32,6 +30,16 @@ import {
   getRecentlyMessagesSuccessed,
   getRecentlyMessagesFailed,
 } from './actions';
+
+import {
+  CREATE_GROUP_CHANNEL,
+  CREATE_GROUP_CHANNEL_SUCCESSED,
+} from '../groupChannels/types';
+
+import {
+  createGroupChannelSuccessed,
+  createGroupChannelFailed,
+} from '../groupChannels/actions';
 
 import { USER_LOGIN_SUCCESSED, USER_RECONNECT_SUCCESSED } from '../user/types';
 
@@ -46,6 +54,19 @@ export function* createChannelAsync(action) {
 
 export function* watchCreateChannel() {
   yield takeLatest(CREATE_OPEN_CHANNEL, createChannelAsync);
+}
+
+export function* createGroupAsync(action) {
+  try {
+    const createdChannel = yield call(createGroupChannel, ...action.payload);
+    yield put(createGroupChannelSuccessed(createdChannel));
+  } catch (error) {
+    yield put(createGroupChannelFailed(error));
+  }
+}
+
+export function* watchGroupChannel() {
+  yield takeLatest(CREATE_GROUP_CHANNEL, createGroupAsync);
 }
 
 export function* openChannels() {
@@ -63,6 +84,7 @@ export function* watchOpenChannels() {
       USER_RECONNECT_SUCCESSED,
       USER_LOGIN_SUCCESSED,
       CREATE_OPEN_CHANNEL_SUCCESSED,
+      CREATE_GROUP_CHANNEL_SUCCESSED,
     ],
     openChannels
   );
@@ -92,22 +114,6 @@ export function* enterSelectedChannel(action) {
 
 export function* watchEnterChannel() {
   yield takeLatest(ENTER_CHANNEL, enterSelectedChannel);
-}
-
-export function* getParticipantsSaga(action) {
-  try {
-    const participants = yield call(
-      getParticipantsReq,
-      action.payload.channel.url
-    );
-    yield put(getParticipantsSuccessed(participants));
-  } catch (error) {
-    yield put(getParticipantsFailed(error));
-  }
-}
-
-export function* watchGetParticipants() {
-  // yield takeEvery(NEW_USER_ENTERED, getParticipantsSaga);
 }
 
 export function* leaveChannel(action) {

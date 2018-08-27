@@ -34,24 +34,6 @@ export class Chat extends React.Component {
     ]);
   };
 
-  // handleMessageTyping = (messageText) => {
-  //   this.props.chatActions.onMessageTyping([
-  //     this.props.currentChannel.url,
-  //     this.props.user.userName,
-  //     messageText,
-  //   ]);
-  // };
-
-  // handleSendMessage = (messageText) => {
-  //   const messageData = [
-  //     this.props.currentChannel.url,
-  //     'MESG',
-  //     this.props.user.userId,
-  //     messageText,
-  //   ];
-  //   this.props.chatActions.sendMessage(messageData);
-  // };
-
   render() {
     return (
       <div>

@@ -83,7 +83,8 @@ export function* onMessageTypingSaga(action) {
   try {
     const response = yield call(onMessageTyping, ...action.payload);
     yield put(messageTypingSet(response));
-    yield put(messageTypingEnd());
+    const endRes = yield call(onMessageTyping, action.payload[0], '', '');
+    yield put(messageTypingEnd(endRes));
   } catch (error) {
     yield put(messageTypingError(error));
   }

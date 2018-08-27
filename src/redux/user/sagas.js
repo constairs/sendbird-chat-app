@@ -8,6 +8,7 @@ import {
 } from '../../services/sendbird';
 import {
   USER_LOGIN_REQUEST,
+  USER_LOGIN_SUCCESSED,
   USER_LOGOUT_REQUEST,
   USER_CHANGE_REQUEST,
   USER_LOGOUT_SUCCESSED,
@@ -28,7 +29,6 @@ export function* loginUserAsync(action) {
   try {
     const user = yield call(connectToSB, action.payload.userId);
     yield put(loginUserSuccessed(user));
-    yield put(push('/'));
   } catch (err) {
     yield put(loginUserError(err));
   }
@@ -36,6 +36,14 @@ export function* loginUserAsync(action) {
 
 export function* watchLoginUser() {
   yield takeLatest(USER_LOGIN_REQUEST, loginUserAsync);
+}
+
+export function* loginSuccessed() {
+  yield put(push('/channels'));
+}
+
+export function* watchLoginSuccessed() {
+  yield takeLatest(USER_LOGIN_SUCCESSED, loginSuccessed);
 }
 
 export function* userReconnectAsync(action) {

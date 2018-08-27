@@ -1,13 +1,14 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 
-export class CreateChannelForm extends React.Component {
+export class CreateGroupForm extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
       channelName: '',
       coverUrl: '',
       coverFile: '',
+      groupUsers: '',
     };
   }
 
@@ -25,6 +26,7 @@ export class CreateChannelForm extends React.Component {
   handleSubmit = (e) => {
     e.preventDefault();
     const formData = [
+      [this.state.groupUsers],
       this.state.channelName,
       this.state.coverUrl,
       this.state.coverFile,
@@ -33,6 +35,7 @@ export class CreateChannelForm extends React.Component {
       channelName: '',
       coverUrl: '',
       coverFile: '',
+      groupUsers: '',
     });
     this.props.onSubmitForm(formData);
   };
@@ -62,6 +65,17 @@ export class CreateChannelForm extends React.Component {
             />
           </label>
 
+          <label htmlFor="groupUsers">
+            <span>Group Users</span>
+            <input
+              id="groupUsers"
+              name="groupUsers"
+              value={this.state.groupUsers}
+              onChange={this.handleInput}
+              type="text"
+            />
+          </label>
+
           <button disabled={!this.state.channelName}>Создать</button>
         </form>
       </div>
@@ -69,6 +83,6 @@ export class CreateChannelForm extends React.Component {
   }
 }
 
-CreateChannelForm.propTypes = {
+CreateGroupForm.propTypes = {
   onSubmitForm: PropTypes.func.isRequired,
 };

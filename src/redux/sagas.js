@@ -8,8 +8,8 @@ export function* rootSaga() {
   yield spawn(openChannelSagas.watchOpenChannels);
   yield spawn(openChannelSagas.watchEnterChannel);
   yield spawn(openChannelSagas.watchLeaveChannel);
-  yield spawn(openChannelSagas.watchGetParticipants);
   yield spawn(openChannelSagas.watchGetRecentMessages);
+  yield spawn(openChannelSagas.watchGroupChannel);
 
   yield spawn(chatSagas.watchSendMessage);
   yield spawn(chatSagas.watchDeleteMessage);
@@ -22,4 +22,5 @@ export function* rootSaga() {
   yield spawn(userSagas.watchChangeUser);
   yield spawn(userSagas.weatchReconnect);
   yield spawn(userSagas.watchLogoutComplete);
+  yield spawn(userSagas.watchLoginSuccessed);
 }

@@ -31,8 +31,7 @@ class LoginConnected extends React.Component {
           </div>
         ) : null}
         {this.props.user.logged ? (
-          // <Redirect to="/channels" />
-          <span>s</span>
+          <Redirect to="/channels" />
         ) : (
           <LoginForm onLogin={this.handleLogin} />
         )}

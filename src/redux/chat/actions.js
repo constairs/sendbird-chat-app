@@ -84,9 +84,9 @@ export const onMessageTyping = messageData => ({
   payload: messageData,
 });
 
-export const messageTypingSet = response => ({
+export const messageTypingSet = userTyping => ({
   type: MESSAGE_TYPING_SET,
-  payload: response,
+  payload: userTyping,
 });
 
 export const messageTypingError = error => ({

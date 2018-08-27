@@ -14,20 +14,13 @@ class MessageField extends React.Component {
   }
 
   handleTextInput = (e) => {
-    this.setState({ message: e.target.value });
-    this.props.chatActions.onMessageTyping([
-      this.props.channelUrl,
-      this.props.user.userName,
-      this.state.message,
-    ]);
-  };
-
-  handleTypingEnd = () => {
-    this.props.chatActions.onMessageTyping([this.props.channelUrl, '', '']);
-  };
-
-  handleTyping = () => {
-    this.props.chatActions.onMessageTyping([this.props.channelUrl, '', '']);
+    this.setState({ message: e.target.value }, () => {
+      this.props.chatActions.onMessageTyping([
+        this.props.channelUrl,
+        this.props.user.userName,
+        this.state.message,
+      ]);
+    });
   };
 
   // handleFocusInput = () => {
@@ -58,8 +51,8 @@ class MessageField extends React.Component {
       <form className="chat-message-form" onSubmit={this.handleSubmit}>
         <input
           type="text"
-          onChange={this.handleTextInput}
-          // onInput={this.handleTyping}
+          // onChange={this.handleTextInput}
+          onInput={this.handleTextInput}
           value={this.state.message}
         />
         {this.props.userTyping &&

@@ -123,6 +123,48 @@ export function createOpenChannel(channelName, coverUrl, coverFile) {
   });
 }
 
+export function createGroupChannel(userIds, channelName, coverUrl, coverFile) {
+  return new Promise((resolve, reject) => {
+    // sb.OpenChannel.createChannel(
+    //   channelName,
+    //   coverUrl,
+    //   coverFile,
+    //   (channel, error) => {
+    //     if (error) {
+    //       reject(error);
+    //     }
+    //     channel.createMetaData({ userTyping: '' }, (response, err) => {
+    //       if (err) {
+    //         reject(err);
+    //       }
+    //       resolve(channel);
+    //     });
+    //   }
+    // );
+    sb.GroupChannel.createChannelWithUserIds(
+      userIds,
+      false,
+      channelName,
+      coverUrl,
+      coverFile,
+      function(createdChannel, error) {
+        if (error) {
+          reject(error);
+        }
+        createdChannel.createMetaData({ userTyping: '' }, (response, err) => {
+          if (err) {
+            reject(err);
+          }
+          resolve(createdChannel);
+        });
+      }
+    );
+  });
+}
+
+var userIds = ['unique_user_id1', 'unique_user_id2'];
+// distinct is false
+
 export function openChannelList() {
   return new Promise((resolve, reject) => {
     const openChannelListQuery = sb.OpenChannel.createOpenChannelListQuery();

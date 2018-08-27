@@ -25,7 +25,7 @@ export function configureStore() {
     module.hot.accept('./reducers', () => {
       // eslint-disable-next-line
       const nextRootReducer = require('./reducers');
-      store.replaceReducer(nextRootReducer);
+      store.replaceReducer(connectRouter(history)(nextRootReducer));
     });
   }
   store.runSaga = sagaMiddleware.run;

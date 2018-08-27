@@ -43,12 +43,9 @@ const editMessage = state => ({
 });
 const editMessageSuccessed = (state, editRes) => ({
   ...state,
-  messages: state.messages.map((cur, i) => {
-    if (cur.messageId === editRes.messageId) {
-      return editRes;
-    }
-    return cur;
-  }),
+  messages: state.messages.map(
+    cur => (cur.messageId === editRes.messageId ? editRes : cur)
+  ),
 });
 const editMessageFailed = (state, error) => ({
   ...state,
@@ -77,12 +74,9 @@ const messageReceived = (state, message) => ({
 
 const messageUpdated = (state, message) => ({
   ...state,
-  messages: state.messages.map((cur, i) => {
-    if (cur.messageId === message.messageId) {
-      return message;
-    }
-    return cur;
-  }),
+  messages: state.messages.map(
+    cur => (cur.messageId === message.messageId ? message : cur)
+  ),
 });
 
 const messageDeleted = (state, messageId) => ({
@@ -96,8 +90,9 @@ const onMessageTyping = (state, messageData) => ({
   typedMessage: messageData[2],
 });
 
-const messageTypingSet = state => ({
+const messageTypingSet = (state, userTyping) => ({
   ...state,
+  userTyping: userTyping.userTyping,
 });
 
 const messageTypingError = (state, error) => ({

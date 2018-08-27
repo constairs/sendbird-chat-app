@@ -1,17 +1,30 @@
 import React from 'react';
-import { Switch, Route, Redirect } from 'react-router-dom';
 import PropTypes from 'prop-types';
+import { Switch, Route, Redirect } from 'react-router-dom';
+import { connect } from 'react-redux';
+import { withRouter } from 'react-router';
 import { LoginContainer } from './containers/LoginContainer/';
 import { OpenChannelsContainer } from './containers/OpenChannelsContainer';
 import { Banner } from './components/Banner';
 import { UserProfileContainer } from './containers/UserProfileContainer';
-import { checkLogin } from './utils/checkLogin';
 
-const PrivateRoute = ({ component: Component, ...rest }) => (
+function mapStateToProps(state) {
+  return {
+    user: state.persistedUserReducer,
+  };
+}
+
+function mapStateToPropsRoute(state) {
+  return {
+    logged: state.persistedUserReducer.logged,
+  };
+}
+
+const Private = ({ component: Component, logged, ...rest }) => (
   <Route
     {...rest}
     render={props =>
-      (checkLogin() ? (
+      (logged ? (
         <Component {...props} />
       ) : (
         <Redirect
@@ -25,16 +38,15 @@ const PrivateRoute = ({ component: Component, ...rest }) => (
   />
 );
 
-PrivateRoute.propTypes = {
+Private.propTypes = {
   component: PropTypes.func.isRequired,
-  location: PropTypes.objectOf(PropTypes.any),
+  logged: PropTypes.bool.isRequired,
+  location: PropTypes.objectOf(PropTypes.any).isRequired,
 };
 
-PrivateRoute.defaultProps = {
-  location: {},
-};
+const PrivateRoute = connect(mapStateToPropsRoute)(Private);
 
-export const Navigation = () => (
+export const Navigator = () => (
   <Switch>
     <Route exact path="/" component={Banner} />
     <Route exact path="/login/" component={LoginContainer} />
@@ -42,3 +54,5 @@ export const Navigation = () => (
     <PrivateRoute component={UserProfileContainer} path="/profile/" />
   </Switch>
 );
+
+export const Navigation = withRouter(connect(mapStateToProps)(Navigator));
