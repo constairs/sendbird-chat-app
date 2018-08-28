@@ -54,7 +54,10 @@ export const editMessageFailed = error => ({
   payload: error,
 });
 
-export const getMessages = channelUrl => ({ type: GET_MESSAGES, channelUrl });
+export const getMessagesRequest = channelUrl => ({
+  type: GET_MESSAGES,
+  channelUrl,
+});
 export const getMessagesSuccessed = messages => ({
   type: GET_MESSAGES_SUCCESSED,
   payload: messages,

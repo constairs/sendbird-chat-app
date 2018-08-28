@@ -2,15 +2,13 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { ChatBox } from '../ChatBox';
 
-import './index.scss';
-
-export class Channel extends React.Component {
+export class GroupChannel extends React.Component {
   handleLeaveBtn = () => {
     this.props.onLeave(this.props.channel.url);
   };
 
   render() {
-    const { name, participantCount } = this.props.channel;
+    const { name, memberCount, members } = this.props.channel;
     return (
       <div className="channel-item">
         <div className="channel-header">
@@ -27,12 +25,12 @@ export class Channel extends React.Component {
             </div>
             <div>
               <h1 className="channel-name">{name}</h1>
-              <p className="channel-users">Online: {participantCount}</p>
+              <p className="channel-users">Участники: {memberCount}</p>
             </div>
           </div>
           <div className="channel-users-list">
             <ul className="users-list">
-              {this.props.participants.map((cur, i) => (
+              {members.map((cur, i) => (
                 <li
                   style={{ transform: `translateX(calc(${i}*(50%)))` }}
                   key={cur.userId}
@@ -61,12 +59,12 @@ export class Channel extends React.Component {
   }
 }
 
-Channel.defaultProps = {
-  participants: [],
+GroupChannel.defaultProps = {
+  // members: [],
 };
 
-Channel.propTypes = {
+GroupChannel.propTypes = {
   channel: PropTypes.objectOf(PropTypes.any).isRequired,
   onLeave: PropTypes.func.isRequired,
-  participants: PropTypes.arrayOf(PropTypes.any),
+  // members: PropTypes.arrayOf(PropTypes.any),
 };

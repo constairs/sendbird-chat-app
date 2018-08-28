@@ -1,5 +1,4 @@
 import { createReducer } from '../../utils/reducerUtils';
-import { ENTER_CHANNEL_SUCCESSED } from '../openChannels/types';
 import * as TYPES from './types';
 
 const initState = {
@@ -123,7 +122,7 @@ const handlers = {
   [TYPES.EDIT_MESSAGE_SUCCESSED]: editMessageSuccessed,
   [TYPES.EDIT_MESSAGE_FAILED]: editMessageFailed,
 
-  [ENTER_CHANNEL_SUCCESSED]: getMessages,
+  [TYPES.GET_MESSAGES]: getMessages,
   [TYPES.GET_MESSAGES_SUCCESSED]: getMessagesSuccessed,
   [TYPES.GET_MESSAGES_FAILED]: getMessagesFailed,
 

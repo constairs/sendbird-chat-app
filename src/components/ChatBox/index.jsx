@@ -23,6 +23,7 @@ export class Chat extends React.Component {
   handleMessageDelete = (message) => {
     this.props.chatActions.deleteMessage([
       this.props.currentChannel.url,
+      this.props.currentChannel.channelType,
       message,
     ]);
   };
@@ -30,6 +31,7 @@ export class Chat extends React.Component {
   handleMessageEdit = (newMessage) => {
     this.props.chatActions.editMessage([
       this.props.currentChannel.url,
+      this.props.currentChannel.channelType,
       ...newMessage,
     ]);
   };
@@ -53,7 +55,10 @@ export class Chat extends React.Component {
             />
           ))}
         </div>
-        <ChatMessageField />
+        <ChatMessageField
+          channelUrl={this.props.currentChannel.url}
+          channelType={this.props.currentChannel.channelType}
+        />
       </div>
     );
   }
@@ -62,8 +67,12 @@ export class Chat extends React.Component {
 function mapStateToProps(state) {
   return {
     user: state.persistedUserReducer,
-    currentChannel: state.openChannelsReducer.channel,
-    chatParticipants: state.openChannelsReducer.participants,
+    // currentChannel:
+    //   state.openChannelsReducer.channel ||
+    //   state.groupChannelsReducer.groupChannel,
+    chatParticipants:
+      state.openChannelsReducer.participants ||
+      state.groupChannelsReducer.participants,
     messages: state.chatReducer.messages,
     messFetching: state.chatReducer.messFetching,
   };

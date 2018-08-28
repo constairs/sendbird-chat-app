@@ -10,6 +10,7 @@ import { CreateChannelForm } from '../../components/CreateChannelForm';
 import { CreateGroupForm } from '../../components/CreateGroupForm';
 import { ChannelList } from '../../components/ChannelList';
 import { Channel } from '../../components/Channel';
+import { GroupChannel } from '../../components/GroupChannel';
 
 class OpenChannel extends React.Component {
   constructor(props) {
@@ -30,8 +31,20 @@ class OpenChannel extends React.Component {
     this.setState({ modalIsOpen: false });
   };
 
-  handleEnterChannel = (channelUrl) => {
-    this.props.openChannelsActions.enterChannel(channelUrl);
+  handleGetChannel = (selectedChan) => {
+    if (selectedChan.channelType === 'open') {
+      this.props.openChannelsActions.enterChannel(selectedChan.channelUrl);
+    } else {
+      this.props.groupChannelsActions.getGroupChannel(selectedChan);
+    }
+  };
+
+  handleInviteUsers = (formData) => {
+    this.props.groupChannelsActions.inviteUsers(formData);
+  };
+
+  hanldeLeaveGroup = (channelUrl) => {
+    this.props.groupChannelsActions.leaveGroup(channelUrl);
   };
 
   handleLeaveChannel = (channelUrl) => {
@@ -39,8 +52,7 @@ class OpenChannel extends React.Component {
   };
 
   handleOpenModal = (e) => {
-    const name = e.target.name;
-    if (name === 'createOpen') {
+    if (e.target.name === 'createOpen') {
       this.setState({ groupChModal: false, modalIsOpen: true });
     } else {
       this.setState({ groupChModal: true, modalIsOpen: true });
@@ -53,6 +65,8 @@ class OpenChannel extends React.Component {
 
   render() {
     const { channelsList, channel } = this.props.openChannels;
+    const { groupChannelsList, groupChannel } = this.props.groupChannels;
+    const { groupChModal } = this.state;
     return (
       <div className="page channel-page">
         {this.props.openChannels.fetching || this.props.user.userFetching ? (
@@ -66,15 +80,32 @@ class OpenChannel extends React.Component {
               Создать открытый канал
             </button>
             {channelsList ? (
-              <ChannelList
-                selectedChan={this.handleEnterChannel}
-                channels={channelsList}
-                fetching={this.props.openChannels.fetching}
-              />
+              <div>
+                <h3>Открытые каналы</h3>
+                <ChannelList
+                  selectedChan={this.handleGetChannel}
+                  channels={channelsList}
+                  fetching={this.props.openChannels.fetching}
+                  group={false}
+                />
+              </div>
             ) : null}
             <button name="createGroup" onClick={this.handleOpenModal}>
               Создать групповой канал
             </button>
+            {groupChannelsList.length > 0 ? (
+              <div>
+                <h3>Групповые каналы</h3>
+                <ChannelList
+                  selectedChan={this.handleGetChannel}
+                  channels={groupChannelsList}
+                  groupsFetching={this.props.groupChannels.groupsFetching}
+                  inviteUsers={this.handleInviteUsers}
+                  leaveGroup={this.hanldeLeaveGroup}
+                  group
+                />
+              </div>
+            ) : null}
           </div>
           {channel ? (
             <Channel
@@ -85,6 +116,15 @@ class OpenChannel extends React.Component {
               participants={this.props.openChannels.participants}
             />
           ) : null}
+          {groupChannel ? (
+            <GroupChannel
+              // onEnter={this.handleEnterChannel}
+              onLeave={this.handleLeaveChannel}
+              user={this.props.user}
+              channel={groupChannel}
+              // participants={this.props.groupChannel.members}
+            />
+          ) : null}
         </div>
         <Modal
           className="modal"
@@ -93,16 +133,15 @@ class OpenChannel extends React.Component {
           onRequestClose={this.closeModal}
           contentLabel="Example Modal"
           ariaHideApp={false}
-          groupChModal
         >
           <button className="x-btn" onClick={this.closeModal}>
             x
           </button>
 
-          {this.state.groupChModal ? (
-            <CreateChannelForm onSubmitForm={this.handleOpenChannel} />
-          ) : (
+          {groupChModal ? (
             <CreateGroupForm onSubmitForm={this.handleGroupChannel} />
+          ) : (
+            <CreateChannelForm onSubmitForm={this.handleOpenChannel} />
           )}
         </Modal>
       </div>
@@ -115,6 +154,7 @@ OpenChannel.propTypes = {
   groupChannelsActions: PropTypes.objectOf(PropTypes.func).isRequired,
   user: PropTypes.objectOf(PropTypes.any).isRequired,
   openChannels: PropTypes.objectOf(PropTypes.any).isRequired,
+  groupChannels: PropTypes.objectOf(PropTypes.any).isRequired,
 };
 
 function mapStateToProps(state) {

@@ -2,6 +2,7 @@ import { spawn } from 'redux-saga/effects';
 import * as chatSagas from './chat/sagas';
 import * as userSagas from './user/sagas';
 import * as openChannelSagas from './openChannels/sagas';
+import * as groupChannelSagas from './groupChannels/sagas';
 
 export function* rootSaga() {
   yield spawn(openChannelSagas.watchCreateChannel);
@@ -9,7 +10,12 @@ export function* rootSaga() {
   yield spawn(openChannelSagas.watchEnterChannel);
   yield spawn(openChannelSagas.watchLeaveChannel);
   yield spawn(openChannelSagas.watchGetRecentMessages);
-  yield spawn(openChannelSagas.watchGroupChannel);
+
+  yield spawn(groupChannelSagas.watchGroupChannel);
+  yield spawn(groupChannelSagas.watchGroupChannels);
+  yield spawn(groupChannelSagas.watchGetGroup);
+  yield spawn(groupChannelSagas.watchInviteUser);
+  yield spawn(groupChannelSagas.watchLeaveGroup);
 
   yield spawn(chatSagas.watchSendMessage);
   yield spawn(chatSagas.watchDeleteMessage);

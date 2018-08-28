@@ -9,7 +9,10 @@ export class ListItem extends React.Component {
   }
 
   handleItemClick = () => {
-    this.props.selectedChan(this.props.cur.url);
+    this.props.selectedChan({
+      channelUrl: this.props.cur.url,
+      channelType: this.props.cur.channelType,
+    });
   };
 
   render() {
@@ -29,16 +32,14 @@ export class ListItem extends React.Component {
             </span>
             <span className="channel-item-name">{this.props.cur.name}</span>
           </div>
-          {this.props.cur.messages ? (
+          {this.props.cur.messages && this.props.cur.messages.length > 0 ? (
             <ul className="recently-messages">
               Последнее сообщение:
               {this.props.cur.messages.map(cur => (
                 <li key={cur.messageId}>{cur.customType}</li>
               ))}
             </ul>
-          ) : (
-            <span>загрузка...</span>
-          )}
+          ) : null}
         </button>
       </li>
     );

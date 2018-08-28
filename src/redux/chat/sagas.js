@@ -13,6 +13,7 @@ import {
   ON_MESSAGE_TYPING,
 } from './types';
 import { ENTER_CHANNEL_SUCCESSED } from '../openChannels/types';
+import { GET_GROUP_CHANNEL_SUCCESSED } from '../groupChannels/types';
 import {
   sendMessageSuccessed,
   sendMessageFailed,
@@ -20,6 +21,7 @@ import {
   deleteMessageFailed,
   editMessageSuccessed,
   editMessageFailed,
+  getMessagesRequest,
   getMessagesSuccessed,
   getMessagesFailed,
   messageTypingSet,
@@ -67,8 +69,13 @@ export function* watchEditMessage() {
 }
 
 export function* getMessagesAsync(action) {
+  yield put(getMessagesRequest(action.payload));
   try {
-    const messages = yield call(getMessages, action.payload.url);
+    const messages = yield call(
+      getMessages,
+      action.payload.url,
+      action.payload.channelType
+    );
     yield put(getMessagesSuccessed(messages));
   } catch (error) {
     yield put(getMessagesFailed(error));
@@ -76,14 +83,24 @@ export function* getMessagesAsync(action) {
 }
 
 export function* watchGetMessages() {
-  yield takeEvery(ENTER_CHANNEL_SUCCESSED, getMessagesAsync);
+  yield takeEvery(
+    [ENTER_CHANNEL_SUCCESSED, GET_GROUP_CHANNEL_SUCCESSED],
+    // GET_GROUP_CHANNEL_SUCCESSED,
+    getMessagesAsync
+  );
 }
 
 export function* onMessageTypingSaga(action) {
   try {
     const response = yield call(onMessageTyping, ...action.payload);
     yield put(messageTypingSet(response));
-    const endRes = yield call(onMessageTyping, action.payload[0], '', '');
+    const endRes = yield call(
+      onMessageTyping,
+      action.payload[0],
+      action.payload[1],
+      '',
+      ''
+    );
     yield put(messageTypingEnd(endRes));
   } catch (error) {
     yield put(messageTypingError(error));

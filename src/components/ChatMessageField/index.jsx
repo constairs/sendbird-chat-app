@@ -17,27 +17,18 @@ class MessageField extends React.Component {
     this.setState({ message: e.target.value }, () => {
       this.props.chatActions.onMessageTyping([
         this.props.channelUrl,
+        this.props.channelType,
         this.props.user.userName,
         this.state.message,
       ]);
     });
   };
 
-  // handleFocusInput = () => {
-  //   this.props.chatActions.onMessageTyping([
-  //     this.props.currentChannel.url,
-  //     this.props.user.userName,
-  //   ]);
-  // };
-
-  // handleBlurInput = () => {
-  //   this.props.chatActions.onMessageTyping([this.props.currentChannel.url, '']);
-  // };
-
   handleSubmit = (e) => {
     e.preventDefault();
     const messageData = [
       this.props.channelUrl,
+      this.props.channelType,
       'MESG',
       this.props.user.userId,
       this.state.message,
@@ -51,7 +42,6 @@ class MessageField extends React.Component {
       <form className="chat-message-form" onSubmit={this.handleSubmit}>
         <input
           type="text"
-          // onChange={this.handleTextInput}
           onInput={this.handleTextInput}
           value={this.state.message}
         />
@@ -76,6 +66,7 @@ class MessageField extends React.Component {
 MessageField.propTypes = {
   user: PropTypes.objectOf(PropTypes.any).isRequired,
   channelUrl: PropTypes.string.isRequired,
+  channelType: PropTypes.string.isRequired,
   userTyping: PropTypes.string.isRequired,
   sendingMessage: PropTypes.bool.isRequired,
   chatActions: PropTypes.objectOf(PropTypes.func).isRequired,
@@ -84,7 +75,6 @@ MessageField.propTypes = {
 function mapStateToProps(state) {
   return {
     user: state.persistedUserReducer,
-    channelUrl: state.openChannelsReducer.channel.url,
     userTyping: state.chatReducer.userTyping,
     sendingMessage: state.chatReducer.sendingMessage,
   };
