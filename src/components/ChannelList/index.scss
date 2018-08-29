@@ -24,7 +24,7 @@
     border: none;
     border-radius: 3px;
     font-size: 16px;
-    button {
+    .channel-list-item {
       background-color: inherit;
       transition: .2s;
       padding: 15px 10px;
@@ -38,6 +38,13 @@
       }
       &:hover {
         background-color: #d6d4d4;
+      }
+    }
+    .btns {
+      display: flex;
+      button {
+        width: 50%;
+        border-radius: 0;
       }
     }
     .recently-messages {

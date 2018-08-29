@@ -18,7 +18,7 @@ export class ListItem extends React.Component {
   render() {
     return (
       <li>
-        <button onClick={this.handleItemClick}>
+        <button className="channel-list-item" onClick={this.handleItemClick}>
           <div className="channel-info">
             <span className="img">
               <img

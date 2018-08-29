@@ -23,8 +23,12 @@ button {
   border-radius: 3px;
   padding: 5px 10px;
   font-size: 14px;
+  transition: .2s;
   :focus {
     outline: none
+  }
+  &:hover {
+    background-color: darken($brand-color, 6%);
   }
   &[disabled] {
     background-color: #ccc;
@@ -74,4 +78,5 @@ button {
 
 .invite-form {
   box-shadow: none;
+  background-color: #d6d4d4;
 }

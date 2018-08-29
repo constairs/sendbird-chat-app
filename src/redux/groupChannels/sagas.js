@@ -13,6 +13,8 @@ import {
   INVITE_USERS,
   LEAVE_GROUP,
   LEAVE_GROUP_SUCCESSED,
+  ON_USER_JOINED,
+  ON_USER_LEFT,
 } from '../groupChannels/types';
 
 import {
@@ -26,6 +28,7 @@ import {
   inviteUsersFailed,
   leaveGroupSuccessed,
   leaveGroupFailed,
+  notificationOff,
 } from '../groupChannels/actions';
 
 import { USER_LOGIN_SUCCESSED, USER_RECONNECT_SUCCESSED } from '../user/types';
@@ -59,6 +62,7 @@ export function* watchGroupChannels() {
       USER_LOGIN_SUCCESSED,
       CREATE_GROUP_CHANNEL_SUCCESSED,
       LEAVE_GROUP_SUCCESSED,
+      ON_USER_JOINED,
     ],
     groupChannels
   );
@@ -105,4 +109,18 @@ export function* leaveGroupSaga(action) {
 
 export function* watchLeaveGroup() {
   yield takeLatest(LEAVE_GROUP, leaveGroupSaga);
+}
+
+export function* groupEventsSaga() {
+  yield put(notificationOff());
+}
+
+export function* watchGroupEvents() {
+  yield takeLatest(
+    [
+      // ON_USER_JOINED,
+      // ON_USER_LEFT
+    ],
+    groupEventsSaga
+  );
 }

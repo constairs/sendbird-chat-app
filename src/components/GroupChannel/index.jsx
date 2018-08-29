@@ -59,12 +59,7 @@ export class GroupChannel extends React.Component {
   }
 }
 
-GroupChannel.defaultProps = {
-  // members: [],
-};
-
 GroupChannel.propTypes = {
   channel: PropTypes.objectOf(PropTypes.any).isRequired,
   onLeave: PropTypes.func.isRequired,
-  // members: PropTypes.arrayOf(PropTypes.any),
 };

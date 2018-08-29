@@ -11,6 +11,7 @@ import { CreateGroupForm } from '../../components/CreateGroupForm';
 import { ChannelList } from '../../components/ChannelList';
 import { Channel } from '../../components/Channel';
 import { GroupChannel } from '../../components/GroupChannel';
+import { NotificationWindow } from '../../components/NotificationWindow';
 
 class OpenChannel extends React.Component {
   constructor(props) {
@@ -57,6 +58,10 @@ class OpenChannel extends React.Component {
     } else {
       this.setState({ groupChModal: true, modalIsOpen: true });
     }
+  };
+
+  handleNotificationClose = () => {
+    this.props.groupChannelsActions.notificationOff();
   };
 
   closeModal = () => {
@@ -118,11 +123,9 @@ class OpenChannel extends React.Component {
           ) : null}
           {groupChannel ? (
             <GroupChannel
-              // onEnter={this.handleEnterChannel}
               onLeave={this.handleLeaveChannel}
               user={this.props.user}
               channel={groupChannel}
-              // participants={this.props.groupChannel.members}
             />
           ) : null}
         </div>
@@ -144,6 +147,14 @@ class OpenChannel extends React.Component {
             <CreateChannelForm onSubmitForm={this.handleOpenChannel} />
           )}
         </Modal>
+        {this.props.notification ? (
+          <NotificationWindow
+            notificationShow={this.props.notificationShow}
+            notification={this.props.notification}
+            nickname={this.props.user.userName}
+            onNotificationClose={this.handleNotificationClose}
+          />
+        ) : null}
       </div>
     );
   }
@@ -162,6 +173,8 @@ function mapStateToProps(state) {
     user: state.persistedUserReducer,
     openChannels: state.openChannelsReducer,
     groupChannels: state.groupChannelsReducer,
+    notification: state.groupChannelsReducer.notification,
+    notificationShow: state.groupChannelsReducer.notificationShow,
   };
 }
 

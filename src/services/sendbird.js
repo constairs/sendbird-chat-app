@@ -15,7 +15,11 @@ import {
   getParticipantsFailed,
 } from '../redux/openChannels/actions';
 
-import { groupUpdated } from '../redux/groupChannels/actions';
+import {
+  groupUpdated,
+  onUserJoined,
+  onUserLeft,
+} from '../redux/groupChannels/actions';
 
 export const sb = new SendBird({ appId: APP_ID });
 
@@ -66,8 +70,12 @@ ChannelHandler.onMetaDataUpdated = function(channel, metaData) {
   store.store.dispatch(userTyping(metaData));
 };
 
-GroupChannelHandler.onUserJoined = function(groupChannel, user) {};
-GroupChannelHandler.onUserLeft = function(groupChannel, user) {};
+GroupChannelHandler.onUserJoined = function(groupChannel, user) {
+  store.store.dispatch(onUserJoined({ groupChannel, user }));
+};
+GroupChannelHandler.onUserLeft = function(groupChannel, user) {
+  store.store.dispatch(onUserLeft({ groupChannel, user }));
+};
 
 /* eslint-disable */
 

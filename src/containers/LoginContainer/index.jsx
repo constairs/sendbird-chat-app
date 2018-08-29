@@ -36,7 +36,7 @@ class LoginConnected extends React.Component {
         ) : (
           <LoginForm onLogin={this.handleLogin} />
         )}
-        <Modal
+        {/* <Modal
           className="modal"
           isOpen={this.props.user.err}
           onAfterOpen={this.afterOpenModal}
@@ -51,7 +51,7 @@ class LoginConnected extends React.Component {
           <button onClick={this.props.userActions.userReconnect()}>
             Попробовать снова
           </button>
-        </Modal>
+        </Modal> */}
       </div>
     );
   }

@@ -19,6 +19,7 @@ import {
   MESSAGE_TYPING_ERROR,
   USER_TYPING,
   MESSAGE_TYPING_END,
+  CLEAN_CHAT,
 } from './types';
 
 export const sendMessage = messageData => ({ type: SEND_MESSAGE, messageData });
@@ -104,4 +105,8 @@ export const userTyping = user => ({
 
 export const messageTypingEnd = () => ({
   type: MESSAGE_TYPING_END,
+});
+
+export const cleanChat = () => ({
+  type: CLEAN_CHAT,
 });

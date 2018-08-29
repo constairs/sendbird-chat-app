@@ -15,6 +15,9 @@ import {
   LEAVE_GROUP_SUCCESSED,
   LEAVE_GROUP_FAILED,
   GROUP_UPDATED,
+  ON_USER_JOINED,
+  ON_USER_LEFT,
+  NOTIFICATION_OFF,
 } from './types';
 
 export const createGroupChannel = formData => ({
@@ -82,4 +85,18 @@ export const leaveGroupFailed = error => ({
 export const groupUpdated = channel => ({
   type: GROUP_UPDATED,
   payload: channel,
+});
+
+export const onUserJoined = userData => ({
+  type: ON_USER_JOINED,
+  payload: userData,
+});
+
+export const onUserLeft = userData => ({
+  type: ON_USER_LEFT,
+  payload: userData,
+});
+
+export const notificationOff = () => ({
+  type: NOTIFICATION_OFF,
 });

@@ -7,6 +7,8 @@ const initState = {
   participants: [],
   groupChannelsList: [],
   messages: [],
+  groupChannel: null,
+  notificationShow: false,
 };
 
 const createGroupChannel = (state, formData) => ({
@@ -82,6 +84,7 @@ const leaveGroup = state => ({
 
 const leaveGroupSuccessed = state => ({
   ...state,
+  groupChannel: null,
 });
 
 const leaveGroupFailed = (state, error) => ({
@@ -92,6 +95,31 @@ const leaveGroupFailed = (state, error) => ({
 const groupUpdated = (state, channel) => ({
   ...state,
   groupChannel: channel,
+});
+
+const onUserJoined = (state, userData) => ({
+  ...state,
+  notificationShow: true,
+  notification: {
+    type: 'onUserJoined',
+    channel: userData.groupChannel,
+    user: userData.user,
+  },
+});
+
+const onUserLeft = (state, userData) => ({
+  ...state,
+  notificationShow: true,
+  notification: {
+    type: 'userLeft',
+    channel: userData.groupChannel,
+    user: userData.user,
+  },
+});
+
+const notificationOff = state => ({
+  ...state,
+  notificationShow: false,
 });
 
 const handlers = {
@@ -116,6 +144,11 @@ const handlers = {
   [TYPES.LEAVE_GROUP_FAILED]: leaveGroupFailed,
 
   [TYPES.GROUP_UPDATED]: groupUpdated,
+
+  [TYPES.ON_USER_JOINED]: onUserJoined,
+  [TYPES.ON_USER_LEFT]: onUserLeft,
+
+  [TYPES.NOTIFICATION_OFF]: notificationOff,
 };
 
 export const groupChannelsReducer = createReducer(initState, handlers);

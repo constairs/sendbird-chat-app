@@ -1,4 +1,4 @@
-import { call, put, takeLatest, takeEvery } from 'redux-saga/effects';
+import { call, put, takeLatest, takeEvery, take } from 'redux-saga/effects';
 import {
   sendMessage,
   deleteMessage,
@@ -13,7 +13,10 @@ import {
   ON_MESSAGE_TYPING,
 } from './types';
 import { ENTER_CHANNEL_SUCCESSED } from '../openChannels/types';
-import { GET_GROUP_CHANNEL_SUCCESSED } from '../groupChannels/types';
+import {
+  GET_GROUP_CHANNEL_SUCCESSED,
+  LEAVE_GROUP_SUCCESSED,
+} from '../groupChannels/types';
 import {
   sendMessageSuccessed,
   sendMessageFailed,
@@ -27,6 +30,7 @@ import {
   messageTypingSet,
   messageTypingError,
   messageTypingEnd,
+  cleanChat,
 } from './actions';
 
 export function* sendMessageAsync(action) {
@@ -85,7 +89,6 @@ export function* getMessagesAsync(action) {
 export function* watchGetMessages() {
   yield takeEvery(
     [ENTER_CHANNEL_SUCCESSED, GET_GROUP_CHANNEL_SUCCESSED],
-    // GET_GROUP_CHANNEL_SUCCESSED,
     getMessagesAsync
   );
 }
@@ -109,4 +112,12 @@ export function* onMessageTypingSaga(action) {
 
 export function* onMessageTypeWatch() {
   yield takeLatest(ON_MESSAGE_TYPING, onMessageTypingSaga);
+}
+
+export function* cleanChatSaga() {
+  yield put(cleanChat());
+}
+
+export function* watchCleanChat() {
+  yield take(LEAVE_GROUP_SUCCESSED, cleanChatSaga);
 }

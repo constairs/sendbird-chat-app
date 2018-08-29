@@ -18,7 +18,7 @@ class ListItem extends React.Component {
   };
 
   handleInviteClick = () => {
-    this.setState({ inviteForm: true });
+    this.setState({ inviteForm: !this.state.inviteForm });
   };
 
   handleLeaveClick = () => {
@@ -32,12 +32,13 @@ class ListItem extends React.Component {
   handleFormSubmit = (e) => {
     e.preventDefault();
     this.props.onInviteUsers([this.props.cur.url, this.state.usersIdsInput]);
+    this.setState({ inviteForm: false, usersIdsInput: '' });
   };
 
   render() {
     return (
       <li>
-        <button onClick={this.handleItemClick}>
+        <button className="channel-list-item" onClick={this.handleItemClick}>
           <div className="channel-info">
             <span className="img">
               <img
@@ -61,21 +62,24 @@ class ListItem extends React.Component {
             </div>
           ) : null}
         </button>
-        <button onClick={this.handleInviteClick}>Пригласить</button>
+        <div className="btns">
+          <button onClick={this.handleInviteClick}>Пригласить</button>
+          <button onClick={this.handleLeaveClick}>Покинуть</button>
+        </div>
         {this.state.inviteForm ? (
-          <div>
-            <form onSubmit={this.handleFormSubmit} className="form invite-form">
+          <form onSubmit={this.handleFormSubmit} className="form invite-form">
+            <label htmlFor="userId">
+              <span>user id</span>
               <input
+                id="userId"
                 value={this.state.usersIdsInput}
                 onChange={this.handleInput}
                 type="text"
-                placeholder="user id"
               />
-              <button>ok</button>
-            </form>
-          </div>
+            </label>
+            <button>ok</button>
+          </form>
         ) : null}
-        <button onClick={this.handleLeaveClick}>Покинуть</button>
       </li>
     );
   }

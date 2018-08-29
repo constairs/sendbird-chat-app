@@ -16,12 +16,14 @@ export function* rootSaga() {
   yield spawn(groupChannelSagas.watchGetGroup);
   yield spawn(groupChannelSagas.watchInviteUser);
   yield spawn(groupChannelSagas.watchLeaveGroup);
+  yield spawn(groupChannelSagas.watchGroupEvents);
 
   yield spawn(chatSagas.watchSendMessage);
   yield spawn(chatSagas.watchDeleteMessage);
   yield spawn(chatSagas.watchEditMessage);
   yield spawn(chatSagas.watchGetMessages);
   yield spawn(chatSagas.onMessageTypeWatch);
+  yield spawn(chatSagas.watchCleanChat);
 
   yield spawn(userSagas.watchLoginUser);
   yield spawn(userSagas.watchLogoutUser);
