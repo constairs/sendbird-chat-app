@@ -2,6 +2,9 @@ import {
   SEND_MESSAGE,
   SEND_MESSAGE_SUCCESSED,
   SEND_MESSAGE_FAILED,
+  SEND_FILE_MESSAGE,
+  SEND_FILE_MESSAGE_SUCCESSED,
+  SEND_FILE_MESSAGE_FAILED,
   GET_MESSAGES,
   GET_MESSAGES_SUCCESSED,
   GET_MESSAGES_FAILED,
@@ -29,6 +32,19 @@ export const sendMessageSuccessed = updMessages => ({
 });
 export const sendMessageFailed = error => ({
   type: SEND_MESSAGE_FAILED,
+  payload: error,
+});
+
+export const sendFileMessage = fileMessageData => ({
+  type: SEND_FILE_MESSAGE,
+  fileMessageData,
+});
+export const sendFileMessageSuccessed = updMessages => ({
+  type: SEND_FILE_MESSAGE_SUCCESSED,
+  payload: updMessages,
+});
+export const sendFileMessageFailed = error => ({
+  type: SEND_FILE_MESSAGE_FAILED,
   payload: error,
 });
 

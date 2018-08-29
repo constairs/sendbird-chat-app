@@ -1,4 +1,5 @@
 import React from 'react';
+import PropTypes from 'prop-types';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faTimes } from '@fortawesome/free-solid-svg-icons';
 
@@ -55,7 +56,9 @@ export class NotificationWindow extends React.Component {
   }
 }
 
-NotificationWindow.defaultProps = {
-  notificationData: {},
-  notificationText: '',
+NotificationWindow.propTypes = {
+  notificationShow: PropTypes.bool.isRequired,
+  onNotificationClose: PropTypes.func.isRequired,
+  notification: PropTypes.objectOf(PropTypes.any).isRequired,
+  nickname: PropTypes.string.isRequired,
 };

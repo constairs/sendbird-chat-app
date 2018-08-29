@@ -38,9 +38,13 @@ const Private = ({ component: Component, logged, ...rest }) => (
   />
 );
 
+Private.defaultProps = {
+  logged: false,
+};
+
 Private.propTypes = {
   component: PropTypes.func.isRequired,
-  logged: PropTypes.bool.isRequired,
+  logged: PropTypes.bool,
   location: PropTypes.objectOf(PropTypes.any).isRequired,
 };
 

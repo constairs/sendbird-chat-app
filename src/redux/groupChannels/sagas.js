@@ -1,15 +1,17 @@
-import { call, put, takeLatest } from 'redux-saga/effects';
+import { call, put, takeLatest, all, spawn } from 'redux-saga/effects';
 import {
   createGroupChannel,
   groupChannelList,
   getChannel,
   inviteToGroup,
   leaveGroup,
+  refreshGroupMembers,
 } from '../../services/sendbird';
 import {
   CREATE_GROUP_CHANNEL,
   CREATE_GROUP_CHANNEL_SUCCESSED,
   GET_GROUP_CHANNEL,
+  GET_GROUP_CHANNEL_SUCCESSED,
   INVITE_USERS,
   LEAVE_GROUP,
   LEAVE_GROUP_SUCCESSED,
@@ -28,12 +30,13 @@ import {
   inviteUsersFailed,
   leaveGroupSuccessed,
   leaveGroupFailed,
-  notificationOff,
+  refreshedMembers,
+  refreshFailed,
 } from '../groupChannels/actions';
 
 import { USER_LOGIN_SUCCESSED, USER_RECONNECT_SUCCESSED } from '../user/types';
 
-export function* createGroupAsync(action) {
+function* createGroupAsync(action) {
   try {
     const createdChannel = yield call(createGroupChannel, ...action.payload);
     yield put(createGroupChannelSuccessed(createdChannel));
@@ -42,11 +45,11 @@ export function* createGroupAsync(action) {
   }
 }
 
-export function* watchGroupChannel() {
+function* watchGroupChannel() {
   yield takeLatest(CREATE_GROUP_CHANNEL, createGroupAsync);
 }
 
-export function* groupChannels() {
+function* groupChannels() {
   try {
     const channelList = yield call(groupChannelList);
     yield put(groupChannelsListSuccessed(channelList));
@@ -55,7 +58,7 @@ export function* groupChannels() {
   }
 }
 
-export function* watchGroupChannels() {
+function* watchGroupChannels() {
   yield takeLatest(
     [
       USER_RECONNECT_SUCCESSED,
@@ -68,7 +71,7 @@ export function* watchGroupChannels() {
   );
 }
 
-export function* getGroup(action) {
+function* getGroup(action) {
   try {
     const groupChannel = yield call(
       getChannel,
@@ -81,11 +84,11 @@ export function* getGroup(action) {
   }
 }
 
-export function* watchGetGroup() {
+function* watchGetGroup() {
   yield takeLatest(GET_GROUP_CHANNEL, getGroup);
 }
 
-export function* inviteUser(action) {
+function* inviteUser(action) {
   try {
     const inviteRes = yield call(inviteToGroup, ...action.payload);
     yield put(inviteUsersSuccessed(inviteRes));
@@ -94,11 +97,11 @@ export function* inviteUser(action) {
   }
 }
 
-export function* watchInviteUser() {
+function* watchInviteUser() {
   yield takeLatest(INVITE_USERS, inviteUser);
 }
 
-export function* leaveGroupSaga(action) {
+function* leaveGroupSaga(action) {
   try {
     const leaveRes = yield call(leaveGroup, action.payload);
     yield put(leaveGroupSuccessed(leaveRes));
@@ -107,20 +110,33 @@ export function* leaveGroupSaga(action) {
   }
 }
 
-export function* watchLeaveGroup() {
+function* watchLeaveGroup() {
   yield takeLatest(LEAVE_GROUP, leaveGroupSaga);
 }
 
-export function* groupEventsSaga() {
-  yield put(notificationOff());
+function* refreshMembersSaga(action) {
+  try {
+    const response = yield call(refreshGroupMembers, action.payload);
+    yield put(refreshedMembers(response));
+  } catch (error) {
+    yield put(refreshFailed(error));
+  }
 }
 
-export function* watchGroupEvents() {
+function* watchRefreshMembers() {
   yield takeLatest(
-    [
-      // ON_USER_JOINED,
-      // ON_USER_LEFT
-    ],
-    groupEventsSaga
+    [GET_GROUP_CHANNEL_SUCCESSED, ON_USER_JOINED, ON_USER_LEFT],
+    refreshMembersSaga
   );
+}
+
+export function* groupSagas() {
+  yield all([
+    spawn(watchRefreshMembers),
+    spawn(watchLeaveGroup),
+    spawn(watchInviteUser),
+    spawn(watchGetGroup),
+    spawn(watchGroupChannels),
+    spawn(watchGroupChannel),
+  ]);
 }

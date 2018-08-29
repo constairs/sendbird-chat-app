@@ -120,8 +120,7 @@ class OpenChannel extends React.Component {
               channel={channel}
               participants={this.props.openChannels.participants}
             />
-          ) : null}
-          {groupChannel ? (
+          ) : groupChannel ? (
             <GroupChannel
               onLeave={this.handleLeaveChannel}
               user={this.props.user}
@@ -160,12 +159,18 @@ class OpenChannel extends React.Component {
   }
 }
 
+OpenChannel.defaultProps = {
+  notificationShow: false,
+};
+
 OpenChannel.propTypes = {
   openChannelsActions: PropTypes.objectOf(PropTypes.func).isRequired,
   groupChannelsActions: PropTypes.objectOf(PropTypes.func).isRequired,
   user: PropTypes.objectOf(PropTypes.any).isRequired,
   openChannels: PropTypes.objectOf(PropTypes.any).isRequired,
   groupChannels: PropTypes.objectOf(PropTypes.any).isRequired,
+  notification: PropTypes.objectOf(PropTypes.any),
+  notificationShow: PropTypes.bool,
 };
 
 function mapStateToProps(state) {

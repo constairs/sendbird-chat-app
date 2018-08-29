@@ -4,9 +4,7 @@ import * as TYPES from './types';
 const initState = {
   fetching: false,
   groupsFetching: false,
-  participants: [],
   groupChannelsList: [],
-  messages: [],
   groupChannel: null,
   notificationShow: false,
 };
@@ -122,6 +120,16 @@ const notificationOff = state => ({
   notificationShow: false,
 });
 
+const refreshedMembers = (state, response) => ({
+  ...state,
+  response,
+});
+
+const refreshFailed = (state, error) => ({
+  ...state,
+  error,
+});
+
 const handlers = {
   [TYPES.CREATE_GROUP_CHANNEL]: createGroupChannel,
   [TYPES.CREATE_GROUP_CHANNEL_SUCCESSED]: createGroupChannelSuccessed,
@@ -149,6 +157,9 @@ const handlers = {
   [TYPES.ON_USER_LEFT]: onUserLeft,
 
   [TYPES.NOTIFICATION_OFF]: notificationOff,
+
+  [TYPES.REFRESHED_MEMBERS]: refreshedMembers,
+  [TYPES.REFRESH_FAILED]: refreshFailed,
 };
 
 export const groupChannelsReducer = createReducer(initState, handlers);

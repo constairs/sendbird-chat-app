@@ -18,6 +18,8 @@ import {
   ON_USER_JOINED,
   ON_USER_LEFT,
   NOTIFICATION_OFF,
+  REFRESHED_MEMBERS,
+  REFRESH_FAILED,
 } from './types';
 
 export const createGroupChannel = formData => ({
@@ -99,4 +101,14 @@ export const onUserLeft = userData => ({
 
 export const notificationOff = () => ({
   type: NOTIFICATION_OFF,
+});
+
+export const refreshedMembers = response => ({
+  type: REFRESHED_MEMBERS,
+  payload: response,
+});
+
+export const refreshFailed = error => ({
+  type: REFRESH_FAILED,
+  payload: error,
 });

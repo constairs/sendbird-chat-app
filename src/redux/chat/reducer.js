@@ -25,6 +25,21 @@ const sendMessageFailed = (state, error) => ({
   sendingMessage: false,
 });
 
+const sendFileMessage = (state, fileMessageData) => ({
+  ...state,
+  fileToSend: fileMessageData,
+});
+
+const sendFileMessageSuccessed = (state, updMessages) => ({
+  ...state,
+  updMessages,
+});
+
+const sendFileMessageFailed = (state, error) => ({
+  ...state,
+  error,
+});
+
 const deleteMessage = state => ({
   ...state,
 });
@@ -113,6 +128,10 @@ const handlers = {
   [TYPES.SEND_MESSAGE]: sendMessage,
   [TYPES.SEND_MESSAGE_SUCCESSED]: sendMessageSuccessed,
   [TYPES.SEND_MESSAGE_FAILED]: sendMessageFailed,
+
+  [TYPES.SEND_FILE_MESSAGE]: sendFileMessage,
+  [TYPES.SEND_FILE_MESSAGE_SUCCESSED]: sendFileMessageSuccessed,
+  [TYPES.SEND_FILE_MESSAGE_FAILED]: sendFileMessageFailed,
 
   [TYPES.DELETE_MESSAGE]: deleteMessage,
   [TYPES.DELETE_MESSAGE_SUCCESSED]: deleteMessageSuccessed,

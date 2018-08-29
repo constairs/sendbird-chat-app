@@ -1,6 +1,7 @@
 import { call, put, takeLatest, takeEvery, take } from 'redux-saga/effects';
 import {
   sendMessage,
+  sendFileMessage,
   deleteMessage,
   editMessage,
   getMessages,
@@ -11,6 +12,7 @@ import {
   DELETE_MESSAGE,
   EDIT_MESSAGE,
   ON_MESSAGE_TYPING,
+  SEND_FILE_MESSAGE,
 } from './types';
 import { ENTER_CHANNEL_SUCCESSED } from '../openChannels/types';
 import {
@@ -44,6 +46,19 @@ export function* sendMessageAsync(action) {
 
 export function* watchSendMessage() {
   yield takeLatest(SEND_MESSAGE, sendMessageAsync);
+}
+
+function* sendFileMessageAsync(action) {
+  try {
+    const sendRes = yield call(sendFileMessage, ...action.fileMessageData);
+    yield put(sendMessageSuccessed(sendRes));
+  } catch (error) {
+    yield put(sendMessageFailed(error));
+  }
+}
+
+export function* watchSendFileMessage() {
+  yield takeLatest(SEND_FILE_MESSAGE, sendFileMessageAsync);
 }
 
 export function* deleteMessageAsync(action) {
