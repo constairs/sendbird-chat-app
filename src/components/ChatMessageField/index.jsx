@@ -6,19 +6,16 @@ import { Spinner, Text } from 'react-preloading-component';
 import Modal from 'react-modal';
 import Dropzone from 'react-dropzone';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faPaperPlane, faTimes } from '@fortawesome/free-solid-svg-icons';
+import { faFile, faTimes } from '@fortawesome/free-solid-svg-icons';
 import * as chatActions from '../../redux/chat/actions';
 
 class MessageField extends React.Component {
-  constructor(props) {
-    super(props);
-    this.state = {
-      message: '',
-      uploadedFile: [],
-      fileUploadModal: false,
-      uploadedPreview: '',
-    };
-  }
+  state = {
+    message: '',
+    uploadedFile: [],
+    fileUploadModal: false,
+    fileToUpload: '',
+  };
 
   handleTextInput = (e) => {
     this.setState({ message: e.target.value }, () => {
@@ -53,7 +50,11 @@ class MessageField extends React.Component {
       this.props.user.userId,
       ...this.state.uploadedFile,
     ];
-    this.setState({ uploadedFile: [] });
+    this.setState({
+      uploadedFile: [],
+      fileUploadModal: false,
+      fileToUpload: '',
+    });
     this.props.chatActions.sendFileMessage(fileMessageData);
   };
 
@@ -65,7 +66,9 @@ class MessageField extends React.Component {
     acceptedFiles.forEach((file) => {
       const reader = new FileReader();
       reader.onload = () => {
-        this.setState({ uploadedPreview: file.preview });
+        this.setState({
+          fileToUpload: file,
+        });
         this.setState({
           uploadedFile: [file, file.name, file.type, file.size],
         });
@@ -78,37 +81,48 @@ class MessageField extends React.Component {
   };
 
   render() {
+    const { fileToUpload } = this.state;
     return (
       <div>
-        <form className="chat-message-form" onSubmit={this.handleSubmit}>
-          <input
-            type="text"
-            onInput={this.handleTextInput}
-            value={this.state.message}
-          />
-          {this.props.userTyping &&
-          this.props.userTyping !== this.props.user.userName ? (
-            <span className="typing-indicator">
-              {this.props.userTyping}
-              <Text color="#000000" fontSize="1em" text="набирает сообщение" />
-            </span>
-          ) : null}
-          <button
-            className="send-message-btn"
-            type="submit"
-            disabled={!this.state.message}
-          >
-            Отправить
-            {this.props.sendingMessage ? (
-              <Spinner color="#ffffff" secondaryColor="#40c9ff" size={10} />
+        <div className="chat-message-filed">
+          <form className="chat-message-form" onSubmit={this.handleSubmit}>
+            <input
+              type="text"
+              onInput={this.handleTextInput}
+              value={this.state.message}
+            />
+            {this.props.userTyping &&
+            this.props.userTyping !== this.props.user.userName ? (
+              <span className="typing-indicator">
+                {this.props.userTyping}
+                <Text
+                  color="#000000"
+                  fontSize="1em"
+                  text="набирает сообщение"
+                />
+              </span>
             ) : null}
-          </button>
-        </form>
-        <button onClick={this.fileUploadModal}>
-          <FontAwesomeIcon icon={faPaperPlane} />
-        </button>
+            <button
+              onClick={this.fileUploadModal}
+              type="button"
+              title="Прикрепить файл"
+            >
+              <FontAwesomeIcon icon={faFile} />
+            </button>
+            <button
+              className="send-message-btn"
+              type="submit"
+              disabled={!this.state.message}
+            >
+              Отправить
+              {this.props.sendingMessage ? (
+                <Spinner color="#ffffff" secondaryColor="#40c9ff" size={10} />
+              ) : null}
+            </button>
+          </form>
+        </div>
         <Modal
-          className="file-upload-modal"
+          className="modal file-upload-modal"
           isOpen={this.state.fileUploadModal}
           onAfterOpen={this.afterOpenModal}
           onRequestClose={this.fileUploadModal}
@@ -119,12 +133,24 @@ class MessageField extends React.Component {
             <FontAwesomeIcon icon={faTimes} />
           </button>
           <form onSubmit={this.handleFileForm}>
-            {this.state.uploadedPreview ? (
-              <div className="file-preview">
-                <img src={this.state.uploadedPreview} alt="preview" />
+            <Dropzone className="dropzone" onDrop={this.handleDropFile} />
+            {fileToUpload ? (
+              <div>
+                <p>Файл для отправки</p>
+                <div className="files-to-upload">
+                  <div className="file-item">
+                    <div className="file-preview">
+                      {new RegExp('^image?', 'i').test(fileToUpload.type) ? (
+                        <img src={fileToUpload.preview} alt="preview" />
+                      ) : (
+                        <FontAwesomeIcon icon={faFile} />
+                      )}
+                    </div>
+                    <p>{fileToUpload.size} кб</p>
+                  </div>
+                </div>
               </div>
             ) : null}
-            <Dropzone className="dropzone" onDrop={this.handleDropFile} />
             <button type="submit">Загрузить</button>
           </form>
         </Modal>

@@ -77,9 +77,8 @@ GroupChannelHandler.onUserLeft = function(groupChannel, user) {
   store.store.dispatch(onUserLeft({ groupChannel, user }));
 };
 GroupChannelHandler.onReadReceiptUpdated = function(channel) {
-  console.log(channel);
+  // console.log(channel);
 };
-
 /* eslint-disable */
 
 sb.addChannelHandler('HANDLER', ChannelHandler);
@@ -288,10 +287,6 @@ export function refreshGroupMembers(channel) {
   });
 }
 
-// export function markAsRead(channel) {
-//   channel.markAsRead();
-// }
-
 export function exitChannel(channelUrl) {
   return new Promise((resolve, reject) => {
     sb.OpenChannel.getChannel(channelUrl, (channel, error) => {
@@ -406,45 +401,33 @@ export function sendFileMessage(
   customType
 ) {
   return new Promise((resolve, reject) => {
-    if (channelType === 'open') {
-    } else {
-      getChannel(channelUrl, channelType).then(groupChannel => {
-        groupChannel.sendFileMessage(
-          file,
-          name,
-          type,
-          size,
-          data,
-          customType,
-          (fileMessage, error) => {
-            if (error) {
-              reject(error);
-            }
-            console.log(fileMessage);
-            const messageListQuery = groupChannel.createPreviousMessageListQuery();
-            messageListQuery.load(10, true, (messageList, e) => {
-              if (e) {
-                reject(e);
-              }
-              resolve(messageList.reverse());
-            });
+    getChannel(channelUrl, channelType).then(groupChannel => {
+      groupChannel.sendFileMessage(
+        file,
+        name,
+        type,
+        size,
+        data,
+        customType,
+        event => {
+          console.log(
+            parseInt(Math.floor((event.loaded / event.total) * 100)) + '%'
+          );
+        },
+        (fileMessage, error) => {
+          if (error) {
+            reject(error);
           }
-        );
-
-        // groupChannel.sendUserMessage(mType, user, message, (response, err) => {
-        //   if (err) {
-        //     reject(err);
-        //   }
-        //   const messageListQuery = groupChannel.createPreviousMessageListQuery();
-        //   messageListQuery.load(10, true, (messageList, e) => {
-        //     if (e) {
-        //       reject(e);
-        //     }
-        //     resolve(messageList.reverse());
-        //   });
-        // });
-      });
-    }
+          const messageListQuery = groupChannel.createPreviousMessageListQuery();
+          messageListQuery.load(10, true, (messageList, e) => {
+            if (e) {
+              reject(e);
+            }
+            resolve(messageList.reverse());
+          });
+        }
+      );
+    });
   });
 }
 

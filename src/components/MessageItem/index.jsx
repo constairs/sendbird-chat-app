@@ -6,6 +6,7 @@ import {
   faPen,
   faPaperPlane,
   faTimes,
+  faFile,
 } from '@fortawesome/free-solid-svg-icons';
 
 import './index.scss';
@@ -66,7 +67,11 @@ export class MessageItem extends React.Component {
           {cur.messageType === 'file' ? (
             <div className="file-message-item">
               <div className="message-file-preview">
-                <img src={cur.url} alt={cur.name} />
+                {new RegExp('^image?', 'i').test(cur.type) ? (
+                  <img src={cur.url} alt={cur.name} />
+                ) : (
+                  <FontAwesomeIcon icon={faFile} />
+                )}
               </div>
               <p>
                 <a href={cur.url} target="_blank">

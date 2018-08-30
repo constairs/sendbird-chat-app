@@ -10,25 +10,20 @@ export class UpdateChannelForm extends React.Component {
     };
   }
 
-  handleInput = (e) => {
-    const curInput = e.target;
-    const curName = curInput.name;
-    const curValue = curInput.value;
-    this.setState({ [curName]: curValue });
-  }
+  handleInput = ({ target }) => {
+    const { name, value } = target;
+    this.setState({ [name]: value });
+  };
 
   handleSubmit = (e) => {
     e.preventDefault();
-    const formData = [
-      this.state.channelName,
-      this.state.coverUrl,
-    ];
+    const formData = [this.state.channelName, this.state.coverUrl];
     this.setState({
       channelName: '',
       coverUrl: '',
     });
     this.props.onSubmitForm(formData);
-  }
+  };
 
   render() {
     return (
@@ -36,13 +31,25 @@ export class UpdateChannelForm extends React.Component {
         <form onSubmit={this.handleSubmit}>
           <label htmlFor="channelName">
             <span>Name</span>
-            <input id="channelName" name="channelName" value={this.state.channelName} onChange={this.handleInput} type="text" />
+            <input
+              id="channelName"
+              name="channelName"
+              value={this.state.channelName}
+              onChange={this.handleInput}
+              type="text"
+            />
           </label>
           <label htmlFor="coverUrl">
             <span>Cover Url</span>
-            <input id="coverUrl" name="coverUrl" value={this.state.coverUrl} onChange={this.handleInput} type="text" />
+            <input
+              id="coverUrl"
+              name="coverUrl"
+              value={this.state.coverUrl}
+              onChange={this.handleInput}
+              type="text"
+            />
           </label>
-          <button >Изменить</button>
+          <button>Изменить</button>
         </form>
       </div>
     );
@@ -50,5 +57,5 @@ export class UpdateChannelForm extends React.Component {
 }
 
 UpdateChannelForm.propTypes = {
-  onSubmitForm: PropTypes.func.isRequired
+  onSubmitForm: PropTypes.func.isRequired,
 };

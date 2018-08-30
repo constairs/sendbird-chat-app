@@ -1,4 +1,11 @@
-import { call, put, takeLatest, takeEvery, take } from 'redux-saga/effects';
+import {
+  call,
+  put,
+  takeLatest,
+  takeEvery,
+  take,
+  all,
+} from 'redux-saga/effects';
 import {
   sendMessage,
   sendFileMessage,
@@ -44,9 +51,9 @@ export function* sendMessageAsync(action) {
   }
 }
 
-export function* watchSendMessage() {
-  yield takeLatest(SEND_MESSAGE, sendMessageAsync);
-}
+// export function* watchSendMessage() {
+//   yield takeLatest(SEND_MESSAGE, sendMessageAsync);
+// }
 
 function* sendFileMessageAsync(action) {
   try {
@@ -57,9 +64,9 @@ function* sendFileMessageAsync(action) {
   }
 }
 
-export function* watchSendFileMessage() {
-  yield takeLatest(SEND_FILE_MESSAGE, sendFileMessageAsync);
-}
+// export function* watchSendFileMessage() {
+//   yield takeLatest(SEND_FILE_MESSAGE, sendFileMessageAsync);
+// }
 
 export function* deleteMessageAsync(action) {
   try {
@@ -70,9 +77,9 @@ export function* deleteMessageAsync(action) {
   }
 }
 
-export function* watchDeleteMessage() {
-  yield takeLatest(DELETE_MESSAGE, deleteMessageAsync);
-}
+// export function* watchDeleteMessage() {
+//   yield takeLatest(DELETE_MESSAGE, deleteMessageAsync);
+// }
 
 export function* editMessageAsync(action) {
   try {
@@ -83,9 +90,9 @@ export function* editMessageAsync(action) {
   }
 }
 
-export function* watchEditMessage() {
-  yield takeLatest(EDIT_MESSAGE, editMessageAsync);
-}
+// export function* watchEditMessage() {
+//   yield takeLatest(EDIT_MESSAGE, editMessageAsync);
+// }
 
 export function* getMessagesAsync(action) {
   yield put(getMessagesRequest(action.payload));
@@ -101,12 +108,12 @@ export function* getMessagesAsync(action) {
   }
 }
 
-export function* watchGetMessages() {
-  yield takeEvery(
-    [ENTER_CHANNEL_SUCCESSED, GET_GROUP_CHANNEL_SUCCESSED],
-    getMessagesAsync
-  );
-}
+// export function* watchGetMessages() {
+//   yield takeEvery(
+//     [ENTER_CHANNEL_SUCCESSED, GET_GROUP_CHANNEL_SUCCESSED],
+//     getMessagesAsync
+//   );
+// }
 
 export function* onMessageTypingSaga(action) {
   try {
@@ -125,14 +132,29 @@ export function* onMessageTypingSaga(action) {
   }
 }
 
-export function* onMessageTypeWatch() {
-  yield takeLatest(ON_MESSAGE_TYPING, onMessageTypingSaga);
-}
+// export function* onMessageTypeWatch() {
+//   yield takeLatest(ON_MESSAGE_TYPING, onMessageTypingSaga);
+// }
 
 export function* cleanChatSaga() {
   yield put(cleanChat());
 }
 
-export function* watchCleanChat() {
-  yield take(LEAVE_GROUP_SUCCESSED, cleanChatSaga);
+// export function* watchCleanChat() {
+//   yield take(LEAVE_GROUP_SUCCESSED, cleanChatSaga);
+// }
+
+export function* chatSagas() {
+  yield all([
+    yield takeLatest(SEND_MESSAGE, sendMessageAsync),
+    yield takeLatest(SEND_FILE_MESSAGE, sendFileMessageAsync),
+    yield takeLatest(DELETE_MESSAGE, deleteMessageAsync),
+    yield takeLatest(EDIT_MESSAGE, editMessageAsync),
+    yield takeEvery(
+      [ENTER_CHANNEL_SUCCESSED, GET_GROUP_CHANNEL_SUCCESSED],
+      getMessagesAsync
+    ),
+    yield takeLatest(ON_MESSAGE_TYPING, onMessageTypingSaga),
+    yield take(LEAVE_GROUP_SUCCESSED, cleanChatSaga),
+  ]);
 }
