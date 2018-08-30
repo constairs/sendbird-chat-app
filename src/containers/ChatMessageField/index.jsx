@@ -11,14 +11,14 @@ import * as chatActions from '../../redux/chat/actions';
 
 class MessageField extends React.Component {
   state = {
-    message: '',
+    messageInput: '',
     uploadedFile: [],
     fileUploadModal: false,
     fileToUpload: '',
   };
 
   handleTextInput = (e) => {
-    this.setState({ message: e.target.value }, () => {
+    this.setState({ messageInput: e.target.value }, () => {
       this.props.chatActions.onMessageTyping([
         this.props.channelUrl,
         this.props.channelType,
@@ -35,9 +35,9 @@ class MessageField extends React.Component {
       this.props.channelType,
       'MESG',
       this.props.user.userId,
-      this.state.message,
+      this.state.messageInput,
     ];
-    this.setState({ message: '' });
+    this.setState({ messageInput: '' });
     this.props.chatActions.sendMessage(messageData);
   };
 
@@ -81,7 +81,8 @@ class MessageField extends React.Component {
   };
 
   render() {
-    const { fileToUpload } = this.state;
+    const { fileToUpload, messageInput, fileUploadModal } = this.state;
+    const { userTyping, user, sendingMessage } = this.props;
     return (
       <div>
         <div className="chat-message-filed">
@@ -89,12 +90,11 @@ class MessageField extends React.Component {
             <input
               type="text"
               onInput={this.handleTextInput}
-              value={this.state.message}
+              value={messageInput}
             />
-            {this.props.userTyping &&
-            this.props.userTyping !== this.props.user.userName ? (
+            {userTyping && userTyping !== user.userName ? (
               <span className="typing-indicator">
-                {this.props.userTyping}
+                {userTyping}
                 <Text
                   color="#000000"
                   fontSize="1em"
@@ -112,10 +112,10 @@ class MessageField extends React.Component {
             <button
               className="send-message-btn"
               type="submit"
-              disabled={!this.state.message}
+              disabled={!messageInput}
             >
               Отправить
-              {this.props.sendingMessage ? (
+              {sendingMessage ? (
                 <Spinner color="#ffffff" secondaryColor="#40c9ff" size={10} />
               ) : null}
             </button>
@@ -123,7 +123,7 @@ class MessageField extends React.Component {
         </div>
         <Modal
           className="modal file-upload-modal"
-          isOpen={this.state.fileUploadModal}
+          isOpen={fileUploadModal}
           onAfterOpen={this.afterOpenModal}
           onRequestClose={this.fileUploadModal}
           contentLabel="Example Modal"

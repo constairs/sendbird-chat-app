@@ -1,68 +1,55 @@
-import {
-  USER_LOGIN_REQUEST,
-  USER_LOGIN_SUCCESSED,
-  USER_LOGIN_FAILED,
-  USER_RECONNECT,
-  USER_RECONNECT_SUCCESSED,
-  USER_RECONNECT_FAILED,
-  USER_LOGOUT_REQUEST,
-  USER_LOGOUT_SUCCESSED,
-  USER_LOGOUT_FAILED,
-  USER_CHANGE_REQUEST,
-  USER_CHANGE_SUCCESSED,
-  USER_CHANGE_FAILED,
-} from './types';
+import * as TYPES from './types';
 
 export const loginUserRequest = userId => ({
-  type: USER_LOGIN_REQUEST,
+  type: TYPES.USER_LOGIN_REQUEST,
   payload: userId,
 });
 
 export const loginUserSuccessed = user => ({
-  type: USER_LOGIN_SUCCESSED,
+  type: TYPES.USER_LOGIN_SUCCESSED,
   payload: user,
 });
 
 export const loginUserFailed = err => ({
-  type: USER_LOGIN_FAILED,
+  type: TYPES.USER_LOGIN_FAILED,
   payload: err,
 });
 
-export const userReconnect = () => ({ type: USER_RECONNECT });
+export const userReconnect = () => ({ type: TYPES.USER_RECONNECT });
 
 export const userReconnectSuccessed = user => ({
-  type: USER_RECONNECT_SUCCESSED,
+  type: TYPES.USER_RECONNECT_SUCCESSED,
   payload: user,
 });
 
 export const userReconnectFailed = err => ({
-  type: USER_RECONNECT_FAILED,
+  type: TYPES.USER_RECONNECT_FAILED,
   payload: err,
 });
 
-export const logoutUserRequest = () => ({ type: USER_LOGOUT_REQUEST });
+export const logoutUserRequest = () => ({ type: TYPES.USER_LOGOUT_REQUEST });
 
 export const logoutUserSuccessed = res => ({
-  type: USER_LOGOUT_SUCCESSED,
+  type: TYPES.USER_LOGOUT_SUCCESSED,
   payload: res,
 });
 
 export const logoutUserFailed = error => ({
-  type: USER_LOGOUT_FAILED,
+  type: TYPES.USER_LOGOUT_FAILED,
   payload: error,
 });
 
 export const changeUserRequest = formData => ({
-  type: USER_CHANGE_REQUEST,
+  type: TYPES.USER_CHANGE_REQUEST,
   newUserData: formData,
 });
 
 export const changeUserSuccessed = newData => ({
-  type: USER_CHANGE_SUCCESSED,
+  type: TYPES.USER_CHANGE_SUCCESSED,
   payload: newData,
 });
 
 export const changeUserFailed = err => ({
-  type: USER_CHANGE_FAILED,
+  type: TYPES.USER_CHANGE_FAILED,
   payload: err,
 });

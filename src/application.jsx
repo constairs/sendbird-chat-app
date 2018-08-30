@@ -2,11 +2,10 @@
 import React from 'react';
 import { hot } from 'react-hot-loader';
 import { Provider } from 'react-redux';
-import { BrowserRouter as Router } from 'react-router-dom';
 import { ConnectedRouter } from 'connected-react-router';
 import { PersistGate } from 'redux-persist/integration/react';
 import { Navigation } from './navigation';
-import { Header } from './components/Header';
+import { Header } from './containers/Header';
 import { configureStore, history } from './redux/store';
 import { rootSaga } from './redux/sagas';
 
@@ -21,12 +20,10 @@ export const Application = hot(module)(() => (
     <PersistGate loading={null} persistor={store.persistor}>
       <React.Fragment>
         <ConnectedRouter history={history}>
-          <Router>
-            <div>
-              <Header />
-              <Navigation />
-            </div>
-          </Router>
+          <div>
+            <Header />
+            <Navigation />
+          </div>
         </ConnectedRouter>
       </React.Fragment>
     </PersistGate>

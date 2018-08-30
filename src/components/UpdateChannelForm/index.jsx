@@ -2,13 +2,10 @@ import React from 'react';
 import PropTypes from 'prop-types';
 
 export class UpdateChannelForm extends React.Component {
-  constructor(props) {
-    super(props);
-    this.state = {
-      channelName: '',
-      coverUrl: '',
-    };
-  }
+  state = {
+    channelName: '',
+    coverUrl: '',
+  };
 
   handleInput = ({ target }) => {
     const { name, value } = target;
@@ -26,6 +23,7 @@ export class UpdateChannelForm extends React.Component {
   };
 
   render() {
+    const { channelName, coverUrl } = this.state;
     return (
       <div className="form create-channel-form">
         <form onSubmit={this.handleSubmit}>
@@ -34,7 +32,7 @@ export class UpdateChannelForm extends React.Component {
             <input
               id="channelName"
               name="channelName"
-              value={this.state.channelName}
+              value={channelName}
               onChange={this.handleInput}
               type="text"
             />
@@ -44,12 +42,12 @@ export class UpdateChannelForm extends React.Component {
             <input
               id="coverUrl"
               name="coverUrl"
-              value={this.state.coverUrl}
+              value={coverUrl}
               onChange={this.handleInput}
               type="text"
             />
           </label>
-          <button>Изменить</button>
+          <button disabled={!channelName}>Изменить</button>
         </form>
       </div>
     );

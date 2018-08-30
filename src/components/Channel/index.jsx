@@ -1,6 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { ChatBox } from '../ChatBox';
+import { ChatBox } from '../../containers/ChatBox';
 
 import './index.scss';
 
@@ -10,7 +10,7 @@ export class Channel extends React.Component {
   };
 
   render() {
-    const { name, participantCount } = this.props.channel;
+    const { name, participantCount, coverUrl } = this.props.channel;
     return (
       <div className="channel-item">
         <div className="channel-header">
@@ -18,9 +18,8 @@ export class Channel extends React.Component {
             <div className="img-place">
               <img
                 src={
-                  this.props.channel.coverUrl
-                    ? this.props.channel.coverUrl
-                    : 'http://dxstmhyqfqr1o.cloudfront.net/images/icon-chat-04.png'
+                  coverUrl ||
+                  'http://dxstmhyqfqr1o.cloudfront.net/images/icon-chat-04.png'
                 }
                 alt={name}
               />
@@ -32,18 +31,18 @@ export class Channel extends React.Component {
           </div>
           <div className="channel-users-list">
             <ul className="users-list">
-              {this.props.participants.map((cur, i) => (
+              {this.props.participants.map((participant, i) => (
                 <li
                   style={{ transform: `translateX(calc(${i}*(50%)))` }}
-                  key={cur.userId}
+                  key={participant.userId}
                 >
                   <div className="img-place">
                     <img
-                      src={cur.profileUrl}
-                      title={cur.nickname}
-                      alt={cur.nickname}
+                      src={participant.profileUrl}
+                      title={participant.nickname}
+                      alt={participant.nickname}
                     />{' '}
-                    {cur.connectionStatus === 'online' ? (
+                    {participant.connectionStatus === 'online' ? (
                       <span className="connection-status online" />
                     ) : (
                       <span className="connection-status" />
@@ -53,7 +52,6 @@ export class Channel extends React.Component {
               ))}
             </ul>
           </div>
-          {/* <button onClick={this.handleLeaveBtn}>Покинуть канал</button> */}
         </div>
         <ChatBox currentChannel={this.props.channel} />
       </div>

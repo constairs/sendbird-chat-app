@@ -1,4 +1,4 @@
-import { call, put, takeLatest } from 'redux-saga/effects';
+import { call, put, takeLatest, all } from 'redux-saga/effects';
 import { REHYDRATE } from 'redux-persist';
 import { push } from 'connected-react-router';
 import {
@@ -25,7 +25,7 @@ import {
   changeUserFailed,
 } from './actions';
 
-export function* loginUserAsync(action) {
+function* loginUserAsync(action) {
   try {
     const user = yield call(connectToSB, action.payload.userId);
     yield put(loginUserSuccessed(user));
@@ -34,19 +34,11 @@ export function* loginUserAsync(action) {
   }
 }
 
-export function* watchLoginUser() {
-  yield takeLatest(USER_LOGIN_REQUEST, loginUserAsync);
-}
-
-export function* loginSuccessed() {
+function* loginSuccessed() {
   yield put(push('/channels'));
 }
 
-export function* watchLoginSuccessed() {
-  yield takeLatest(USER_LOGIN_SUCCESSED, loginSuccessed);
-}
-
-export function* userReconnectAsync(action) {
+function* userReconnectAsync(action) {
   if (action.payload && action.payload.userId) {
     try {
       yield put(userReconnect());
@@ -58,11 +50,7 @@ export function* userReconnectAsync(action) {
   }
 }
 
-export function* weatchReconnect() {
-  yield takeLatest(REHYDRATE, userReconnectAsync);
-}
-
-export function* logoutUserAsync(action) {
+function* logoutUserAsync(action) {
   try {
     const res = yield call(disconnectFromSB, action);
     yield put(logoutUserSuccessed(res));
@@ -71,19 +59,11 @@ export function* logoutUserAsync(action) {
   }
 }
 
-export function* watchLogoutUser() {
-  yield takeLatest(USER_LOGOUT_REQUEST, logoutUserAsync);
-}
-
-export function* logoutUserComplete() {
+function* logoutUserComplete() {
   yield put(push('/'));
 }
 
-export function* watchLogoutComplete() {
-  yield takeLatest(USER_LOGOUT_SUCCESSED, logoutUserComplete);
-}
-
-export function* changeUserAsync(action) {
+function* changeUserAsync(action) {
   try {
     const newData = yield call(changeProfile, ...action.newUserData);
     yield put(changeUserSuccessed(newData));
@@ -92,6 +72,13 @@ export function* changeUserAsync(action) {
   }
 }
 
-export function* watchChangeUser() {
-  yield takeLatest(USER_CHANGE_REQUEST, changeUserAsync);
+export function* userSagas() {
+  yield all([
+    yield takeLatest(USER_LOGIN_REQUEST, loginUserAsync),
+    yield takeLatest(USER_LOGIN_SUCCESSED, loginSuccessed),
+    yield takeLatest(REHYDRATE, userReconnectAsync),
+    yield takeLatest(USER_LOGOUT_REQUEST, logoutUserAsync),
+    yield takeLatest(USER_LOGOUT_SUCCESSED, logoutUserComplete),
+    yield takeLatest(USER_CHANGE_REQUEST, changeUserAsync),
+  ]);
 }

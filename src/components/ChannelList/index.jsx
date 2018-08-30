@@ -1,8 +1,8 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { Spinner } from 'react-preloading-component';
-import { ChannelListItem } from '../ChannelListItem';
-import { GroupListItem } from '../../components/GroupListItem';
+import { ChannelListItem } from '../../containers/ChannelListItem';
+import { GroupListItem } from '../../containers/GroupListItem';
 
 import './index.scss';
 
@@ -26,19 +26,19 @@ export class ChannelList extends React.Component {
           </div>
         ) : null}
         {this.props.channels.map(
-          cur =>
+          channelItem =>
             (this.props.group ? (
               <GroupListItem
-                cur={cur}
-                key={cur.createdAt}
+                channelItem={channelItem}
+                key={channelItem.createdAt}
                 selectedChan={this.handleChanSelect}
                 onInviteUsers={this.handleInviteUser}
                 onLeaveGroup={this.handleLeaveGroup}
               />
             ) : (
               <ChannelListItem
-                cur={cur}
-                key={cur.createdAt}
+                channelItem={channelItem}
+                key={channelItem.createdAt}
                 selectedChan={this.handleChanSelect}
               />
             ))

@@ -2,20 +2,15 @@ import React from 'react';
 import PropTypes from 'prop-types';
 
 export class CreateChannelForm extends React.Component {
-  constructor(props) {
-    super(props);
-    this.state = {
-      channelName: '',
-      coverUrl: '',
-      coverFile: '',
-    };
-  }
+  state = {
+    channelName: '',
+    coverUrl: '',
+    coverFile: '',
+  };
 
-  handleInput = (e) => {
-    const curInput = e.target;
-    const curName = curInput.name;
-    const curValue = curInput.value;
-    this.setState({ [curName]: curValue });
+  handleInput = ({ target }) => {
+    const { name, value } = target;
+    this.setState({ [name]: value });
   };
 
   handleFilesLoad = (file) => {
@@ -39,6 +34,7 @@ export class CreateChannelForm extends React.Component {
   };
 
   render() {
+    const { channelName, coverUrl } = this.state;
     return (
       <div className="form create-channel-form">
         <form onSubmit={this.handleSubmit}>
@@ -47,7 +43,7 @@ export class CreateChannelForm extends React.Component {
             <input
               id="channelName"
               name="channelName"
-              value={this.state.channelName}
+              value={channelName}
               onChange={this.handleInput}
               type="text"
             />
@@ -57,13 +53,13 @@ export class CreateChannelForm extends React.Component {
             <input
               id="coverUrl"
               name="coverUrl"
-              value={this.state.coverUrl}
+              value={coverUrl}
               onChange={this.handleInput}
               type="text"
             />
           </label>
 
-          <button disabled={!this.state.channelName}>Создать</button>
+          <button disabled={!channelName}>Создать</button>
         </form>
       </div>
     );

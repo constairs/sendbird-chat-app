@@ -12,12 +12,9 @@ import { UserForm } from '../../components/UserForm';
 import './index.scss';
 
 class UserProfile extends React.Component {
-  constructor(props) {
-    super(props);
-    this.state = {
-      modalIsOpen: false,
-    };
-  }
+  state = {
+    modalIsOpen: false,
+  };
 
   handleLogout = () => {
     this.props.userActions.logoutUserRequest();

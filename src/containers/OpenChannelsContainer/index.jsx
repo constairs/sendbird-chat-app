@@ -11,16 +11,13 @@ import { CreateGroupForm } from '../../components/CreateGroupForm';
 import { ChannelList } from '../../components/ChannelList';
 import { Channel } from '../../components/Channel';
 import { GroupChannel } from '../../components/GroupChannel';
-import { NotificationWindow } from '../../components/NotificationWindow';
+import { NotificationWindow } from '../NotificationWindow';
 
 class OpenChannel extends React.Component {
-  constructor(props) {
-    super(props);
-    this.state = {
-      modalIsOpen: false,
-      groupChModal: false,
-    };
-  }
+  state = {
+    modalIsOpen: false,
+    groupChModal: false,
+  };
 
   handleOpenChannel = (formData) => {
     this.props.openChannelsActions.createOpenChannel(formData);
@@ -112,20 +109,24 @@ class OpenChannel extends React.Component {
               </div>
             ) : null}
           </div>
-          {channel ? (
-            <Channel
-              onEnter={this.handleEnterChannel}
-              onLeave={this.handleLeaveChannel}
-              user={this.props.user}
-              channel={channel}
-              participants={this.props.openChannels.participants}
-            />
-          ) : groupChannel ? (
-            <GroupChannel
-              onLeave={this.handleLeaveChannel}
-              user={this.props.user}
-              channel={groupChannel}
-            />
+          {channel || groupChannel ? (
+            <div className="channel-page-content">
+              {channel ? (
+                <Channel
+                  onEnter={this.handleEnterChannel}
+                  onLeave={this.handleLeaveChannel}
+                  user={this.props.user}
+                  channel={channel}
+                  participants={this.props.openChannels.participants}
+                />
+              ) : (
+                <GroupChannel
+                  onLeave={this.handleLeaveChannel}
+                  user={this.props.user}
+                  channel={groupChannel}
+                />
+              )}
+            </div>
           ) : null}
         </div>
         <Modal
@@ -146,14 +147,12 @@ class OpenChannel extends React.Component {
             <CreateChannelForm onSubmitForm={this.handleOpenChannel} />
           )}
         </Modal>
-        {this.props.notification ? (
-          <NotificationWindow
-            notificationShow={this.props.notificationShow}
-            notification={this.props.notification}
-            nickname={this.props.user.userName}
-            onNotificationClose={this.handleNotificationClose}
-          />
-        ) : null}
+        <NotificationWindow
+          notificationShow={this.props.notificationShow}
+          notification={this.props.notification}
+          nickname={this.props.user.userName}
+          onNotificationClose={this.handleNotificationClose}
+        />
       </div>
     );
   }
@@ -169,8 +168,8 @@ OpenChannel.propTypes = {
   user: PropTypes.objectOf(PropTypes.any).isRequired,
   openChannels: PropTypes.objectOf(PropTypes.any).isRequired,
   groupChannels: PropTypes.objectOf(PropTypes.any).isRequired,
-  notification: PropTypes.objectOf(PropTypes.any),
   notificationShow: PropTypes.bool,
+  notification: PropTypes.objectOf(PropTypes.any).isRequired,
 };
 
 function mapStateToProps(state) {

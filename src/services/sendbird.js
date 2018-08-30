@@ -77,8 +77,12 @@ GroupChannelHandler.onUserLeft = function(groupChannel, user) {
   store.store.dispatch(onUserLeft({ groupChannel, user }));
 };
 GroupChannelHandler.onReadReceiptUpdated = function(channel) {
-  // console.log(channel);
+  console.log(channel);
 };
+GroupChannelHandler.onTypingStatusUpdated = function(channel) {
+  console.log(channel);
+};
+
 /* eslint-disable */
 
 sb.addChannelHandler('HANDLER', ChannelHandler);
@@ -185,7 +189,7 @@ export function groupChannelList() {
     const groupChannelListQuery = sb.GroupChannel.createMyGroupChannelListQuery();
     groupChannelListQuery.includeEmpty = true;
     groupChannelListQuery.limit = 20;
-
+    groupChannelListQuery.showReadReceipt = true;
     if (groupChannelListQuery.hasNext) {
       groupChannelListQuery.next(function(channelList, error) {
         if (error) {
@@ -311,21 +315,21 @@ export function getMessages(channelUrl, channelType) {
           reject(error);
         }
         const messageListQuery = channel.createPreviousMessageListQuery();
-        messageListQuery.load(10, true, (messageList, err) => {
+        messageListQuery.load(10, false, (messageList, err) => {
           if (err) {
             reject(err);
           }
-          resolve(messageList.reverse());
+          resolve(messageList);
         });
       });
     } else {
       getChannel(channelUrl, channelType).then(groupChannel => {
         const messageListQuery = groupChannel.createPreviousMessageListQuery();
-        messageListQuery.load(10, true, (messageList, error) => {
+        messageListQuery.load(10, false, (messageList, error) => {
           if (error) {
             reject(error);
           }
-          resolve(messageList.reverse());
+          resolve(messageList);
         });
       });
     }
@@ -343,7 +347,7 @@ export function getRecentlyMessages(channelUrl, quantity) {
         if (err) {
           reject(err);
         }
-        resolve(messageList.reverse());
+        resolve(messageList);
       });
     });
   });
@@ -361,11 +365,11 @@ export function sendMessage(channelUrl, channelType, mType, user, message) {
             reject(err);
           }
           const messageListQuery = channel.createPreviousMessageListQuery();
-          messageListQuery.load(10, true, (messageList, e) => {
+          messageListQuery.load(10, false, (messageList, e) => {
             if (e) {
               reject(e);
             }
-            resolve(messageList.reverse());
+            resolve(messageList);
           });
         });
       });
@@ -376,11 +380,11 @@ export function sendMessage(channelUrl, channelType, mType, user, message) {
             reject(err);
           }
           const messageListQuery = groupChannel.createPreviousMessageListQuery();
-          messageListQuery.load(10, true, (messageList, e) => {
+          messageListQuery.load(10, false, (messageList, e) => {
             if (e) {
               reject(e);
             }
-            resolve(messageList.reverse());
+            resolve(messageList);
           });
         });
       });
@@ -419,11 +423,11 @@ export function sendFileMessage(
             reject(error);
           }
           const messageListQuery = groupChannel.createPreviousMessageListQuery();
-          messageListQuery.load(10, true, (messageList, e) => {
+          messageListQuery.load(10, false, (messageList, e) => {
             if (e) {
               reject(e);
             }
-            resolve(messageList.reverse());
+            resolve(messageList);
           });
         }
       );

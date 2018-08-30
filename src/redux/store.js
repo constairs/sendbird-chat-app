@@ -2,7 +2,6 @@ import { createStore, applyMiddleware } from 'redux';
 import { createBrowserHistory } from 'history';
 import { connectRouter, routerMiddleware } from 'connected-react-router';
 import { persistStore } from 'redux-persist';
-import thunk from 'redux-thunk';
 import createSagaMiddleware from 'redux-saga';
 import { rootReducer } from './reducers';
 
@@ -16,7 +15,7 @@ export function configureStore() {
     window.__REDUX_DEVTOOLS_EXTENSION__ &&
       window.__REDUX_DEVTOOLS_EXTENSION__(),
     /* eslint-disable */
-    applyMiddleware(routerMiddleware(history), sagaMiddleware, thunk)
+    applyMiddleware(routerMiddleware(history), sagaMiddleware)
   );
 
   const persistor = persistStore(store);

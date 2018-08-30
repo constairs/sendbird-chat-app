@@ -3,17 +3,15 @@ import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
 
 class ListItem extends React.Component {
-  constructor(props) {
-    super(props);
-    this.state = {
-      inviteForm: false,
-      usersIdsInput: '',
-    };
-  }
+  state = {
+    inviteForm: false,
+    usersIdsInput: '',
+  };
+
   handleItemClick = () => {
     this.props.selectedChan({
-      channelUrl: this.props.cur.url,
-      channelType: this.props.cur.channelType,
+      channelUrl: this.props.channelItem.url,
+      channelType: this.props.channelItem.channelType,
     });
   };
 
@@ -22,7 +20,7 @@ class ListItem extends React.Component {
   };
 
   handleLeaveClick = () => {
-    this.props.onLeaveGroup(this.props.cur.url);
+    this.props.onLeaveGroup(this.props.channelItem.url);
   };
 
   handleInput = (e) => {
@@ -31,11 +29,15 @@ class ListItem extends React.Component {
 
   handleFormSubmit = (e) => {
     e.preventDefault();
-    this.props.onInviteUsers([this.props.cur.url, this.state.usersIdsInput]);
+    this.props.onInviteUsers([
+      this.props.channelItem.url,
+      this.state.usersIdsInput,
+    ]);
     this.setState({ inviteForm: false, usersIdsInput: '' });
   };
 
   render() {
+    const { channelItem } = this.props;
     return (
       <li>
         <button className="channel-list-item" onClick={this.handleItemClick}>
@@ -43,21 +45,21 @@ class ListItem extends React.Component {
             <span className="img">
               <img
                 src={
-                  this.props.cur.coverUrl
-                    ? this.props.cur.coverUrl
+                  channelItem.coverUrl
+                    ? channelItem.coverUrl
                     : 'http://dxstmhyqfqr1o.cloudfront.net/images/icon-chat-04.png'
                 }
-                alt={this.props.cur.name}
+                alt={channelItem.name}
               />
             </span>
-            <span className="channel-item-name">{this.props.cur.name}</span>
+            <span className="channel-item-name">{channelItem.name}</span>
           </div>
-          {this.props.cur.lastMessage ? (
+          {channelItem.lastMessage ? (
             <div>
               <div className="recently-messages">
                 Последнее сообщение:
                 <br />
-                <span>{this.props.cur.lastMessage.customType}</span>
+                <span>{channelItem.lastMessage.customType}</span>
               </div>
             </div>
           ) : null}
@@ -87,7 +89,7 @@ class ListItem extends React.Component {
 
 ListItem.propTypes = {
   selectedChan: PropTypes.func.isRequired,
-  cur: PropTypes.objectOf(PropTypes.any).isRequired,
+  channelItem: PropTypes.objectOf(PropTypes.any).isRequired,
   onInviteUsers: PropTypes.func.isRequired,
   onLeaveGroup: PropTypes.func.isRequired,
 };

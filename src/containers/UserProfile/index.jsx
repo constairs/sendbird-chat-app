@@ -11,12 +11,9 @@ import * as userActions from '../../redux/user/actions';
 import './index.scss';
 
 class Profile extends React.Component {
-  constructor(props) {
-    super(props);
-    this.state = {
-      modalIsOpen: false,
-    };
-  }
+  state = {
+    modalIsOpen: false,
+  };
 
   handleOpenModal = () => {
     this.setState({ modalIsOpen: true });
@@ -75,10 +72,6 @@ class Profile extends React.Component {
 Profile.propTypes = {
   user: PropTypes.objectOf(PropTypes.any).isRequired,
   userActions: PropTypes.objectOf(PropTypes.any).isRequired,
-};
-
-Profile.defaultProps = {
-  history,
 };
 
 function mapStateToProps(state) {

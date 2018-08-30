@@ -16,66 +16,70 @@ export class MessageItem extends React.Component {
     super(props);
     this.state = {
       onEdit: false,
-      message: this.props.cur.updatedAt
-        ? this.props.cur.message
-        : this.props.cur.customType,
+      messageInput: props.message.updatedAt
+        ? props.message.message
+        : props.message.customType,
     };
   }
   handleDeleteBtn = () => {
-    this.props.onDeleteMessage(this.props.cur);
+    this.props.onDeleteMessage(this.props.message);
   };
   handleTextInput = (e) => {
-    this.setState({ message: e.target.value });
+    this.setState({ messageInput: e.target.value });
   };
   handleEditMessage = () => {
     this.setState({ onEdit: true });
   };
   handleSubmit = (e) => {
     e.preventDefault();
-    this.props.onEditMessage([this.props.cur.messageId, this.state.message]);
+    this.props.onEditMessage([
+      this.props.message.messageId,
+      this.state.messageInput,
+    ]);
     this.setState({ onEdit: false });
   };
   render() {
-    const { cur } = this.props;
+    const { message, userId } = this.props;
     return (
       <div className="message-item">
         <div className="sender-img">
           <img
             src={
-              cur.sender || cur.sender.profileUrl
-                ? cur.sender.profileUrl
+              message.sender || message.sender.profileUrl
+                ? message.sender.profileUrl
                 : 'http://dxstmhyqfqr1o.cloudfront.net/images/icon-chat-04.png'
             }
-            alt={cur.nickname}
+            alt={message.nickname}
           />
         </div>
         <div className="message-body">
           <p className="sender-info">
             <span className="sender-nick">
-              {cur.sender.nickname ? cur.sender.nickname : 'noname'}
+              {message.sender.nickname ? message.sender.nickname : 'noname'}
             </span>
-            {cur.updatedAt ? (
+            {message.updatedAt ? (
               <span className="sending-date">
-                Обновлено: {moment(cur.updatedAt).format('DD/MM/YY hh:mm a')}
+                Обновлено:{' '}
+                {moment(message.updatedAt).format('DD/MM/YY hh:mm a')}
               </span>
             ) : (
               <span className="sending-date">
-                {moment(cur.createdAt).format('DD/MM/YY hh:mm a')}
+                {moment(message.createdAt).format('DD/MM/YY hh:mm a')}
               </span>
             )}
           </p>
-          {cur.messageType === 'file' ? (
+          {message.messageType === 'file' ? (
             <div className="file-message-item">
               <div className="message-file-preview">
-                {new RegExp('^image?', 'i').test(cur.type) ? (
-                  <img src={cur.url} alt={cur.name} />
+                {new RegExp('^image?', 'i').test(message.type) ? (
+                  <img src={message.url} alt={message.name} />
                 ) : (
                   <FontAwesomeIcon icon={faFile} />
                 )}
               </div>
               <p>
-                <a href={cur.url} target="_blank">
-                  {cur.name} ({cur.size} кб)
+                <a href={message.url} target="_blank">
+                  {message.name} ({message.size} кб)
                 </a>
               </p>
             </div>
@@ -85,7 +89,7 @@ export class MessageItem extends React.Component {
               <input
                 type="text"
                 onChange={this.handleTextInput}
-                value={this.state.message}
+                value={this.state.messageInput}
               />
               <button>
                 <FontAwesomeIcon icon={faPaperPlane} />
@@ -93,11 +97,11 @@ export class MessageItem extends React.Component {
             </form>
           ) : (
             <p className="message-text">
-              {cur.updatedAt ? cur.message : cur.customType}
+              {message.updatedAt ? message.message : message.customType}
             </p>
           )}
         </div>
-        {this.props.userId === cur.sender.userId ? (
+        {userId === message.sender.userId ? (
           <div>
             <button onClick={this.handleDeleteBtn} className="x-btn">
               <FontAwesomeIcon icon={faTimes} />
@@ -115,6 +119,6 @@ export class MessageItem extends React.Component {
 MessageItem.propTypes = {
   onDeleteMessage: PropTypes.func.isRequired,
   onEditMessage: PropTypes.func.isRequired,
-  cur: PropTypes.objectOf(PropTypes.any).isRequired,
+  message: PropTypes.objectOf(PropTypes.any).isRequired,
   userId: PropTypes.string.isRequired,
 };

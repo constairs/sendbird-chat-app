@@ -1,6 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { ChatBox } from '../ChatBox';
+import { ChatBox } from '../../containers/ChatBox';
 
 export class GroupChannel extends React.Component {
   handleLeaveBtn = () => {
@@ -8,7 +8,7 @@ export class GroupChannel extends React.Component {
   };
 
   render() {
-    const { name, memberCount, members } = this.props.channel;
+    const { channel } = this.props;
     return (
       <div className="channel-item">
         <div className="channel-header">
@@ -16,21 +16,20 @@ export class GroupChannel extends React.Component {
             <div className="img-place">
               <img
                 src={
-                  this.props.channel.coverUrl
-                    ? this.props.channel.coverUrl
-                    : 'http://dxstmhyqfqr1o.cloudfront.net/images/icon-chat-04.png'
+                  channel.coverUrl ||
+                  'http://dxstmhyqfqr1o.cloudfront.net/images/icon-chat-04.png'
                 }
-                alt={name}
+                alt={channel.name}
               />
             </div>
             <div>
-              <h1 className="channel-name">{name}</h1>
-              <p className="channel-users">Участники: {memberCount}</p>
+              <h1 className="channel-name">{channel.name}</h1>
+              <p className="channel-users">Участники: {channel.memberCount}</p>
             </div>
           </div>
           <div className="channel-users-list">
             <ul className="users-list">
-              {members.map((cur, i) => (
+              {channel.members.map((cur, i) => (
                 <li
                   style={{ transform: `translateX(calc(${i}*(50%)))` }}
                   key={cur.userId}
@@ -53,7 +52,7 @@ export class GroupChannel extends React.Component {
           </div>
           {/* <button onClick={this.handleLeaveBtn}>Покинуть канал</button> */}
         </div>
-        <ChatBox currentChannel={this.props.channel} />
+        <ChatBox currentChannel={channel} />
       </div>
     );
   }

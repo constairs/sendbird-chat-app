@@ -2,21 +2,16 @@ import React from 'react';
 import PropTypes from 'prop-types';
 
 export class CreateGroupForm extends React.Component {
-  constructor(props) {
-    super(props);
-    this.state = {
-      channelName: '',
-      coverUrl: '',
-      coverFile: '',
-      groupUsers: '',
-    };
-  }
+  state = {
+    channelName: '',
+    coverUrl: '',
+    coverFile: '',
+    groupUsers: '',
+  };
 
-  handleInput = (e) => {
-    const curInput = e.target;
-    const curName = curInput.name;
-    const curValue = curInput.value;
-    this.setState({ [curName]: curValue });
+  handleInput = ({ target }) => {
+    const { name, value } = target;
+    this.setState({ [name]: value });
   };
 
   handleFilesLoad = (file) => {
@@ -42,6 +37,7 @@ export class CreateGroupForm extends React.Component {
   };
 
   render() {
+    const { channelName, coverUrl, groupUsers } = this.state;
     return (
       <div className="form create-channel-form">
         <form onSubmit={this.handleSubmit}>
@@ -50,7 +46,7 @@ export class CreateGroupForm extends React.Component {
             <input
               id="channelName"
               name="channelName"
-              value={this.state.channelName}
+              value={channelName}
               onChange={this.handleInput}
               type="text"
             />
@@ -60,7 +56,7 @@ export class CreateGroupForm extends React.Component {
             <input
               id="coverUrl"
               name="coverUrl"
-              value={this.state.coverUrl}
+              value={coverUrl}
               onChange={this.handleInput}
               type="text"
             />
@@ -71,13 +67,13 @@ export class CreateGroupForm extends React.Component {
             <input
               id="groupUsers"
               name="groupUsers"
-              value={this.state.groupUsers}
+              value={groupUsers}
               onChange={this.handleInput}
               type="text"
             />
           </label>
 
-          <button disabled={!this.state.channelName}>Создать</button>
+          <button disabled={!channelName}>Создать</button>
         </form>
       </div>
     );

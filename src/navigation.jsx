@@ -2,17 +2,10 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { Switch, Route, Redirect } from 'react-router-dom';
 import { connect } from 'react-redux';
-import { withRouter } from 'react-router';
 import { LoginContainer } from './containers/LoginContainer/';
 import { OpenChannelsContainer } from './containers/OpenChannelsContainer';
 import { Banner } from './components/Banner';
 import { UserProfileContainer } from './containers/UserProfileContainer';
-
-function mapStateToProps(state) {
-  return {
-    user: state.persistedUserReducer,
-  };
-}
 
 function mapStateToPropsRoute(state) {
   return {
@@ -50,7 +43,7 @@ Private.propTypes = {
 
 const PrivateRoute = connect(mapStateToPropsRoute)(Private);
 
-export const Navigator = () => (
+export const Navigation = () => (
   <Switch>
     <Route exact path="/" component={Banner} />
     <Route exact path="/login/" component={LoginContainer} />
@@ -58,5 +51,3 @@ export const Navigator = () => (
     <PrivateRoute component={UserProfileContainer} path="/profile/" />
   </Switch>
 );
-
-export const Navigation = withRouter(connect(mapStateToProps)(Navigator));

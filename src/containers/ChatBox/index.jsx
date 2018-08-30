@@ -5,7 +5,6 @@ import { Spinner } from 'react-preloading-component';
 import PropTypes from 'prop-types';
 import * as chatActions from '../../redux/chat/actions';
 import { MessageItem } from '../MessageItem';
-import { scrollToBottom } from '../../utils/scrollToBottom';
 import { ChatMessageField } from '../ChatMessageField';
 
 import './index.scss';
@@ -17,7 +16,7 @@ export class Chat extends React.Component {
   }
 
   componentDidUpdate() {
-    scrollToBottom(this.ref.current);
+    this.ref.current.scrollTop = this.ref.current.scrollHeight;
   }
 
   handleMessageDelete = (message) => {
@@ -37,28 +36,27 @@ export class Chat extends React.Component {
   };
 
   render() {
+    const { messFetching, messages, user } = this.props;
+    const { url, channelType } = this.props.currentChannel;
     return (
       <div>
         <div className="chat-box" ref={this.ref}>
-          {this.props.messFetching ? (
+          {messFetching ? (
             <div className="preloader">
               <Spinner color="#ffffff" secondaryColor="#40c9ff" size={50} />
             </div>
           ) : null}
-          {this.props.messages.map(elem => (
+          {messages.map(message => (
             <MessageItem
-              cur={elem}
+              message={message}
               onDeleteMessage={this.handleMessageDelete}
               onEditMessage={this.handleMessageEdit}
-              key={elem.createdAt}
-              userId={this.props.user.userId}
+              key={message.createdAt}
+              userId={user.userId}
             />
           ))}
         </div>
-        <ChatMessageField
-          channelUrl={this.props.currentChannel.url}
-          channelType={this.props.currentChannel.channelType}
-        />
+        <ChatMessageField channelUrl={url} channelType={channelType} />
       </div>
     );
   }
@@ -67,9 +65,6 @@ export class Chat extends React.Component {
 function mapStateToProps(state) {
   return {
     user: state.persistedUserReducer,
-    // currentChannel:
-    //   state.openChannelsReducer.channel ||
-    //   state.groupChannelsReducer.groupChannel,
     chatParticipants:
       state.openChannelsReducer.participants ||
       state.groupChannelsReducer.participants,

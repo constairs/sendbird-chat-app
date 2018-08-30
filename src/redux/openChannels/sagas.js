@@ -1,4 +1,4 @@
-import { call, put, takeLatest, takeEvery } from 'redux-saga/effects';
+import { call, put, takeLatest, takeEvery, all } from 'redux-saga/effects';
 import {
   createOpenChannel,
   openChannelList,
@@ -41,10 +41,6 @@ export function* createChannelAsync(action) {
   }
 }
 
-export function* watchCreateChannel() {
-  yield takeLatest(CREATE_OPEN_CHANNEL, createChannelAsync);
-}
-
 export function* openChannels() {
   try {
     const channelList = yield call(openChannelList);
@@ -52,17 +48,6 @@ export function* openChannels() {
   } catch (error) {
     yield put(openChannelsListFailed(error));
   }
-}
-
-export function* watchOpenChannels() {
-  yield takeLatest(
-    [
-      USER_RECONNECT_SUCCESSED,
-      USER_LOGIN_SUCCESSED,
-      CREATE_OPEN_CHANNEL_SUCCESSED,
-    ],
-    openChannels
-  );
 }
 
 export function* selectChannel(action) {
@@ -74,10 +59,6 @@ export function* selectChannel(action) {
   }
 }
 
-export function* watchGetChannel() {
-  yield takeLatest(GET_SELECTED_CHANNEL, selectChannel);
-}
-
 export function* enterSelectedChannel(action) {
   try {
     const data = yield call(enterChannel, action.payload);
@@ -87,10 +68,6 @@ export function* enterSelectedChannel(action) {
   }
 }
 
-export function* watchEnterChannel() {
-  yield takeLatest(ENTER_CHANNEL, enterSelectedChannel);
-}
-
 export function* leaveChannel(action) {
   try {
     const res = yield call(exitChannel, action.payload);
@@ -98,10 +75,6 @@ export function* leaveChannel(action) {
   } catch (error) {
     yield put(leaveChannelFailed(error));
   }
-}
-
-export function* watchLeaveChannel() {
-  yield takeLatest(LEAVE_CHANNEL, leaveChannel);
 }
 
 export function* getRecentMessages(action) {
@@ -114,6 +87,20 @@ export function* getRecentMessages(action) {
   }
 }
 
-export function* watchGetRecentMessages() {
-  yield takeEvery(GET_RECENTLY_MESSAGES, getRecentMessages);
+export function* openChannelSagas() {
+  yield all([
+    yield takeLatest(CREATE_OPEN_CHANNEL, createChannelAsync),
+    yield takeLatest(
+      [
+        USER_RECONNECT_SUCCESSED,
+        USER_LOGIN_SUCCESSED,
+        CREATE_OPEN_CHANNEL_SUCCESSED,
+      ],
+      openChannels
+    ),
+    yield takeLatest(GET_SELECTED_CHANNEL, selectChannel),
+    yield takeLatest(ENTER_CHANNEL, enterSelectedChannel),
+    yield takeLatest(LEAVE_CHANNEL, leaveChannel),
+    yield takeEvery(GET_RECENTLY_MESSAGES, getRecentMessages),
+  ]);
 }

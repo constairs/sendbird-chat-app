@@ -27,12 +27,16 @@ body {
   width: 100%;
 }
 
+.channel-page-content {
+  width: 65%;
+}
+
 .channel-page {
   .channels-list {
     margin-right: 40px;
   }
   .channel-sidebar {
-    width: 40%;
+    width: 35%;
     transition: .2s;
     &.min {
       width: 35%;

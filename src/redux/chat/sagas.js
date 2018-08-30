@@ -42,7 +42,7 @@ import {
   cleanChat,
 } from './actions';
 
-export function* sendMessageAsync(action) {
+function* sendMessageAsync(action) {
   try {
     const sendRes = yield call(sendMessage, ...action.messageData);
     yield put(sendMessageSuccessed(sendRes));
@@ -50,10 +50,6 @@ export function* sendMessageAsync(action) {
     yield put(sendMessageFailed(error));
   }
 }
-
-// export function* watchSendMessage() {
-//   yield takeLatest(SEND_MESSAGE, sendMessageAsync);
-// }
 
 function* sendFileMessageAsync(action) {
   try {
@@ -64,11 +60,7 @@ function* sendFileMessageAsync(action) {
   }
 }
 
-// export function* watchSendFileMessage() {
-//   yield takeLatest(SEND_FILE_MESSAGE, sendFileMessageAsync);
-// }
-
-export function* deleteMessageAsync(action) {
+function* deleteMessageAsync(action) {
   try {
     const delRes = yield call(deleteMessage, ...action.messageData);
     yield put(deleteMessageSuccessed(delRes));
@@ -77,11 +69,7 @@ export function* deleteMessageAsync(action) {
   }
 }
 
-// export function* watchDeleteMessage() {
-//   yield takeLatest(DELETE_MESSAGE, deleteMessageAsync);
-// }
-
-export function* editMessageAsync(action) {
+function* editMessageAsync(action) {
   try {
     const editRes = yield call(editMessage, ...action.messageData);
     yield put(editMessageSuccessed(editRes));
@@ -90,11 +78,7 @@ export function* editMessageAsync(action) {
   }
 }
 
-// export function* watchEditMessage() {
-//   yield takeLatest(EDIT_MESSAGE, editMessageAsync);
-// }
-
-export function* getMessagesAsync(action) {
+function* getMessagesAsync(action) {
   yield put(getMessagesRequest(action.payload));
   try {
     const messages = yield call(
@@ -108,14 +92,7 @@ export function* getMessagesAsync(action) {
   }
 }
 
-// export function* watchGetMessages() {
-//   yield takeEvery(
-//     [ENTER_CHANNEL_SUCCESSED, GET_GROUP_CHANNEL_SUCCESSED],
-//     getMessagesAsync
-//   );
-// }
-
-export function* onMessageTypingSaga(action) {
+function* onMessageTypingSaga(action) {
   try {
     const response = yield call(onMessageTyping, ...action.payload);
     yield put(messageTypingSet(response));
@@ -132,17 +109,9 @@ export function* onMessageTypingSaga(action) {
   }
 }
 
-// export function* onMessageTypeWatch() {
-//   yield takeLatest(ON_MESSAGE_TYPING, onMessageTypingSaga);
-// }
-
-export function* cleanChatSaga() {
+function* cleanChatSaga() {
   yield put(cleanChat());
 }
-
-// export function* watchCleanChat() {
-//   yield take(LEAVE_GROUP_SUCCESSED, cleanChatSaga);
-// }
 
 export function* chatSagas() {
   yield all([

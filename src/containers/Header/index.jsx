@@ -9,11 +9,9 @@ import { UserProfile } from '../UserProfile';
 import './index.scss';
 
 class Head extends React.Component {
-  constructor(props) {
-    super(props);
-    this.state = {};
-  }
+  state = {};
   render() {
+    const { logged } = this.props.user;
     return (
       <header>
         <nav>
@@ -28,7 +26,7 @@ class Head extends React.Component {
                 Profile
               </Link>
             </li>
-            {this.props.user.logged ? (
+            {logged ? (
               <li>
                 <Link href="/channels" to="/channels">
                   Channels
@@ -37,7 +35,7 @@ class Head extends React.Component {
             ) : null}
           </ul>
         </nav>
-        {this.props.user.logged ? (
+        {logged ? (
           <UserProfile />
         ) : (
           <div>

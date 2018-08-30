@@ -109,55 +109,6 @@ function* refreshMembersSaga(action) {
   }
 }
 
-// function* watchRefreshMembers() {
-//   yield takeLatest(
-//     [GET_GROUP_CHANNEL_SUCCESSED, ON_USER_JOINED, ON_USER_LEFT],
-//     refreshMembersSaga
-//   );
-// }
-
-// function* watchMembersUpdated() {
-//   yield takeLatest([ON_USER_JOINED, ON_USER_LEFT], membersUpdatedSaga);
-// }
-// function* watchLeaveGroup() {
-//   yield takeLatest(LEAVE_GROUP, leaveGroupSaga);
-// }
-// function* watchInviteUser() {
-//   yield takeLatest(INVITE_USERS, inviteUser);
-// }
-// function* watchGroupChannel() {
-//   yield takeLatest(CREATE_GROUP_CHANNEL, createGroupAsync);
-// }
-
-// function* watchGroupChannels() {
-//   yield takeLatest(
-//     [
-//       USER_RECONNECT_SUCCESSED,
-//       USER_LOGIN_SUCCESSED,
-//       CREATE_GROUP_CHANNEL_SUCCESSED,
-//       LEAVE_GROUP_SUCCESSED,
-//       ON_USER_JOINED,
-//     ],
-//     groupChannels
-//   );
-// }
-
-// function* watchGetGroup() {
-//   yield takeLatest(GET_GROUP_CHANNEL, getGroup);
-// }
-
-// export function* groupSagas() {
-//   yield all([
-//     spawn(watchRefreshMembers),
-//     spawn(watchLeaveGroup),
-//     spawn(watchInviteUser),
-//     spawn(watchGetGroup),
-//     spawn(watchGroupChannels),
-//     spawn(watchGroupChannel),
-//     spawn(watchMembersUpdated),
-//   ]);
-// }
-
 export function* groupSagas() {
   yield all([
     yield takeLatest(

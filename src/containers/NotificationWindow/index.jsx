@@ -16,7 +16,7 @@ export class NotificationWindow extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      show: this.props.notificationShow,
+      show: props.notificationShow,
     };
   }
 
@@ -26,6 +26,7 @@ export class NotificationWindow extends React.Component {
   };
   render() {
     const { user, channel, type } = this.props.notification;
+    const { nickname } = this.props;
     return (
       <div
         className={
@@ -34,7 +35,7 @@ export class NotificationWindow extends React.Component {
       >
         {type === 'onUserJoined' ? (
           <p>
-            {user.nickname === this.props.nickname
+            {user.nickname === nickname
               ? `Вас пригласили в групповой канал ${channel.name}`
               : `Пользователь ${user.nickname} присоединился к каналу ${
                   channel.name
@@ -42,7 +43,7 @@ export class NotificationWindow extends React.Component {
           </p>
         ) : (
           <p>
-            {user.nickname === this.props.nickname
+            {user.nickname === nickname
               ? `Вы покинули в групповой канал ${channel.name}`
               : `Пользователь ${user.nickname} покинул канал ${channel.name}`}
           </p>

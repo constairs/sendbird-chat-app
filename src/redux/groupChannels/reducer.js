@@ -7,6 +7,11 @@ const initState = {
   groupChannelsList: [],
   groupChannel: null,
   notificationShow: false,
+  notification: {
+    type: '',
+    channel: '',
+    user: '',
+  },
 };
 
 const createGroupChannel = (state, formData) => ({
