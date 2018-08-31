@@ -20,6 +20,7 @@ import {
   onUserJoined,
   onUserLeft,
   onUserTyping,
+  onReadReceiptUpdated,
 } from '../redux/groupChannels/actions';
 
 export const sb = new SendBird({ appId: APP_ID });
@@ -71,15 +72,6 @@ ChannelHandler.onMetaDataUpdated = function(channel, metaData) {
   store.store.dispatch(userTyping(metaData));
 };
 
-GroupChannelHandler.onMessageReceived = function(groupChannel, message) {
-  store.store.dispatch(messageReceived(groupChannel, message));
-};
-GroupChannelHandler.onMessageUpdated = function(groupChannel, message) {
-  store.store.dispatch(messageUpdated(groupChannel, message));
-};
-GroupChannelHandler.onMessageDeleted = function(groupChannel, messageId) {
-  store.store.dispatch(messageDeleted(groupChannel, messageId));
-};
 GroupChannelHandler.onUserJoined = function(groupChannel, user) {
   store.store.dispatch(onUserJoined({ groupChannel, user }));
 };
@@ -90,22 +82,14 @@ GroupChannelHandler.onTypingStatusUpdated = function(groupChannel) {
   const typingMembers = groupChannel.getTypingMembers();
   store.store.dispatch(onUserTyping(groupChannel, typingMembers));
 };
+ChannelHandler.onReadReceiptUpdated = function(channel) {
+  store.store.dispatch(onReadReceiptUpdated(channel));
+};
 
 /* eslint-disable */
 
 sb.addChannelHandler('HANDLER', ChannelHandler);
 sb.addChannelHandler('GROUP_HANDLER', GroupChannelHandler);
-// sb.removeChannelHandler('HANDLER', ChannelHandler);
-
-export function addEventHandler(channelType) {
-  if (channelType === 'open') {
-    sb.removeChannelHandler('GROUP_HANDLER', GroupChannelHandler);
-    sb.addChannelHandler('HANDLER', ChannelHandler);
-  } else {
-    sb.removeChannelHandler('HANDLER', ChannelHandler);
-    sb.addChannelHandler('GROUP_HANDLER', GroupChannelHandler);
-  }
-}
 
 export function connectToSB(userId) {
   return new Promise((resolve, reject) => {
@@ -364,13 +348,6 @@ export function sendMessage(channelUrl, channelType, mType, user, message) {
         if (err) {
           reject(err);
         }
-        // const messageListQuery = channel.createPreviousMessageListQuery();
-        // messageListQuery.load(10, false, (messageList, e) => {
-        //   if (e) {
-        //     reject(e);
-        //   }
-        //   resolve(messageList);
-        // });
         resolve(response);
       });
     });

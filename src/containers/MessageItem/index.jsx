@@ -7,6 +7,7 @@ import {
   faPaperPlane,
   faTimes,
   faFile,
+  faCircle,
 } from '@fortawesome/free-solid-svg-icons';
 
 import './index.scss';
@@ -41,7 +42,14 @@ export class MessageItem extends React.Component {
   render() {
     const { message, userId } = this.props;
     return (
-      <div className="message-item">
+      <div
+        className={
+          this.props.currentChannel.getReadReceipt(message) &&
+          userId !== message.sender.userId
+            ? 'message-item unread'
+            : 'message-item'
+        }
+      >
         <div className="sender-img">
           <img
             src={
@@ -97,6 +105,12 @@ export class MessageItem extends React.Component {
             </form>
           ) : (
             <p className="message-text">
+              <span className="isReadIndicator">
+                {this.props.currentChannel.getReadReceipt(message) !== 0 &&
+                userId === message.sender.userId ? (
+                  <FontAwesomeIcon icon={faCircle} />
+                ) : null}
+              </span>
               {message.updatedAt ? message.message : message.customType}
             </p>
           )}
@@ -121,4 +135,5 @@ MessageItem.propTypes = {
   onEditMessage: PropTypes.func.isRequired,
   message: PropTypes.objectOf(PropTypes.any).isRequired,
   userId: PropTypes.string.isRequired,
+  currentChannel: PropTypes.objectOf(PropTypes.any).isRequired,
 };

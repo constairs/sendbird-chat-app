@@ -67,7 +67,7 @@ export const getMessagesFailed = error => ({
 
 export const messageReceived = (channel, message) => ({
   type: TYPES.MESSAGE_RECEIVED,
-  payload: message,
+  payload: { channel, message },
 });
 
 export const messageDeleted = (channel, messageId) => ({

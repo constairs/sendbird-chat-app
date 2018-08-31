@@ -135,6 +135,11 @@ const refreshFailed = (state, error) => ({
   error,
 });
 
+const onReadReceiptUpdated = (state, channel) => ({
+  ...state,
+  groupChannel: channel,
+});
+
 const handlers = {
   [TYPES.CREATE_GROUP_CHANNEL]: createGroupChannel,
   [TYPES.CREATE_GROUP_CHANNEL_SUCCESSED]: createGroupChannelSuccessed,
@@ -165,6 +170,7 @@ const handlers = {
 
   [TYPES.REFRESHED_MEMBERS]: refreshedMembers,
   [TYPES.REFRESH_FAILED]: refreshFailed,
+  [TYPES.ON_READ_RECEIPT_UPDATED]: onReadReceiptUpdated,
 };
 
 export const groupChannelsReducer = createReducer(initState, handlers);

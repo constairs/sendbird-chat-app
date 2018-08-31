@@ -1,6 +1,10 @@
 import { createReducer } from '../../utils/reducerUtils';
 import * as TYPES from './types';
-import { ON_USER_TYPING } from '../groupChannels/types';
+import {
+  ON_USER_TYPING,
+  GET_GROUP_CHANNEL_SUCCESSED,
+} from '../groupChannels/types';
+import { ENTER_CHANNEL_SUCCESSED } from '../openChannels/types';
 
 const initState = {
   messFetching: false,
@@ -82,9 +86,12 @@ const getMessagesFailed = (state, error) => ({
   messFetching: false,
 });
 
-const messageReceived = (state, message) => ({
+const messageReceived = (state, messageData) => ({
   ...state,
-  messages: [...state.messages, message],
+  messages:
+    state.currentChannel.url === messageData.channel.url
+      ? [...state.messages, messageData.message]
+      : state.messages,
 });
 
 const messageUpdated = (state, message) => ({
@@ -130,9 +137,22 @@ const cleanChat = state => ({
   messages: [],
 });
 
-const onUserTyping = (state, channel) => ({
+const onUserTyping = (state, typingData) => ({
   ...state,
-  membersTyping: channel.typingMembers,
+  membersTyping:
+    state.currentChannel && typingData.channel.url === state.currentChannel.url
+      ? typingData.typingMembers
+      : [],
+});
+
+const changeChannelGroup = (state, groupChannel) => ({
+  ...state,
+  currentChannel: groupChannel,
+});
+
+const changeChannelOpen = (state, channel) => ({
+  ...state,
+  currentChannel: channel,
 });
 
 const handlers = {
@@ -170,6 +190,9 @@ const handlers = {
   [TYPES.CLEAN_CHAT]: cleanChat,
 
   [ON_USER_TYPING]: onUserTyping,
+
+  [GET_GROUP_CHANNEL_SUCCESSED]: changeChannelGroup,
+  [ENTER_CHANNEL_SUCCESSED]: changeChannelOpen,
 };
 
 export const chatReducer = createReducer(initState, handlers);

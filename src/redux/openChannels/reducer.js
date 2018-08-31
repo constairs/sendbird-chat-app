@@ -1,5 +1,6 @@
 import { createReducer } from '../../utils/reducerUtils';
 import * as TYPES from './types';
+import { GET_GROUP_CHANNEL_SUCCESSED } from '../groupChannels/types';
 
 const initState = {
   fetching: false,
@@ -126,6 +127,11 @@ const getRecentlyMessagesFailed = (state, error) => ({
   fetching: false,
 });
 
+const changedToAnotherChannel = state => ({
+  ...state,
+  channel: '',
+});
+
 const handlers = {
   [TYPES.CREATE_OPEN_CHANNEL]: createOpenChannel,
   [TYPES.CREATE_OPEN_CHANNEL_SUCCESSED]: createOpenChannelSuccessed,
@@ -156,6 +162,8 @@ const handlers = {
   [TYPES.GET_RECENTLY_MESSAGES]: getRecentlyMessages,
   [TYPES.GET_RECENTLY_MESSAGES_SUCCESSED]: getRecentlyMessagesSuccessed,
   [TYPES.GET_RECENTLY_MESSAGES_FAILED]: getRecentlyMessagesFailed,
+
+  [GET_GROUP_CHANNEL_SUCCESSED]: changedToAnotherChannel,
 };
 
 export const openChannelsReducer = createReducer(initState, handlers);

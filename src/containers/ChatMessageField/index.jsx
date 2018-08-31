@@ -43,6 +43,7 @@ class MessageField extends React.Component {
     ];
     this.setState({ messageInput: '' });
     this.props.chatActions.sendMessage(messageData);
+    this.props.onMessageTypingEnd();
   };
 
   handleFileForm = (e) => {
@@ -86,9 +87,7 @@ class MessageField extends React.Component {
 
   render() {
     const { fileToUpload, messageInput, fileUploadModal } = this.state;
-    const {
- userTyping, user, sendingMessage, membersTyping 
-} = this.props;
+    const { userTyping, user, membersTyping } = this.props;
     return (
       <div>
         <div className="chat-message-filed">
@@ -110,9 +109,15 @@ class MessageField extends React.Component {
             ) : null}
             {membersTyping.length ? (
               <span className="typing-indicator">
-                {membersTyping.map(member => (
-                  <span key={member.userId}>{member.nickname}</span>
-                ))}
+                {membersTyping.map((member, i) => {
+                  if (
+                    membersTyping.length > 1 &&
+                    i !== membersTyping.length - 1
+                  ) {
+                    return <span key={member.userId}>{member.nickname}, </span>;
+                  }
+                  return <span key={member.userId}>{member.nickname}</span>;
+                })}
                 <Text
                   color="#000000"
                   fontSize="1em"
@@ -133,7 +138,7 @@ class MessageField extends React.Component {
               disabled={!messageInput}
             >
               Отправить
-              {sendingMessage ? (
+              {this.props.sendingMessage ? (
                 <Spinner color="#ffffff" secondaryColor="#40c9ff" size={10} />
               ) : null}
             </button>
@@ -186,6 +191,7 @@ MessageField.propTypes = {
   sendingMessage: PropTypes.bool.isRequired,
   chatActions: PropTypes.objectOf(PropTypes.func).isRequired,
   onMessageTyping: PropTypes.func.isRequired,
+  onMessageTypingEnd: PropTypes.func.isRequired,
 };
 
 MessageField.defaultProps = {

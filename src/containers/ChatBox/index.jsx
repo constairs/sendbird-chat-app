@@ -17,6 +17,9 @@ export class Chat extends React.Component {
 
   componentDidUpdate() {
     this.ref.current.scrollTop = this.ref.current.scrollHeight;
+    if (this.props.currentChannel.channelType === 'group') {
+      this.props.currentChannel.markAsRead();
+    }
   }
 
   handleMessageDelete = (message) => {
@@ -39,6 +42,10 @@ export class Chat extends React.Component {
     this.props.currentChannel.startTyping();
   };
 
+  handleTypingEnd = () => {
+    this.props.currentChannel.endTyping();
+  };
+
   render() {
     const { messFetching, messages, user } = this.props;
     const { url, channelType } = this.props.currentChannel;
@@ -53,6 +60,7 @@ export class Chat extends React.Component {
           {messages.map(message => (
             <MessageItem
               message={message}
+              currentChannel={this.props.currentChannel}
               onDeleteMessage={this.handleMessageDelete}
               onEditMessage={this.handleMessageEdit}
               key={message.createdAt}
@@ -62,8 +70,10 @@ export class Chat extends React.Component {
         </div>
         <ChatMessageField
           onMessageTyping={this.handleTyping}
+          onMessageTypingEnd={this.handleTypingEnd}
           channelUrl={url}
           channelType={channelType}
+          channel={this.props.currentChannel}
         />
       </div>
     );

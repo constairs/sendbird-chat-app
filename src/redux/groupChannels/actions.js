@@ -95,3 +95,8 @@ export const onUserTyping = (channel, typingMembers) => ({
   type: TYPES.ON_USER_TYPING,
   payload: { channel, typingMembers },
 });
+
+export const onReadReceiptUpdated = channel => ({
+  type: TYPES.ON_READ_RECEIPT_UPDATED,
+  payload: channel,
+});
