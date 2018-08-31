@@ -23,8 +23,12 @@ button {
   border-radius: 3px;
   padding: 5px 10px;
   font-size: 14px;
+  transition: .2s;
   :focus {
     outline: none
+  }
+  &:hover {
+    background-color: darken($brand-color, 6%);
   }
   &[disabled] {
     background-color: #ccc;
@@ -69,5 +73,49 @@ button {
     font-family: $font;
     border: none;
     transition: all .2s
+  }
+}
+
+.invite-form {
+  box-shadow: none;
+  background-color: #d6d4d4;
+}
+
+.file-upload-modal {
+  background-color: #ffffff;
+  width: 300px;
+  padding: 20px;
+  box-shadow: 0 0 10px rgba(0,0,0,.3);
+  border-radius: 3px;
+  position: relative;
+  text-align: center;
+  .dropzone {
+    margin: 0 auto;
+    margin-bottom: 15px;
+    position: relative;
+    width: 200px;
+    height: 200px;
+    border-width: 2px;
+    border-color: rgb(102, 102, 102);
+    border-style: dashed;
+    border-radius: 5px;
+  }
+  .x-btn {
+    right: 10px;
+    top: 10px;
+    width: 20px;
+    padding: 0;
+    height: 20px;
+    position: absolute;
+  }
+}
+
+.file-preview {
+  border-radius: 3px;
+  width: 50px;
+  height: 50px;
+  img {
+    display: block;
+    width: 100%;
   }
 }

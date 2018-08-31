@@ -1,5 +1,4 @@
 import { createReducer } from '../../utils/reducerUtils';
-import { ENTER_CHANNEL_SUCCESSED } from '../openChannels/types';
 import * as TYPES from './types';
 
 const initState = {
@@ -24,6 +23,21 @@ const sendMessageFailed = (state, error) => ({
   ...state,
   error,
   sendingMessage: false,
+});
+
+const sendFileMessage = (state, fileMessageData) => ({
+  ...state,
+  fileToSend: fileMessageData,
+});
+
+const sendFileMessageSuccessed = (state, updMessages) => ({
+  ...state,
+  updMessages,
+});
+
+const sendFileMessageFailed = (state, error) => ({
+  ...state,
+  error,
 });
 
 const deleteMessage = state => ({
@@ -115,6 +129,10 @@ const handlers = {
   [TYPES.SEND_MESSAGE_SUCCESSED]: sendMessageSuccessed,
   [TYPES.SEND_MESSAGE_FAILED]: sendMessageFailed,
 
+  [TYPES.SEND_FILE_MESSAGE]: sendFileMessage,
+  [TYPES.SEND_FILE_MESSAGE_SUCCESSED]: sendFileMessageSuccessed,
+  [TYPES.SEND_FILE_MESSAGE_FAILED]: sendFileMessageFailed,
+
   [TYPES.DELETE_MESSAGE]: deleteMessage,
   [TYPES.DELETE_MESSAGE_SUCCESSED]: deleteMessageSuccessed,
   [TYPES.DELETE_MESSAGE_FAILED]: deleteMessageFailed,
@@ -123,7 +141,7 @@ const handlers = {
   [TYPES.EDIT_MESSAGE_SUCCESSED]: editMessageSuccessed,
   [TYPES.EDIT_MESSAGE_FAILED]: editMessageFailed,
 
-  [ENTER_CHANNEL_SUCCESSED]: getMessages,
+  [TYPES.GET_MESSAGES]: getMessages,
   [TYPES.GET_MESSAGES_SUCCESSED]: getMessagesSuccessed,
   [TYPES.GET_MESSAGES_FAILED]: getMessagesFailed,
 

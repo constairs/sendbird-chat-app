@@ -2,6 +2,9 @@ import {
   SEND_MESSAGE,
   SEND_MESSAGE_SUCCESSED,
   SEND_MESSAGE_FAILED,
+  SEND_FILE_MESSAGE,
+  SEND_FILE_MESSAGE_SUCCESSED,
+  SEND_FILE_MESSAGE_FAILED,
   GET_MESSAGES,
   GET_MESSAGES_SUCCESSED,
   GET_MESSAGES_FAILED,
@@ -19,6 +22,7 @@ import {
   MESSAGE_TYPING_ERROR,
   USER_TYPING,
   MESSAGE_TYPING_END,
+  CLEAN_CHAT,
 } from './types';
 
 export const sendMessage = messageData => ({ type: SEND_MESSAGE, messageData });
@@ -28,6 +32,19 @@ export const sendMessageSuccessed = updMessages => ({
 });
 export const sendMessageFailed = error => ({
   type: SEND_MESSAGE_FAILED,
+  payload: error,
+});
+
+export const sendFileMessage = fileMessageData => ({
+  type: SEND_FILE_MESSAGE,
+  fileMessageData,
+});
+export const sendFileMessageSuccessed = updMessages => ({
+  type: SEND_FILE_MESSAGE_SUCCESSED,
+  payload: updMessages,
+});
+export const sendFileMessageFailed = error => ({
+  type: SEND_FILE_MESSAGE_FAILED,
   payload: error,
 });
 
@@ -54,7 +71,10 @@ export const editMessageFailed = error => ({
   payload: error,
 });
 
-export const getMessages = channelUrl => ({ type: GET_MESSAGES, channelUrl });
+export const getMessagesRequest = channelUrl => ({
+  type: GET_MESSAGES,
+  channelUrl,
+});
 export const getMessagesSuccessed = messages => ({
   type: GET_MESSAGES_SUCCESSED,
   payload: messages,
@@ -101,4 +121,8 @@ export const userTyping = user => ({
 
 export const messageTypingEnd = () => ({
   type: MESSAGE_TYPING_END,
+});
+
+export const cleanChat = () => ({
+  type: CLEAN_CHAT,
 });

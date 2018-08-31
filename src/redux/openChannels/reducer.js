@@ -6,7 +6,6 @@ const initState = {
   participants: [],
   channelsList: [],
   messages: [],
-  typedMessage: '',
 };
 
 const createOpenChannel = (state, formData) => ({
@@ -113,12 +112,12 @@ const getRecentlyMessages = (state, reqParams) => ({
 });
 const getRecentlyMessagesSuccessed = (state, messages) => ({
   ...state,
-  channelsList: state.channelsList.map((cur, i) => {
-    if (cur.url === messages.channel) {
-      return { ...cur, messages: messages.messages };
-    }
-    return cur;
-  }),
+  channelsList: state.channelsList.map(
+    cur =>
+      cur.url === messages.channel
+        ? { ...cur, messages: messages.messages }
+        : cur
+  ),
   fetching: false,
 });
 const getRecentlyMessagesFailed = (state, error) => ({

@@ -4,7 +4,7 @@ import storage from 'redux-persist/lib/storage';
 import { chatReducer } from './chat/reducer';
 import { userReducer } from './user/reducer';
 import { openChannelsReducer } from './openChannels/reducer';
-import { groupChannelsreducer } from './groupChannels/reducer';
+import { groupChannelsReducer } from './groupChannels/reducer';
 
 const persistedUserReducer = persistReducer(
   { key: 'user', storage },
@@ -15,5 +15,5 @@ export const rootReducer = combineReducers({
   chatReducer,
   persistedUserReducer,
   openChannelsReducer,
-  groupChannelsreducer,
+  groupChannelsReducer,
 });

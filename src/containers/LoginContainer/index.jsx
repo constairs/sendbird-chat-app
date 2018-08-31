@@ -3,6 +3,7 @@ import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
 import { Spinner } from 'react-preloading-component';
 import PropTypes from 'prop-types';
+import Modal from 'react-modal';
 import { Redirect } from 'react-router';
 import * as userActions from '../../redux/user/actions';
 import { LoginForm } from '../../components/LoginForm';
@@ -35,6 +36,22 @@ class LoginConnected extends React.Component {
         ) : (
           <LoginForm onLogin={this.handleLogin} />
         )}
+        {/* <Modal
+          className="modal"
+          isOpen={this.props.user.err}
+          onAfterOpen={this.afterOpenModal}
+          onRequestClose={this.closeModal}
+          contentLabel="Example Modal"
+          ariaHideApp={false}
+        >
+          <h2>Произошла ошибка при подключении</h2>
+          <button className="x-btn" onClick={this.closeModal}>
+            x
+          </button>
+          <button onClick={this.props.userActions.userReconnect()}>
+            Попробовать снова
+          </button>
+        </Modal> */}
       </div>
     );
   }
