@@ -19,12 +19,16 @@ class MessageField extends React.Component {
 
   handleTextInput = (e) => {
     this.setState({ messageInput: e.target.value }, () => {
-      this.props.chatActions.onMessageTyping([
-        this.props.channelUrl,
-        this.props.channelType,
-        this.props.user.userName,
-        this.state.message,
-      ]);
+      if (this.props.channelType === 'open') {
+        this.props.chatActions.onMessageTyping([
+          this.props.channelUrl,
+          this.props.channelType,
+          this.props.user.userName,
+          this.state.message,
+        ]);
+      } else {
+        this.props.onMessageTyping();
+      }
     });
   };
 
@@ -82,7 +86,9 @@ class MessageField extends React.Component {
 
   render() {
     const { fileToUpload, messageInput, fileUploadModal } = this.state;
-    const { userTyping, user, sendingMessage } = this.props;
+    const {
+ userTyping, user, sendingMessage, membersTyping 
+} = this.props;
     return (
       <div>
         <div className="chat-message-filed">
@@ -95,6 +101,18 @@ class MessageField extends React.Component {
             {userTyping && userTyping !== user.userName ? (
               <span className="typing-indicator">
                 {userTyping}
+                <Text
+                  color="#000000"
+                  fontSize="1em"
+                  text="набирает сообщение"
+                />
+              </span>
+            ) : null}
+            {membersTyping.length ? (
+              <span className="typing-indicator">
+                {membersTyping.map(member => (
+                  <span key={member.userId}>{member.nickname}</span>
+                ))}
                 <Text
                   color="#000000"
                   fontSize="1em"
@@ -164,14 +182,21 @@ MessageField.propTypes = {
   channelUrl: PropTypes.string.isRequired,
   channelType: PropTypes.string.isRequired,
   userTyping: PropTypes.string.isRequired,
+  membersTyping: PropTypes.arrayOf(PropTypes.any),
   sendingMessage: PropTypes.bool.isRequired,
   chatActions: PropTypes.objectOf(PropTypes.func).isRequired,
+  onMessageTyping: PropTypes.func.isRequired,
+};
+
+MessageField.defaultProps = {
+  membersTyping: [],
 };
 
 function mapStateToProps(state) {
   return {
     user: state.persistedUserReducer,
     userTyping: state.chatReducer.userTyping,
+    membersTyping: state.chatReducer.membersTyping,
     sendingMessage: state.chatReducer.sendingMessage,
   };
 }

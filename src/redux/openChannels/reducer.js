@@ -114,9 +114,9 @@ const getRecentlyMessagesSuccessed = (state, messages) => ({
   ...state,
   channelsList: state.channelsList.map(
     cur =>
-      cur.url === messages.channel
+      (cur.url === messages.channel
         ? { ...cur, messages: messages.messages }
-        : cur
+        : cur)
   ),
   fetching: false,
 });

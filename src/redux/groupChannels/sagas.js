@@ -36,6 +36,8 @@ import {
   notificationOff,
 } from '../groupChannels/actions';
 
+import { cleanChat } from '../chat/actions';
+
 import { USER_LOGIN_SUCCESSED, USER_RECONNECT_SUCCESSED } from '../user/types';
 
 function* createGroupAsync(action) {
@@ -63,6 +65,7 @@ function* getGroup(action) {
       action.payload.channelUrl,
       action.payload.channelType
     );
+    yield put(cleanChat());
     yield put(getGroupChannelSuccessed(groupChannel));
   } catch (error) {
     yield put(getGroupChannelFailed(error));
@@ -95,11 +98,13 @@ function* membersUpdatedSaga() {
 function* refreshMembersSaga(action) {
   try {
     if (action.type === ON_USER_JOINED || action.type === ON_USER_LEFT) {
-      const response = yield call(
-        refreshGroupMembers,
-        action.payload.groupChannel
-      );
-      yield put(refreshedMembers(response));
+      if (action.payload.groupChannel.myMemberState === 'joined') {
+        const response = yield call(
+          refreshGroupMembers,
+          action.payload.groupChannel
+        );
+        yield put(refreshedMembers(response));
+      }
     } else {
       const response = yield call(refreshGroupMembers, action.payload);
       yield put(refreshedMembers(response));
@@ -118,7 +123,6 @@ export function* groupSagas() {
     yield takeLatest([ON_USER_JOINED, ON_USER_LEFT], membersUpdatedSaga),
     yield takeLatest(LEAVE_GROUP, leaveGroupSaga),
     yield takeLatest(INVITE_USERS, inviteUser),
-    yield takeLatest(CREATE_GROUP_CHANNEL, createGroupAsync),
     yield takeLatest(CREATE_GROUP_CHANNEL, createGroupAsync),
     yield takeLatest(
       [

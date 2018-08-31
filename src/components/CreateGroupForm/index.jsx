@@ -21,11 +21,10 @@ export class CreateGroupForm extends React.Component {
   handleSubmit = (e) => {
     e.preventDefault();
     const formData = [
-      'group',
+      [this.state.groupUsers],
       this.state.channelName,
       this.state.coverUrl,
       this.state.coverFile,
-      [this.state.groupUsers],
     ];
     this.setState({
       channelName: '',

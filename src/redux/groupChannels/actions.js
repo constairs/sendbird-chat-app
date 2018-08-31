@@ -90,3 +90,8 @@ export const refreshFailed = error => ({
   type: TYPES.REFRESH_FAILED,
   payload: error,
 });
+
+export const onUserTyping = (channel, typingMembers) => ({
+  type: TYPES.ON_USER_TYPING,
+  payload: { channel, typingMembers },
+});

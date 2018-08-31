@@ -35,6 +35,10 @@ export class Chat extends React.Component {
     ]);
   };
 
+  handleTyping = () => {
+    this.props.currentChannel.startTyping();
+  };
+
   render() {
     const { messFetching, messages, user } = this.props;
     const { url, channelType } = this.props.currentChannel;
@@ -56,7 +60,11 @@ export class Chat extends React.Component {
             />
           ))}
         </div>
-        <ChatMessageField channelUrl={url} channelType={channelType} />
+        <ChatMessageField
+          onMessageTyping={this.handleTyping}
+          channelUrl={url}
+          channelType={channelType}
+        />
       </div>
     );
   }

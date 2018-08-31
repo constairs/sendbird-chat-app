@@ -19,6 +19,7 @@ import {
   groupUpdated,
   onUserJoined,
   onUserLeft,
+  onUserTyping,
 } from '../redux/groupChannels/actions';
 
 export const sb = new SendBird({ appId: APP_ID });
@@ -70,23 +71,41 @@ ChannelHandler.onMetaDataUpdated = function(channel, metaData) {
   store.store.dispatch(userTyping(metaData));
 };
 
+GroupChannelHandler.onMessageReceived = function(groupChannel, message) {
+  store.store.dispatch(messageReceived(groupChannel, message));
+};
+GroupChannelHandler.onMessageUpdated = function(groupChannel, message) {
+  store.store.dispatch(messageUpdated(groupChannel, message));
+};
+GroupChannelHandler.onMessageDeleted = function(groupChannel, messageId) {
+  store.store.dispatch(messageDeleted(groupChannel, messageId));
+};
 GroupChannelHandler.onUserJoined = function(groupChannel, user) {
   store.store.dispatch(onUserJoined({ groupChannel, user }));
 };
 GroupChannelHandler.onUserLeft = function(groupChannel, user) {
   store.store.dispatch(onUserLeft({ groupChannel, user }));
 };
-GroupChannelHandler.onReadReceiptUpdated = function(channel) {
-  console.log(channel);
-};
-GroupChannelHandler.onTypingStatusUpdated = function(channel) {
-  console.log(channel);
+GroupChannelHandler.onTypingStatusUpdated = function(groupChannel) {
+  const typingMembers = groupChannel.getTypingMembers();
+  store.store.dispatch(onUserTyping(groupChannel, typingMembers));
 };
 
 /* eslint-disable */
 
 sb.addChannelHandler('HANDLER', ChannelHandler);
 sb.addChannelHandler('GROUP_HANDLER', GroupChannelHandler);
+// sb.removeChannelHandler('HANDLER', ChannelHandler);
+
+export function addEventHandler(channelType) {
+  if (channelType === 'open') {
+    sb.removeChannelHandler('GROUP_HANDLER', GroupChannelHandler);
+    sb.addChannelHandler('HANDLER', ChannelHandler);
+  } else {
+    sb.removeChannelHandler('HANDLER', ChannelHandler);
+    sb.addChannelHandler('GROUP_HANDLER', GroupChannelHandler);
+  }
+}
 
 export function connectToSB(userId) {
   return new Promise((resolve, reject) => {
@@ -309,30 +328,15 @@ export function exitChannel(channelUrl) {
 
 export function getMessages(channelUrl, channelType) {
   return new Promise((resolve, reject) => {
-    if (channelType === 'open') {
-      sb.OpenChannel.getChannel(channelUrl, (channel, error) => {
+    getChannel(channelUrl, channelType).then(channel => {
+      const messageListQuery = channel.createPreviousMessageListQuery();
+      messageListQuery.load(10, false, (messageList, error) => {
         if (error) {
           reject(error);
         }
-        const messageListQuery = channel.createPreviousMessageListQuery();
-        messageListQuery.load(10, false, (messageList, err) => {
-          if (err) {
-            reject(err);
-          }
-          resolve(messageList);
-        });
+        resolve(messageList);
       });
-    } else {
-      getChannel(channelUrl, channelType).then(groupChannel => {
-        const messageListQuery = groupChannel.createPreviousMessageListQuery();
-        messageListQuery.load(10, false, (messageList, error) => {
-          if (error) {
-            reject(error);
-          }
-          resolve(messageList);
-        });
-      });
-    }
+    });
   });
 }
 
@@ -355,40 +359,21 @@ export function getRecentlyMessages(channelUrl, quantity) {
 
 export function sendMessage(channelUrl, channelType, mType, user, message) {
   return new Promise((resolve, reject) => {
-    if (channelType === 'open') {
-      sb.OpenChannel.getChannel(channelUrl, (channel, error) => {
-        if (error) {
-          reject(error);
+    getChannel(channelUrl, channelType).then(channel => {
+      channel.sendUserMessage(mType, user, message, (response, err) => {
+        if (err) {
+          reject(err);
         }
-        channel.sendUserMessage(mType, user, message, (response, err) => {
-          if (err) {
-            reject(err);
-          }
-          const messageListQuery = channel.createPreviousMessageListQuery();
-          messageListQuery.load(10, false, (messageList, e) => {
-            if (e) {
-              reject(e);
-            }
-            resolve(messageList);
-          });
-        });
+        // const messageListQuery = channel.createPreviousMessageListQuery();
+        // messageListQuery.load(10, false, (messageList, e) => {
+        //   if (e) {
+        //     reject(e);
+        //   }
+        //   resolve(messageList);
+        // });
+        resolve(response);
       });
-    } else {
-      getChannel(channelUrl, channelType).then(groupChannel => {
-        groupChannel.sendUserMessage(mType, user, message, (response, err) => {
-          if (err) {
-            reject(err);
-          }
-          const messageListQuery = groupChannel.createPreviousMessageListQuery();
-          messageListQuery.load(10, false, (messageList, e) => {
-            if (e) {
-              reject(e);
-            }
-            resolve(messageList);
-          });
-        });
-      });
-    }
+    });
   });
 }
 
@@ -437,28 +422,14 @@ export function sendFileMessage(
 
 export function deleteMessage(channelUrl, channelType, message) {
   return new Promise((resolve, reject) => {
-    if (channelType === 'open') {
-      sb.OpenChannel.getChannel(channelUrl, (channel, error) => {
-        if (error) {
-          reject(error);
+    getChannel(channelUrl, channelType).then(channel => {
+      channel.deleteMessage(message, (response, err) => {
+        if (err) {
+          reject(err);
         }
-        channel.deleteMessage(message, (response, err) => {
-          if (err) {
-            reject(err);
-          }
-          resolve(message);
-        });
+        resolve(message);
       });
-    } else {
-      getChannel(channelUrl, channelType).then(groupChannel => {
-        groupChannel.deleteMessage(message, (response, err) => {
-          if (err) {
-            reject(err);
-          }
-          resolve(message);
-        });
-      });
-    }
+    });
   });
 }
 
@@ -471,73 +442,32 @@ export function editMessage(
   customType
 ) {
   return new Promise((resolve, reject) => {
-    if (channelType === 'open') {
-      sb.OpenChannel.getChannel(channelUrl, (channel, error) => {
-        if (error) {
-          reject(error);
+    getChannel(channelUrl, channelType).then(channel => {
+      channel.updateUserMessage(
+        messageId,
+        message,
+        data,
+        customType,
+        (userMessage, err) => {
+          if (err) {
+            reject(err);
+          }
+          resolve(userMessage);
         }
-        channel.updateUserMessage(
-          messageId,
-          message,
-          data,
-          customType,
-          (userMessage, err) => {
-            if (err) {
-              reject(err);
-            }
-            resolve(userMessage);
-          }
-        );
-      });
-    } else {
-      getChannel(channelUrl, channelType).then(groupChannel => {
-        groupChannel.updateUserMessage(
-          messageId,
-          message,
-          data,
-          customType,
-          (userMessage, err) => {
-            if (err) {
-              reject(err);
-            }
-            resolve(userMessage);
-          }
-        );
-      });
-    }
+      );
+    });
   });
 }
 
 export function onMessageTyping(channelUrl, channelType, userNickname) {
   return new Promise((resolve, reject) => {
-    if (channelType === 'open') {
-      sb.OpenChannel.getChannel(channelUrl, (channel, error) => {
-        if (error) {
-          reject(error);
+    getChannel(channelUrl, channelType).then(channel => {
+      channel.updateMetaData({ userTyping: userNickname }, (response, err) => {
+        if (err) {
+          reject(err);
         }
-
-        channel.updateMetaData(
-          { userTyping: userNickname },
-          (response, err) => {
-            if (err) {
-              reject(err);
-            }
-            resolve(response);
-          }
-        );
+        resolve(response);
       });
-    } else {
-      getChannel(channelUrl, channelType).then(groupChannel => {
-        groupChannel.updateMetaData(
-          { userTyping: userNickname },
-          (response, err) => {
-            if (err) {
-              reject(err);
-            }
-            resolve(response);
-          }
-        );
-      });
-    }
+    });
   });
 }

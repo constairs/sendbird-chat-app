@@ -1,5 +1,6 @@
 import { createReducer } from '../../utils/reducerUtils';
 import * as TYPES from './types';
+import { ON_USER_TYPING } from '../groupChannels/types';
 
 const initState = {
   messFetching: false,
@@ -16,7 +17,7 @@ const sendMessage = state => ({
 });
 const sendMessageSuccessed = (state, updMessages) => ({
   ...state,
-  messages: updMessages,
+  messages: [...state.messages, updMessages],
   sendingMessage: false,
 });
 const sendMessageFailed = (state, error) => ({
@@ -124,6 +125,16 @@ const userTyping = (state, user) => ({
   ...user,
 });
 
+const cleanChat = state => ({
+  ...state,
+  messages: [],
+});
+
+const onUserTyping = (state, channel) => ({
+  ...state,
+  membersTyping: channel.typingMembers,
+});
+
 const handlers = {
   [TYPES.SEND_MESSAGE]: sendMessage,
   [TYPES.SEND_MESSAGE_SUCCESSED]: sendMessageSuccessed,
@@ -155,6 +166,10 @@ const handlers = {
 
   [TYPES.USER_TYPING]: userTyping,
   [TYPES.MESSAGE_TYPING_END]: messageTypingEnd,
+
+  [TYPES.CLEAN_CHAT]: cleanChat,
+
+  [ON_USER_TYPING]: onUserTyping,
 };
 
 export const chatReducer = createReducer(initState, handlers);
