@@ -35,9 +35,9 @@ const sendFileMessage = (state, fileMessageData) => ({
   fileToSend: fileMessageData,
 });
 
-const sendFileMessageSuccessed = (state, updMessages) => ({
+const sendFileMessageSuccessed = state => ({
   ...state,
-  updMessages,
+  // updMessages,
 });
 
 const sendFileMessageFailed = (state, error) => ({
@@ -71,6 +71,22 @@ const editMessageFailed = (state, error) => ({
   error,
 });
 
+const editFileMessage = state => ({
+  ...state,
+});
+
+const editFileMessageSuccessed = (state, editRes) => ({
+  ...state,
+  messages: state.messages.map(
+    message => (message.messageId === editRes.messageId ? editRes : message)
+  ),
+});
+
+const editFileMessageFailed = (state, error) => ({
+  ...state,
+  error,
+});
+
 const getMessages = state => ({
   ...state,
   messFetching: true,
@@ -94,10 +110,13 @@ const messageReceived = (state, messageData) => ({
       : state.messages,
 });
 
-const messageUpdated = (state, message) => ({
+const messageUpdated = (state, updatedData) => ({
   ...state,
   messages: state.messages.map(
-    cur => (cur.messageId === message.messageId ? message : cur)
+    cur =>
+      (cur.messageId === updatedData.message.messageId
+        ? updatedData.message
+        : cur)
   ),
 });
 
@@ -193,6 +212,10 @@ const handlers = {
 
   [GET_GROUP_CHANNEL_SUCCESSED]: changeChannelGroup,
   [ENTER_CHANNEL_SUCCESSED]: changeChannelOpen,
+
+  [TYPES.EDIT_FILE_MESSAGE]: editFileMessage,
+  [TYPES.EDIT_FILE_MESSAGE_SUCCESSED]: editFileMessageSuccessed,
+  [TYPES.EDIT_FILE_MESSAGE_FAILED]: editFileMessageFailed,
 };
 
 export const chatReducer = createReducer(initState, handlers);

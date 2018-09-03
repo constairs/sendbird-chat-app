@@ -27,6 +27,8 @@ export const sb = new SendBird({ appId: APP_ID });
 
 const ChannelHandler = new sb.ChannelHandler();
 const GroupChannelHandler = new sb.ChannelHandler();
+const OpenChatHandler = new sb.ChannelHandler();
+const GroupChatHandler = new sb.ChannelHandler();
 
 function getPatticipants(channel) {
   const participantListQuery = channel.createParticipantListQuery();
@@ -38,15 +40,15 @@ function getPatticipants(channel) {
   });
 }
 /* eslint-disable */
-ChannelHandler.onMessageReceived = function(channel, message) {
+OpenChatHandler.onMessageReceived = function(channel, message) {
   store.store.dispatch(messageReceived(channel, message));
 };
 
-ChannelHandler.onMessageUpdated = function(channel, message) {
+OpenChatHandler.onMessageUpdated = function(channel, message) {
   store.store.dispatch(messageUpdated(channel, message));
 };
 
-ChannelHandler.onMessageDeleted = function(channel, messageId) {
+OpenChatHandler.onMessageDeleted = function(channel, messageId) {
   store.store.dispatch(messageDeleted(channel, messageId));
 };
 
@@ -57,36 +59,62 @@ ChannelHandler.onChannelChanged = function(channel) {
     store.store.dispatch(groupUpdated(channel));
   }
 };
-
 ChannelHandler.onUserEntered = function(channel, user) {
   store.store.dispatch(userEntered({ channel, user }));
   getPatticipants(channel);
 };
-
 ChannelHandler.onUserExited = function(channel, user) {
   store.store.dispatch(userExited({ channel, user }));
   getPatticipants(channel);
 };
-
 ChannelHandler.onMetaDataUpdated = function(channel, metaData) {
   store.store.dispatch(userTyping(metaData));
 };
 
+GroupChatHandler.onMessageReceived = function(channel, message) {
+  store.store.dispatch(messageReceived(channel, message));
+};
+GroupChatHandler.onMessageUpdated = function(channel, message) {
+  store.store.dispatch(messageUpdated(channel, message));
+};
+GroupChatHandler.onMessageDeleted = function(channel, messageId) {
+  store.store.dispatch(messageDeleted(channel, messageId));
+};
+GroupChatHandler.onTypingStatusUpdated = function(groupChannel) {
+  const typingMembers = groupChannel.getTypingMembers();
+  store.store.dispatch(onUserTyping(groupChannel, typingMembers));
+};
+GroupChatHandler.onReadReceiptUpdated = function(channel) {
+  store.store.dispatch(onReadReceiptUpdated(channel));
+};
+
+GroupChannelHandler.onChannelChanged = function(channel) {
+  store.store.dispatch(groupUpdated(channel));
+};
 GroupChannelHandler.onUserJoined = function(groupChannel, user) {
   store.store.dispatch(onUserJoined({ groupChannel, user }));
 };
 GroupChannelHandler.onUserLeft = function(groupChannel, user) {
   store.store.dispatch(onUserLeft({ groupChannel, user }));
 };
-GroupChannelHandler.onTypingStatusUpdated = function(groupChannel) {
-  const typingMembers = groupChannel.getTypingMembers();
-  store.store.dispatch(onUserTyping(groupChannel, typingMembers));
-};
-ChannelHandler.onReadReceiptUpdated = function(channel) {
-  store.store.dispatch(onReadReceiptUpdated(channel));
-};
 
 /* eslint-disable */
+
+export function addEventHandlers(channel) {
+  if (channel.channeltype === 'open') {
+    sb.addChannelHandler('OPEN_CHAT_HANDLER', OpenChatHandler);
+  } else {
+    sb.addChannelHandler('GROUP_CHAT_HANDLER', GroupChatHandler);
+  }
+}
+
+export function removeEventHandlers(channel) {
+  if (channel.channeltype === 'open') {
+    sb.removeChannelHandler('OPEN_CHAT_HANDLER', OpenChatHandler);
+  } else {
+    sb.removeChannelHandler('GROUP_CHAT_HANDLER', GroupChatHandler);
+  }
+}
 
 sb.addChannelHandler('HANDLER', ChannelHandler);
 sb.addChannelHandler('GROUP_HANDLER', GroupChannelHandler);
@@ -384,13 +412,7 @@ export function sendFileMessage(
           if (error) {
             reject(error);
           }
-          const messageListQuery = groupChannel.createPreviousMessageListQuery();
-          messageListQuery.load(10, false, (messageList, e) => {
-            if (e) {
-              reject(e);
-            }
-            resolve(messageList);
-          });
+          resolve(fileMessage);
         }
       );
     });
@@ -436,6 +458,42 @@ export function editMessage(
   });
 }
 
+export function editFileMessage(
+  channelUrl,
+  channelType,
+  messageId,
+  mType,
+  user,
+  file,
+  name,
+  type,
+  size,
+  data,
+  customType
+) {
+  return new Promise((resolve, reject) => {
+    getChannel(channelUrl, channelType).then(channel => {
+      channel.updateFileMessage(
+        messageId,
+        file,
+        name,
+        type,
+        size,
+        data,
+        customType,
+        (fileMessage, error) => {
+          if (error) {
+            console.log(error);
+            reject(error);
+          }
+          console.log(fileMessage);
+          resolve(fileMessage);
+        }
+      );
+    });
+  });
+}
+
 export function onMessageTyping(channelUrl, channelType, userNickname) {
   return new Promise((resolve, reject) => {
     getChannel(channelUrl, channelType).then(channel => {
@@ -447,4 +505,8 @@ export function onMessageTyping(channelUrl, channelType, userNickname) {
       });
     });
   });
+}
+
+export function makeAsRead(channel) {
+  channel.makeAsRead();
 }

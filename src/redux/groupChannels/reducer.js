@@ -97,7 +97,7 @@ const leaveGroupFailed = (state, error) => ({
 
 const groupUpdated = (state, channel) => ({
   ...state,
-  groupChannel: channel,
+  groupChannel: state.groupChannel ? channel : null,
 });
 
 const onUserJoined = (state, userData) => ({

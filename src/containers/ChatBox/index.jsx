@@ -3,6 +3,10 @@ import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import { Spinner } from 'react-preloading-component';
 import PropTypes from 'prop-types';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faFile, faTimes } from '@fortawesome/free-solid-svg-icons';
+import Modal from 'react-modal';
+import Dropzone from 'react-dropzone';
 import * as chatActions from '../../redux/chat/actions';
 import { MessageItem } from '../MessageItem';
 import { ChatMessageField } from '../ChatMessageField';
@@ -14,6 +18,13 @@ export class Chat extends React.Component {
     super(props);
     this.ref = React.createRef();
   }
+
+  state = {
+    fileToUpload: '',
+    fileUploadModal: false,
+    fileEditFile: false,
+    messToEdit: '',
+  };
 
   componentDidUpdate() {
     this.ref.current.scrollTop = this.ref.current.scrollHeight;
@@ -38,6 +49,14 @@ export class Chat extends React.Component {
     ]);
   };
 
+  handleFileMessageEdit = (messageId) => {
+    this.setState({
+      fileUploadModal: true,
+      fileEditFile: true,
+      messToEdit: messageId,
+    });
+  };
+
   handleTyping = () => {
     this.props.currentChannel.startTyping();
   };
@@ -46,9 +65,70 @@ export class Chat extends React.Component {
     this.props.currentChannel.endTyping();
   };
 
+  handleFileForm = (e) => {
+    e.preventDefault();
+    const fileMessageData = [
+      this.props.currentChannel.url,
+      this.props.currentChannel.channelType,
+      'FILE',
+      this.props.user.userId,
+      ...this.state.uploadedFile,
+    ];
+    this.setState({
+      uploadedFile: [],
+      fileUploadModal: false,
+      fileToUpload: '',
+    });
+    this.props.chatActions.sendFileMessage(fileMessageData);
+  };
+
+  handleFileEdit = (e) => {
+    e.preventDefault();
+    const updFileMessageData = [
+      this.props.currentChannel.url,
+      this.props.currentChannel.channelType,
+      this.state.messToEdit,
+      'FILE',
+      this.props.user.userId,
+      ...this.state.uploadedFile,
+    ];
+    this.setState({
+      uploadedFile: [],
+      fileUploadModal: false,
+      fileToUpload: '',
+    });
+    this.props.chatActions.editFileMessage(updFileMessageData);
+  };
+
+  fileUploadModal = () => {
+    this.setState({
+      fileUploadModal: !this.state.fileUploadModal,
+      fileEditFile: false,
+    });
+  };
+
+  handleDropFile = (acceptedFiles) => {
+    acceptedFiles.forEach((file) => {
+      const reader = new FileReader();
+      reader.onload = () => {
+        this.setState({
+          fileToUpload: file,
+        });
+        this.setState({
+          uploadedFile: [file, file.name, file.type, file.size],
+        });
+      };
+      // reader.onabort = () => console.log('file reading was aborted');
+      // reader.onerror = () => console.log('file reading has failed');
+
+      reader.readAsBinaryString(file);
+    });
+  };
+
   render() {
     const { messFetching, messages, user } = this.props;
     const { url, channelType } = this.props.currentChannel;
+    const { fileToUpload, fileUploadModal, fileEditFile } = this.state;
     return (
       <div>
         <div className="chat-box" ref={this.ref}>
@@ -62,12 +142,52 @@ export class Chat extends React.Component {
               message={message}
               currentChannel={this.props.currentChannel}
               onDeleteMessage={this.handleMessageDelete}
+              onEditFileMessage={this.handleFileMessageEdit}
               onEditMessage={this.handleMessageEdit}
               key={message.createdAt}
               userId={user.userId}
             />
           ))}
         </div>
+        <Modal
+          className="modal file-upload-modal"
+          isOpen={fileUploadModal}
+          onAfterOpen={this.afterOpenModal}
+          onRequestClose={this.fileUploadModal}
+          contentLabel="Example Modal"
+          ariaHideApp={false}
+        >
+          <button className="x-btn" onClick={this.fileUploadModal}>
+            <FontAwesomeIcon icon={faTimes} />
+          </button>
+          <form
+            onSubmit={fileEditFile ? this.handleFileEdit : this.handleFileForm}
+          >
+            <Dropzone className="dropzone" onDrop={this.handleDropFile} />
+            {fileToUpload ? (
+              <div>
+                <p>Файл для отправки</p>
+                <div className="files-to-upload">
+                  <div className="file-item">
+                    <div className="file-preview">
+                      {new RegExp('^image?', 'i').test(fileToUpload.type) ? (
+                        <img src={fileToUpload.preview} alt="preview" />
+                      ) : (
+                        <FontAwesomeIcon icon={faFile} />
+                      )}
+                    </div>
+                    <p>{fileToUpload.size} кб</p>
+                  </div>
+                </div>
+              </div>
+            ) : null}
+            {fileEditFile ? (
+              <button type="submit">Обновить</button>
+            ) : (
+              <button type="submit">Загрузить</button>
+            )}
+          </form>
+        </Modal>
         <ChatMessageField
           onMessageTyping={this.handleTyping}
           onMessageTypingEnd={this.handleTypingEnd}

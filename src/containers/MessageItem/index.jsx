@@ -22,6 +22,7 @@ export class MessageItem extends React.Component {
         : props.message.customType,
     };
   }
+
   handleDeleteBtn = () => {
     this.props.onDeleteMessage(this.props.message);
   };
@@ -30,6 +31,9 @@ export class MessageItem extends React.Component {
   };
   handleEditMessage = () => {
     this.setState({ onEdit: true });
+  };
+  handleEditFileMessage = () => {
+    this.props.onEditFileMessage(this.props.message.messageId);
   };
   handleSubmit = (e) => {
     e.preventDefault();
@@ -42,14 +46,7 @@ export class MessageItem extends React.Component {
   render() {
     const { message, userId } = this.props;
     return (
-      <div
-        className={
-          this.props.currentChannel.getReadReceipt(message) &&
-          userId !== message.sender.userId
-            ? 'message-item unread'
-            : 'message-item'
-        }
-      >
+      <div className="message-item">
         <div className="sender-img">
           <img
             src={
@@ -106,7 +103,8 @@ export class MessageItem extends React.Component {
           ) : (
             <p className="message-text">
               <span className="isReadIndicator">
-                {this.props.currentChannel.getReadReceipt(message) !== 0 &&
+                {//   this.props.currentChannel.getReadReceipt &&
+                this.props.currentChannel.getReadReceipt(message) > 0 &&
                 userId === message.sender.userId ? (
                   <FontAwesomeIcon icon={faCircle} />
                 ) : null}
@@ -120,9 +118,15 @@ export class MessageItem extends React.Component {
             <button onClick={this.handleDeleteBtn} className="x-btn">
               <FontAwesomeIcon icon={faTimes} />
             </button>
-            <button onClick={this.handleEditMessage} className="edit-btn">
-              <FontAwesomeIcon icon={faPen} />
-            </button>
+            {message.messageType === 'file' ? (
+              <button onClick={this.handleEditFileMessage} className="edit-btn">
+                <FontAwesomeIcon icon={faPen} />
+              </button>
+            ) : (
+              <button onClick={this.handleEditMessage} className="edit-btn">
+                <FontAwesomeIcon icon={faPen} />
+              </button>
+            )}
           </div>
         ) : null}
       </div>
@@ -133,6 +137,7 @@ export class MessageItem extends React.Component {
 MessageItem.propTypes = {
   onDeleteMessage: PropTypes.func.isRequired,
   onEditMessage: PropTypes.func.isRequired,
+  onEditFileMessage: PropTypes.func.isRequired,
   message: PropTypes.objectOf(PropTypes.any).isRequired,
   userId: PropTypes.string.isRequired,
   currentChannel: PropTypes.objectOf(PropTypes.any).isRequired,

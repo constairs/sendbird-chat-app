@@ -52,6 +52,19 @@ export const editMessageFailed = error => ({
   payload: error,
 });
 
+export const editFileMessage = updFileMessage => ({
+  type: TYPES.EDIT_FILE_MESSAGE,
+  payload: updFileMessage,
+});
+export const editFileMessageSuccessed = editRes => ({
+  type: TYPES.EDIT_FILE_MESSAGE_SUCCESSED,
+  payload: editRes,
+});
+export const editFileMessageFailed = error => ({
+  type: TYPES.EDIT_FILE_MESSAGE_FAILED,
+  payload: error,
+});
+
 export const getMessagesRequest = channelUrl => ({
   type: TYPES.GET_MESSAGES,
   channelUrl,
@@ -77,7 +90,7 @@ export const messageDeleted = (channel, messageId) => ({
 
 export const messageUpdated = (channel, message) => ({
   type: TYPES.MESSAGE_UPDATED,
-  payload: message,
+  payload: { channel, message },
 });
 
 export const onMessageTyping = messageData => ({

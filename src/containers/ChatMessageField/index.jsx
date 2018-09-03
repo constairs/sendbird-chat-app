@@ -128,7 +128,7 @@ class MessageField extends React.Component {
             <button
               onClick={this.fileUploadModal}
               type="button"
-              title="Прикрепить файл"
+              title="Отправить файл"
             >
               <FontAwesomeIcon icon={faFile} />
             </button>
