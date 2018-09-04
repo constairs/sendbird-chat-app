@@ -483,7 +483,6 @@ export function editFileMessage(
         customType,
         (fileMessage, error) => {
           if (error) {
-            console.log(error);
             reject(error);
           }
           console.log(fileMessage);

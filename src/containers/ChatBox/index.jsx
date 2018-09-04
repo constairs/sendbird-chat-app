@@ -14,9 +14,26 @@ import { ChatMessageField } from '../ChatMessageField';
 import './index.scss';
 
 export class Chat extends React.Component {
+  static getDerivedStateFromProps(nextProps, prevState) {
+    if (nextProps.chacurrentChannelnnel !== prevState.currentChannel) {
+      return {
+        currentChannel: nextProps.currentChannel,
+        readReceipt: Object.values(
+          nextProps.currentChannel.cachedReadReceiptStatus
+        ).sort((a, b) => a > b)[0],
+      };
+    }
+    return null;
+  }
+
   constructor(props) {
     super(props);
     this.ref = React.createRef();
+    this.state = {
+      readReceipt: Object.values(
+        props.currentChannel.cachedReadReceiptStatus
+      ).sort((a, b) => a > b)[0],
+    };
   }
 
   state = {
@@ -140,12 +157,12 @@ export class Chat extends React.Component {
           {messages.map(message => (
             <MessageItem
               message={message}
-              currentChannel={this.props.currentChannel}
               onDeleteMessage={this.handleMessageDelete}
               onEditFileMessage={this.handleFileMessageEdit}
               onEditMessage={this.handleMessageEdit}
               key={message.createdAt}
               userId={user.userId}
+              isNotRead={this.state.readReceipt < message.createdAt}
             />
           ))}
         </div>
@@ -208,6 +225,9 @@ function mapStateToProps(state) {
       state.groupChannelsReducer.participants,
     messages: state.chatReducer.messages,
     messFetching: state.chatReducer.messFetching,
+    readReceipt: state.chatReducer.readReceipt,
+    cached: state.chatReducer.cached,
+    currentChannel: state.chatReducer.currentChannel,
   };
 }
 

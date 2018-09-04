@@ -11,6 +11,7 @@ export class GroupChannel extends React.Component {
   componentWillUnmount() {
     removeEventHandlers(this.props.channel);
   }
+
   handleLeaveBtn = () => {
     this.props.onLeave(this.props.channel.url);
   };
@@ -60,7 +61,8 @@ export class GroupChannel extends React.Component {
           </div>
           {/* <button onClick={this.handleLeaveBtn}>Покинуть канал</button> */}
         </div>
-        <ChatBox currentChannel={channel} />
+        {/* <ChatBox currentChannel={channel} /> */}
+        <ChatBox />
       </div>
     );
   }

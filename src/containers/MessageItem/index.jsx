@@ -103,9 +103,7 @@ export class MessageItem extends React.Component {
           ) : (
             <p className="message-text">
               <span className="isReadIndicator">
-                {//   this.props.currentChannel.getReadReceipt &&
-                this.props.currentChannel.getReadReceipt(message) > 0 &&
-                userId === message.sender.userId ? (
+                {this.props.isNotRead && userId === message.sender.userId ? (
                   <FontAwesomeIcon icon={faCircle} />
                 ) : null}
               </span>
@@ -118,11 +116,7 @@ export class MessageItem extends React.Component {
             <button onClick={this.handleDeleteBtn} className="x-btn">
               <FontAwesomeIcon icon={faTimes} />
             </button>
-            {message.messageType === 'file' ? (
-              <button onClick={this.handleEditFileMessage} className="edit-btn">
-                <FontAwesomeIcon icon={faPen} />
-              </button>
-            ) : (
+            {message.messageType === 'file' ? null : ( // </button> //   <FontAwesomeIcon icon={faPen} /> // <button onClick={this.handleEditFileMessage} className="edit-btn">
               <button onClick={this.handleEditMessage} className="edit-btn">
                 <FontAwesomeIcon icon={faPen} />
               </button>
@@ -140,5 +134,5 @@ MessageItem.propTypes = {
   onEditFileMessage: PropTypes.func.isRequired,
   message: PropTypes.objectOf(PropTypes.any).isRequired,
   userId: PropTypes.string.isRequired,
-  currentChannel: PropTypes.objectOf(PropTypes.any).isRequired,
+  isNotRead: PropTypes.bool.isRequired,
 };

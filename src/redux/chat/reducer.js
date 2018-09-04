@@ -3,8 +3,8 @@ import * as TYPES from './types';
 import {
   ON_USER_TYPING,
   GET_GROUP_CHANNEL_SUCCESSED,
+  ON_READ_RECEIPT_UPDATED,
 } from '../groupChannels/types';
-import { ENTER_CHANNEL_SUCCESSED } from '../openChannels/types';
 
 const initState = {
   messFetching: false,
@@ -37,7 +37,6 @@ const sendFileMessage = (state, fileMessageData) => ({
 
 const sendFileMessageSuccessed = state => ({
   ...state,
-  // updMessages,
 });
 
 const sendFileMessageFailed = (state, error) => ({
@@ -169,7 +168,7 @@ const changeChannelGroup = (state, groupChannel) => ({
   currentChannel: groupChannel,
 });
 
-const changeChannelOpen = (state, channel) => ({
+const onReadReceiptUpdated = (state, channel) => ({
   ...state,
   currentChannel: channel,
 });
@@ -211,11 +210,11 @@ const handlers = {
   [ON_USER_TYPING]: onUserTyping,
 
   [GET_GROUP_CHANNEL_SUCCESSED]: changeChannelGroup,
-  [ENTER_CHANNEL_SUCCESSED]: changeChannelOpen,
 
   [TYPES.EDIT_FILE_MESSAGE]: editFileMessage,
   [TYPES.EDIT_FILE_MESSAGE_SUCCESSED]: editFileMessageSuccessed,
   [TYPES.EDIT_FILE_MESSAGE_FAILED]: editFileMessageFailed,
+  [ON_READ_RECEIPT_UPDATED]: onReadReceiptUpdated,
 };
 
 export const chatReducer = createReducer(initState, handlers);
