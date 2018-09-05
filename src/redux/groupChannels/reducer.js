@@ -1,5 +1,6 @@
 import { createReducer } from '../../utils/reducerUtils';
 import * as TYPES from './types';
+import { ENTER_CHANNEL_SUCCESSED } from '../openChannels/types';
 
 const initState = {
   fetching: false,
@@ -52,9 +53,10 @@ const getGroup = state => ({
   fetching: true,
 });
 
-const getGroupSuccessed = (state, groupChannel) => ({
+const getGroupSuccessed = (state, groupData) => ({
   ...state,
-  groupChannel,
+  groupChannel: groupData.groupChannel,
+  receipt: groupData.receipt,
   fetching: false,
 });
 
@@ -135,9 +137,10 @@ const refreshFailed = (state, error) => ({
   error,
 });
 
-const onReadReceiptUpdated = (state, channel) => ({
+const changedToAnotherChannel = state => ({
   ...state,
-  groupChannel: channel,
+  groupChannel: '',
+  receipt: '',
 });
 
 const handlers = {
@@ -170,7 +173,8 @@ const handlers = {
 
   [TYPES.REFRESHED_MEMBERS]: refreshedMembers,
   [TYPES.REFRESH_FAILED]: refreshFailed,
-  [TYPES.ON_READ_RECEIPT_UPDATED]: onReadReceiptUpdated,
+
+  [ENTER_CHANNEL_SUCCESSED]: changedToAnotherChannel,
 };
 
 export const groupChannelsReducer = createReducer(initState, handlers);

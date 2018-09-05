@@ -6,6 +6,7 @@ import {
   messageDeleted,
   messageUpdated,
   userTyping,
+  readReceipt,
 } from '../redux/chat/actions';
 import {
   channelUpdated,
@@ -20,15 +21,14 @@ import {
   onUserJoined,
   onUserLeft,
   onUserTyping,
-  onReadReceiptUpdated,
+  // onReadReceiptUpdated,
 } from '../redux/groupChannels/actions';
 
 export const sb = new SendBird({ appId: APP_ID });
 
 const ChannelHandler = new sb.ChannelHandler();
 const GroupChannelHandler = new sb.ChannelHandler();
-const OpenChatHandler = new sb.ChannelHandler();
-const GroupChatHandler = new sb.ChannelHandler();
+const ChatHandler = new sb.ChannelHandler();
 
 function getPatticipants(channel) {
   const participantListQuery = channel.createParticipantListQuery();
@@ -40,17 +40,6 @@ function getPatticipants(channel) {
   });
 }
 /* eslint-disable */
-OpenChatHandler.onMessageReceived = function(channel, message) {
-  store.store.dispatch(messageReceived(channel, message));
-};
-
-OpenChatHandler.onMessageUpdated = function(channel, message) {
-  store.store.dispatch(messageUpdated(channel, message));
-};
-
-OpenChatHandler.onMessageDeleted = function(channel, messageId) {
-  store.store.dispatch(messageDeleted(channel, messageId));
-};
 
 ChannelHandler.onChannelChanged = function(channel) {
   if (channel.channelType === 'open') {
@@ -71,21 +60,25 @@ ChannelHandler.onMetaDataUpdated = function(channel, metaData) {
   store.store.dispatch(userTyping(metaData));
 };
 
-GroupChatHandler.onMessageReceived = function(channel, message) {
+ChatHandler.onMessageReceived = function(channel, message) {
   store.store.dispatch(messageReceived(channel, message));
 };
-GroupChatHandler.onMessageUpdated = function(channel, message) {
+ChatHandler.onMessageUpdated = function(channel, message) {
   store.store.dispatch(messageUpdated(channel, message));
 };
-GroupChatHandler.onMessageDeleted = function(channel, messageId) {
+ChatHandler.onMessageDeleted = function(channel, messageId) {
   store.store.dispatch(messageDeleted(channel, messageId));
 };
-GroupChatHandler.onTypingStatusUpdated = function(groupChannel) {
+ChatHandler.onTypingStatusUpdated = function(groupChannel) {
   const typingMembers = groupChannel.getTypingMembers();
   store.store.dispatch(onUserTyping(groupChannel, typingMembers));
 };
-GroupChatHandler.onReadReceiptUpdated = function(channel) {
-  store.store.dispatch(onReadReceiptUpdated(channel));
+ChatHandler.onReadReceiptUpdated = function(channel) {
+  // store.store.dispatch(onReadReceiptUpdated(channel));
+  const receipt = Object.values(channel.cachedReadReceiptStatus).sort(
+    (a, b) => a > b
+  )[0];
+  store.store.dispatch(readReceipt(receipt));
 };
 
 GroupChannelHandler.onChannelChanged = function(channel) {
@@ -100,24 +93,9 @@ GroupChannelHandler.onUserLeft = function(groupChannel, user) {
 
 /* eslint-disable */
 
-export function addEventHandlers(channel) {
-  if (channel.channeltype === 'open') {
-    sb.addChannelHandler('OPEN_CHAT_HANDLER', OpenChatHandler);
-  } else {
-    sb.addChannelHandler('GROUP_CHAT_HANDLER', GroupChatHandler);
-  }
-}
-
-export function removeEventHandlers(channel) {
-  if (channel.channeltype === 'open') {
-    sb.removeChannelHandler('OPEN_CHAT_HANDLER', OpenChatHandler);
-  } else {
-    sb.removeChannelHandler('GROUP_CHAT_HANDLER', GroupChatHandler);
-  }
-}
-
 sb.addChannelHandler('HANDLER', ChannelHandler);
 sb.addChannelHandler('GROUP_HANDLER', GroupChannelHandler);
+sb.addChannelHandler('CHAT_HANDLER', ChatHandler);
 
 export function connectToSB(userId) {
   return new Promise((resolve, reject) => {
@@ -372,11 +350,11 @@ export function getRecentlyMessages(channelUrl, quantity) {
 export function sendMessage(channelUrl, channelType, mType, user, message) {
   return new Promise((resolve, reject) => {
     getChannel(channelUrl, channelType).then(channel => {
-      channel.sendUserMessage(mType, user, message, (response, err) => {
+      channel.sendUserMessage(mType, user, message, (messages, err) => {
         if (err) {
           reject(err);
         }
-        resolve(response);
+        resolve({ channel, messages });
       });
     });
   });
@@ -395,8 +373,8 @@ export function sendFileMessage(
   customType
 ) {
   return new Promise((resolve, reject) => {
-    getChannel(channelUrl, channelType).then(groupChannel => {
-      groupChannel.sendFileMessage(
+    getChannel(channelUrl, channelType).then(channel => {
+      channel.sendFileMessage(
         file,
         name,
         type,
@@ -412,7 +390,7 @@ export function sendFileMessage(
           if (error) {
             reject(error);
           }
-          resolve(fileMessage);
+          resolve({ channel, fileMessage });
         }
       );
     });
@@ -506,6 +484,6 @@ export function onMessageTyping(channelUrl, channelType, userNickname) {
   });
 }
 
-export function makeAsRead(channel) {
-  channel.makeAsRead();
+export function markAsReadSb(channel) {
+  channel.markAsRead();
 }

@@ -18,7 +18,7 @@ import {
   LEAVE_GROUP_SUCCESSED,
   ON_USER_JOINED,
   ON_USER_LEFT,
-} from '../groupChannels/types';
+} from './types';
 
 import {
   createGroupChannelSuccessed,
@@ -34,7 +34,7 @@ import {
   refreshedMembers,
   refreshFailed,
   notificationOff,
-} from '../groupChannels/actions';
+} from './actions';
 
 import { cleanChat } from '../chat/actions';
 
@@ -65,8 +65,11 @@ function* getGroup(action) {
       action.payload.channelUrl,
       action.payload.channelType
     );
+    const receipt = Object.values(groupChannel.cachedReadReceiptStatus).sort(
+      (a, b) => a > b
+    )[0];
     yield put(cleanChat());
-    yield put(getGroupChannelSuccessed(groupChannel));
+    yield put(getGroupChannelSuccessed(groupChannel, receipt));
   } catch (error) {
     yield put(getGroupChannelFailed(error));
   }
@@ -98,15 +101,15 @@ function* membersUpdatedSaga() {
 function* refreshMembersSaga(action) {
   try {
     if (action.type === ON_USER_JOINED || action.type === ON_USER_LEFT) {
-      if (action.payload.groupChannel.myMemberState === 'joined') {
-        const response = yield call(
-          refreshGroupMembers,
-          action.payload.groupChannel
-        );
+      if (action.payload.myMemberState === 'joined') {
+        const response = yield call(refreshGroupMembers, action.payload);
         yield put(refreshedMembers(response));
       }
     } else {
-      const response = yield call(refreshGroupMembers, action.payload);
+      const response = yield call(
+        refreshGroupMembers,
+        action.payload.groupChannel
+      );
       yield put(refreshedMembers(response));
     }
   } catch (error) {

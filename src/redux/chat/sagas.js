@@ -6,6 +6,12 @@ import {
   take,
   all,
 } from 'redux-saga/effects';
+import { ENTER_CHANNEL_SUCCESSED } from '../openChannels/types';
+import {
+  GET_GROUP_CHANNEL_SUCCESSED,
+  LEAVE_GROUP_SUCCESSED,
+  // ON_READ_RECEIPT_UPDATED,
+} from '../groupChannels/types';
 import {
   sendMessage,
   sendFileMessage,
@@ -13,7 +19,7 @@ import {
   editMessage,
   getMessages,
   onMessageTyping,
-  makeAsRead,
+  markAsReadSb,
   editFileMessage,
 } from '../../services/sendbird';
 import {
@@ -23,13 +29,8 @@ import {
   ON_MESSAGE_TYPING,
   SEND_FILE_MESSAGE,
   EDIT_FILE_MESSAGE,
-} from './types';
-import { ENTER_CHANNEL_SUCCESSED } from '../openChannels/types';
-import {
-  GET_GROUP_CHANNEL_SUCCESSED,
-  LEAVE_GROUP_SUCCESSED,
   MESSAGE_RECEIVED,
-} from '../groupChannels/types';
+} from './types';
 import {
   sendMessageSuccessed,
   sendMessageFailed,
@@ -46,12 +47,18 @@ import {
   cleanChat,
   editFileMessageSuccessed,
   editFileMessageFailed,
+  // readReceipt,
+  markAsRead,
 } from './actions';
 
 function* sendMessageAsync(action) {
   try {
     const sendRes = yield call(sendMessage, ...action.messageData);
-    yield put(sendMessageSuccessed(sendRes));
+    yield put(sendMessageSuccessed(sendRes.channel, sendRes.messages));
+    if (sendRes.channel.channelType === 'group') {
+      yield call(markAsReadSb, sendRes.channel);
+      yield put(markAsRead());
+    }
   } catch (error) {
     yield put(sendMessageFailed(error));
   }
@@ -61,6 +68,10 @@ function* sendFileMessageAsync(action) {
   try {
     const sendRes = yield call(sendFileMessage, ...action.fileMessageData);
     yield put(sendMessageSuccessed(sendRes));
+    if (sendRes.channel.channelType === 'group') {
+      yield call(markAsReadSb, sendRes.channel);
+      yield put(markAsRead());
+    }
   } catch (error) {
     yield put(sendMessageFailed(error));
   }
@@ -93,17 +104,26 @@ function* getMessagesAsync(action) {
       action.payload.channelType
     );
     yield put(getMessagesSuccessed(messages));
-    if (action.payload.channelType === 'group') {
-      yield call(makeAsRead, action.payload);
-    }
   } catch (error) {
     yield put(getMessagesFailed(error));
   }
 }
 
-function* makeAsReadSaga(action) {
-  if (action.payload.channelType === 'group') {
-    yield call(makeAsRead, action.payload.channel);
+function* getGroupMessges(action) {
+  yield put(getMessagesRequest(action.payload.groupChannel));
+  try {
+    const messages = yield call(
+      getMessages,
+      action.payload.groupChannel.url,
+      action.payload.groupChannel.channelType
+    );
+    yield put(getMessagesSuccessed(messages));
+    if (action.payload.groupChannel.channelType === 'group') {
+      yield call(markAsReadSb, action.payload.groupChannel);
+      yield put(markAsRead());
+    }
+  } catch (error) {
+    yield put(getMessagesFailed(error));
   }
 }
 
@@ -137,19 +157,33 @@ function* editFileMessageSaga(action) {
   }
 }
 
+function* markAsReadSaga(action) {
+  if (action.payload.channel.channelType === 'group') {
+    yield call(markAsReadSb, action.payload.channel);
+    yield put(markAsRead());
+  }
+}
+
+// function* onReadReceiptUpdatedSaga(action) {
+//   console.log(action.payload);
+//   const receipt = Object.values(action.payload.cachedReadReceiptStatus).sort(
+//     (a, b) => a > b
+//   )[0];
+//   yield put(readReceipt(receipt));
+// }
+
 export function* chatSagas() {
   yield all([
+    yield takeLatest(MESSAGE_RECEIVED, markAsReadSaga),
     yield takeLatest(SEND_MESSAGE, sendMessageAsync),
     yield takeLatest(SEND_FILE_MESSAGE, sendFileMessageAsync),
     yield takeLatest(DELETE_MESSAGE, deleteMessageAsync),
     yield takeLatest(EDIT_MESSAGE, editMessageAsync),
     yield takeLatest(EDIT_FILE_MESSAGE, editFileMessageSaga),
-    yield takeEvery(
-      [ENTER_CHANNEL_SUCCESSED, GET_GROUP_CHANNEL_SUCCESSED],
-      getMessagesAsync
-    ),
-    yield takeLatest(ON_MESSAGE_TYPING, onMessageTypingSaga),
+    yield takeEvery(ENTER_CHANNEL_SUCCESSED, getMessagesAsync),
+    yield takeEvery(GET_GROUP_CHANNEL_SUCCESSED, getGroupMessges),
     yield take(LEAVE_GROUP_SUCCESSED, cleanChatSaga),
-    yield takeLatest(MESSAGE_RECEIVED, makeAsReadSaga),
+    // yield takeLatest(ON_READ_RECEIPT_UPDATED, onReadReceiptUpdatedSaga),
+    yield takeLatest(ON_MESSAGE_TYPING, onMessageTypingSaga),
   ]);
 }

@@ -14,26 +14,9 @@ import { ChatMessageField } from '../ChatMessageField';
 import './index.scss';
 
 export class Chat extends React.Component {
-  static getDerivedStateFromProps(nextProps, prevState) {
-    if (nextProps.chacurrentChannelnnel !== prevState.currentChannel) {
-      return {
-        currentChannel: nextProps.currentChannel,
-        readReceipt: Object.values(
-          nextProps.currentChannel.cachedReadReceiptStatus
-        ).sort((a, b) => a > b)[0],
-      };
-    }
-    return null;
-  }
-
   constructor(props) {
     super(props);
     this.ref = React.createRef();
-    this.state = {
-      readReceipt: Object.values(
-        props.currentChannel.cachedReadReceiptStatus
-      ).sort((a, b) => a > b)[0],
-    };
   }
 
   state = {
@@ -45,9 +28,6 @@ export class Chat extends React.Component {
 
   componentDidUpdate() {
     this.ref.current.scrollTop = this.ref.current.scrollHeight;
-    if (this.props.currentChannel.channelType === 'group') {
-      this.props.currentChannel.markAsRead();
-    }
   }
 
   handleMessageDelete = (message) => {
@@ -162,7 +142,7 @@ export class Chat extends React.Component {
               onEditMessage={this.handleMessageEdit}
               key={message.createdAt}
               userId={user.userId}
-              isNotRead={this.state.readReceipt < message.createdAt}
+              isNotRead={this.props.readReceipt < message.createdAt}
             />
           ))}
         </div>
@@ -225,9 +205,8 @@ function mapStateToProps(state) {
       state.groupChannelsReducer.participants,
     messages: state.chatReducer.messages,
     messFetching: state.chatReducer.messFetching,
-    readReceipt: state.chatReducer.readReceipt,
-    cached: state.chatReducer.cached,
-    currentChannel: state.chatReducer.currentChannel,
+    readReceipt: state.chatReducer.receipt,
+    channel: state.groupChannelsReducer.groupChannel,
   };
 }
 
@@ -248,8 +227,10 @@ Chat.propTypes = {
   messFetching: PropTypes.bool.isRequired,
   user: PropTypes.objectOf(PropTypes.any).isRequired,
   currentChannel: PropTypes.objectOf(PropTypes.any).isRequired,
+  readReceipt: PropTypes.number,
 };
 
 Chat.defaultProps = {
   messages: [],
+  readReceipt: 0,
 };

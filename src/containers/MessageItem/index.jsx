@@ -134,5 +134,5 @@ MessageItem.propTypes = {
   onEditFileMessage: PropTypes.func.isRequired,
   message: PropTypes.objectOf(PropTypes.any).isRequired,
   userId: PropTypes.string.isRequired,
-  isNotRead: PropTypes.bool.isRequired,
+  isNotRead: PropTypes.bool,
 };

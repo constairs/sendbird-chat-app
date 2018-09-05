@@ -27,9 +27,9 @@ export const getGroupChannel = channelUrl => ({
   type: TYPES.GET_GROUP_CHANNEL,
   payload: channelUrl,
 });
-export const getGroupChannelSuccessed = groupChannel => ({
+export const getGroupChannelSuccessed = (groupChannel, receipt) => ({
   type: TYPES.GET_GROUP_CHANNEL_SUCCESSED,
-  payload: groupChannel,
+  payload: { groupChannel, receipt },
 });
 export const getGroupChannelFailed = error => ({
   type: TYPES.GET_GROUP_CHANNEL_FAILED,

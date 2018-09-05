@@ -3,8 +3,8 @@ import * as TYPES from './types';
 import {
   ON_USER_TYPING,
   GET_GROUP_CHANNEL_SUCCESSED,
-  ON_READ_RECEIPT_UPDATED,
 } from '../groupChannels/types';
+import { ENTER_CHANNEL_SUCCESSED } from '../openChannels/types';
 
 const initState = {
   messFetching: false,
@@ -19,9 +19,9 @@ const sendMessage = state => ({
   ...state,
   sendingMessage: true,
 });
-const sendMessageSuccessed = (state, updMessages) => ({
+const sendMessageSuccessed = (state, sendRes) => ({
   ...state,
-  messages: [...state.messages, updMessages],
+  messages: [...state.messages, sendRes.messages],
   sendingMessage: false,
 });
 const sendMessageFailed = (state, error) => ({
@@ -30,9 +30,9 @@ const sendMessageFailed = (state, error) => ({
   sendingMessage: false,
 });
 
-const sendFileMessage = (state, fileMessageData) => ({
+const sendFileMessage = (state, sendRes) => ({
   ...state,
-  fileToSend: fileMessageData,
+  fileToSend: sendRes.fileMessage,
 });
 
 const sendFileMessageSuccessed = state => ({
@@ -163,14 +163,20 @@ const onUserTyping = (state, typingData) => ({
       : [],
 });
 
-const changeChannelGroup = (state, groupChannel) => ({
+const changeChannelGroup = (state, groupChannelData) => ({
   ...state,
-  currentChannel: groupChannel,
+  currentChannel: groupChannelData.groupChannel,
+  receipt: groupChannelData.receipt,
 });
 
-const onReadReceiptUpdated = (state, channel) => ({
+const changeOpenChannel = (state, openChannel) => ({
   ...state,
-  currentChannel: channel,
+  currentChannel: openChannel,
+});
+
+const readReceipt = (state, receipt) => ({
+  ...state,
+  receipt,
 });
 
 const handlers = {
@@ -210,11 +216,12 @@ const handlers = {
   [ON_USER_TYPING]: onUserTyping,
 
   [GET_GROUP_CHANNEL_SUCCESSED]: changeChannelGroup,
+  [ENTER_CHANNEL_SUCCESSED]: changeOpenChannel,
 
   [TYPES.EDIT_FILE_MESSAGE]: editFileMessage,
   [TYPES.EDIT_FILE_MESSAGE_SUCCESSED]: editFileMessageSuccessed,
   [TYPES.EDIT_FILE_MESSAGE_FAILED]: editFileMessageFailed,
-  [ON_READ_RECEIPT_UPDATED]: onReadReceiptUpdated,
+  [TYPES.READ_RECEIPT]: readReceipt,
 };
 
 export const chatReducer = createReducer(initState, handlers);

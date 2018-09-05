@@ -4,9 +4,9 @@ export const sendMessage = messageData => ({
   type: TYPES.SEND_MESSAGE,
   messageData,
 });
-export const sendMessageSuccessed = updMessages => ({
+export const sendMessageSuccessed = (channel, messages) => ({
   type: TYPES.SEND_MESSAGE_SUCCESSED,
-  payload: updMessages,
+  payload: { channel, messages },
 });
 export const sendMessageFailed = error => ({
   type: TYPES.SEND_MESSAGE_FAILED,
@@ -119,4 +119,13 @@ export const messageTypingEnd = () => ({
 
 export const cleanChat = () => ({
   type: TYPES.CLEAN_CHAT,
+});
+
+export const readReceipt = receipt => ({
+  type: TYPES.READ_RECEIPT,
+  payload: receipt,
+});
+
+export const markAsRead = () => ({
+  type: TYPES.MARK_AS_READ,
 });

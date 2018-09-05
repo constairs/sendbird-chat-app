@@ -1,18 +1,18 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { ChatBox } from '../../containers/ChatBox';
-import { addEventHandlers, removeEventHandlers } from '../../services/sendbird';
+// import { addEventHandlers, removeEventHandlers } from '../../services/sendbird';
 
 import './index.scss';
 
 export class Channel extends React.Component {
-  componentDidMount() {
-    addEventHandlers(this.props.channel);
-  }
+  // componentDidMount() {
+  //   addEventHandlers(this.props.channel);
+  // }
 
-  componentWillUnmount() {
-    removeEventHandlers(this.props.channel);
-  }
+  // componentWillUnmount() {
+  //   removeEventHandlers(this.props.channel);
+  // }
 
   handleLeaveBtn = () => {
     this.props.onLeave(this.props.channel.url);
