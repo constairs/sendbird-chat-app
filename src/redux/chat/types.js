@@ -37,3 +37,5 @@ export const USER_TYPING = 'USER_TYPING';
 export const CLEAN_CHAT = 'CLEAN_CHAT';
 export const READ_RECEIPT = 'READ_RECEIPT';
 export const MARK_AS_READ = 'MARK_AS_READ';
+
+export const PRELOAD_FILE_MESSAGE = 'PRELOAD_FILE_MESSAGE';

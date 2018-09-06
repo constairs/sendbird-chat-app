@@ -6,6 +6,7 @@ import {
   take,
   all,
 } from 'redux-saga/effects';
+import { v4 } from 'uuid';
 import { ENTER_CHANNEL_SUCCESSED } from '../openChannels/types';
 import {
   GET_GROUP_CHANNEL_SUCCESSED,
@@ -64,8 +65,63 @@ function* sendMessageAsync(action) {
 
 function* sendFileMessageAsync(action) {
   try {
+    const fakeId = v4();
+    const creationTime = new Date();
+
+    // this.props.channelUrl,
+    // this.props.channelType,
+    // 'FILE',
+    // this.props.user,
+    // ...this.state.uploadedFile,
+    // this.state.fileMessageText,
+
+    const fakeMessage = {
+      isFake: true,
+      messageType: 'file',
+      channelUrl: action.fileMessageData[0],
+      channelType: action.fileMessageData[1],
+      name: action.fileMessageData[5],
+      type: action.fileMessageData[6],
+      size: action.fileMessageData[7],
+      data: action.fileMessageData[8],
+      createdAt: creationTime.getTime(),
+      messageId: fakeId,
+      sender: {
+        profileUrl: action.fileMessageData[3].userImg,
+        userId: action.fileMessageData[3].userId,
+        nickname: action.fileMessageData[3].userName,
+      },
+    };
+
+    yield put(
+      sendMessageSuccessed(
+        {
+          channelUrl: action.fileMessageData[0],
+          channelType: action.fileMessageData[1],
+        },
+        fakeMessage
+      )
+    );
+
     const sendRes = yield call(sendFileMessage, ...action.fileMessageData);
-    yield put(sendMessageSuccessed(sendRes.channel, sendRes.fileMessage));
+
+    // yield put(editFileMessage([
+    //   action.fileMessageData[0],
+    //   action.fileMessageData[1],
+    //   'FILE',
+    //   fakeMessage.messageId,
+    //   fakeMessage.data,
+    // ]));
+    const replacingRes = yield call(editFileMessage, [
+      action.fileMessageData[0],
+      action.fileMessageData[1],
+      'FILE',
+      fakeId,
+      sendRes.fileMessage,
+    ]);
+
+    // yield put(sendMessageSuccessed(sendRes.channel, sendRes.fileMessage));
+
     if (sendRes.channel.channelType === 'group') {
       yield call(markAsReadSb, sendRes.channel);
       yield put(markAsRead());

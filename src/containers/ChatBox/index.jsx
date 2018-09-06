@@ -35,6 +35,28 @@ export class Chat extends React.Component {
     ]);
   };
 
+  handleGreateFileMessage = (fileMessageData) => {
+    const creationTime = new Date();
+    const fakeMessage = {
+      isFake: true,
+      data: fileMessageData.message,
+      messageType: 'file',
+      name: fileMessageData.name,
+      type: fileMessageData.type,
+      size: fileMessageData.size,
+      createdAt: creationTime.getTime(),
+      sender: {
+        profileUrl: this.props.user.userImg,
+        userId: this.props.user.userId,
+        nickname: this.props.user.userName,
+      },
+    };
+    this.props.messages.push(fakeMessage);
+    if (this.props.uploadProgress === 100) {
+      this.props.messages.pop();
+    }
+  };
+
   handleTyping = () => {
     this.props.currentChannel.startTyping();
   };
@@ -61,6 +83,7 @@ export class Chat extends React.Component {
               onEditMessage={this.handleMessageEdit}
               key={message.createdAt}
               userId={user.userId}
+              uploadProgress={this.props.uploadProgress}
               isNotRead={
                 this.props.readReceipt < message.createdAt &&
                 this.props.readReceipt !== 0
@@ -71,6 +94,7 @@ export class Chat extends React.Component {
         <ChatMessageField
           onMessageTyping={this.handleTyping}
           onMessageTypingEnd={this.handleTypingEnd}
+          onCreateFileMessage={this.handleGreateFileMessage}
           channelUrl={url}
           channelType={channelType}
           channel={this.props.currentChannel}
@@ -89,6 +113,7 @@ function mapStateToProps(state) {
     messages: state.chatReducer.messages,
     messFetching: state.chatReducer.messFetching,
     readReceipt: state.chatReducer.receipt,
+    uploadProgress: state.chatReducer.uploadProgress,
     channel: state.groupChannelsReducer.groupChannel,
   };
 }
@@ -111,9 +136,11 @@ Chat.propTypes = {
   user: PropTypes.objectOf(PropTypes.any).isRequired,
   currentChannel: PropTypes.objectOf(PropTypes.any).isRequired,
   readReceipt: PropTypes.number,
+  uploadProgress: PropTypes.number,
 };
 
 Chat.defaultProps = {
   messages: [],
   readReceipt: 0,
+  uploadProgress: 0,
 };

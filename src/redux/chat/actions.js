@@ -129,3 +129,8 @@ export const readReceipt = (receipt, channelUrl) => ({
 export const markAsRead = () => ({
   type: TYPES.MARK_AS_READ,
 });
+
+export const preloadFileMessage = progress => ({
+  type: TYPES.PRELOAD_FILE_MESSAGE,
+  payload: progress,
+});

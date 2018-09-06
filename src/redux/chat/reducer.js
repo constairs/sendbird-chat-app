@@ -184,6 +184,11 @@ const readReceipt = (state, receiptData) => ({
       : state.receipt,
 });
 
+const preloadFileMessage = (state, progress) => ({
+  ...state,
+  uploadProgress: progress,
+});
+
 const handlers = {
   [TYPES.SEND_MESSAGE]: sendMessage,
   [TYPES.SEND_MESSAGE_SUCCESSED]: sendMessageSuccessed,
@@ -227,6 +232,7 @@ const handlers = {
   [TYPES.EDIT_FILE_MESSAGE_SUCCESSED]: editFileMessageSuccessed,
   [TYPES.EDIT_FILE_MESSAGE_FAILED]: editFileMessageFailed,
   [TYPES.READ_RECEIPT]: readReceipt,
+  [TYPES.PRELOAD_FILE_MESSAGE]: preloadFileMessage,
 };
 
 export const chatReducer = createReducer(initState, handlers);

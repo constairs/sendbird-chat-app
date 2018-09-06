@@ -7,6 +7,7 @@ import {
   messageUpdated,
   userTyping,
   readReceipt,
+  preloadFileMessage,
 } from '../redux/chat/actions';
 import {
   channelUpdated,
@@ -372,7 +373,7 @@ export function sendFileMessage(
 ) {
   return new Promise((resolve, reject) => {
     getChannel(channelUrl, channelType).then(channel => {
-      channel.sendFileMessage(
+      const sentFileMessage = channel.sendFileMessage(
         file,
         name,
         type,
@@ -383,6 +384,11 @@ export function sendFileMessage(
           console.log(
             parseInt(Math.floor((event.loaded / event.total) * 100)) + '%'
           );
+          store.store.dispatch(
+            preloadFileMessage(
+              parseInt(Math.floor((event.loaded / event.total) * 100))
+            )
+          );
         },
         (fileMessage, error) => {
           if (error) {
@@ -391,6 +397,10 @@ export function sendFileMessage(
           resolve({ channel, fileMessage });
         }
       );
+
+      // const cancelResult = channel.cancelUploadingFileMessage(
+      //   sentFileMessage.reqId
+      // );
     });
   });
 }
@@ -452,8 +462,8 @@ export function editMessage(
 export function editFileMessage(
   channelUrl,
   channelType,
+  messageType,
   messageId,
-  mType,
   user,
   file,
   name,

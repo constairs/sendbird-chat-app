@@ -75,9 +75,6 @@
   padding: 10px 20px;
 }
 
-.file-message-item {
-  
-}
 
 .file-info {
   display: flex;
@@ -97,9 +94,19 @@
   align-items: center;
   justify-content: center;
   margin: 0 10px 10px 0;
+  position: relative;
   img {
     width: 100%;
     display: block;
+  }
+  .loading-progress {
+    font-size: 14px;
+    text-align: center;
+    position: absolute;
+    display: block;
+  }
+  .PreLoading-Spinner {
+    position: absolute;
   }
 }
 

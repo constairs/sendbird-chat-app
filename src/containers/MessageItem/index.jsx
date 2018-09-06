@@ -9,7 +9,7 @@ import {
   faFile,
   faCircle,
 } from '@fortawesome/free-solid-svg-icons';
-
+import { Spinner } from 'react-preloading-component';
 import './index.scss';
 
 export class MessageItem extends React.Component {
@@ -52,13 +52,13 @@ export class MessageItem extends React.Component {
                 ? message.sender.profileUrl
                 : 'http://dxstmhyqfqr1o.cloudfront.net/images/icon-chat-04.png'
             }
-            alt={message.nickname}
+            alt={message.sender.nickname}
           />
         </div>
         <div className="message-body">
           <p className="sender-info">
             <span className="sender-nick">
-              {message.sender.nickname ? message.sender.nickname : 'noname'}
+              {message.sender.nickname || 'noname'}
             </span>
             {message.updatedAt ? (
               <span className="sending-date">
@@ -74,15 +74,30 @@ export class MessageItem extends React.Component {
           {message.messageType === 'file' ? (
             <div className="file-message-item">
               <div className="file-info">
-                <div className="message-file-preview">
-                  {new RegExp('^image?', 'i').test(message.type) ? (
-                    <img src={message.url} alt={message.name} />
-                  ) : (
-                    <FontAwesomeIcon icon={faFile} />
-                  )}
-                </div>
+                {/* <div className="message-file-preview"> */}
+                {message.isFake ? (
+                  <div className="message-file-preview">
+                    <Spinner
+                      color="#ffffff"
+                      secondaryColor="#40c9ff"
+                      size={70}
+                    />
+                    <span className="loading-progress">
+                      {this.props.uploadProgress} %
+                    </span>
+                  </div>
+                ) : (
+                  <div className="message-file-preview">
+                    {new RegExp('^image?', 'i').test(message.type) ? (
+                      <img src={message.url} alt={message.name} />
+                    ) : (
+                      <FontAwesomeIcon icon={faFile} />
+                    )}
+                  </div>
+                )}
+                {/* </div> */}
                 <p>
-                  <a href={message.url} target="_blank">
+                  <a href={message.url || '#'} target="_blank">
                     {message.name} ({message.size} кб)
                   </a>
                 </p>
@@ -107,7 +122,7 @@ export class MessageItem extends React.Component {
                   <FontAwesomeIcon icon={faCircle} />
                 ) : null}
               </span>
-              {message.message ? message.message : null}
+              {message.message || null}
               {message.messageType === 'file' && message.data
                 ? message.data
                 : null}
