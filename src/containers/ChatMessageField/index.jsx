@@ -11,15 +11,17 @@ import * as chatActions from '../../redux/chat/actions';
 
 class MessageField extends React.Component {
   state = {
-    messageInput: '',
+    messageText: '',
+    fileMessageText: '',
     uploadedFile: [],
     fileUploadModal: false,
     fileToUpload: '',
   };
 
-  handleTextInput = (e) => {
-    this.setState({ messageInput: e.target.value }, () => {
-      if (this.props.channelType === 'open') {
+  handleTextInput = ({ target }) => {
+    const { name, value } = target;
+    this.setState({ [name]: value }, () => {
+      if (this.props.channelType === 'open' && name === 'messageText') {
         this.props.chatActions.onMessageTyping([
           this.props.channelUrl,
           this.props.channelType,
@@ -39,9 +41,9 @@ class MessageField extends React.Component {
       this.props.channelType,
       'MESG',
       this.props.user.userId,
-      this.state.messageInput,
+      this.state.messageText,
     ];
-    this.setState({ messageInput: '' });
+    this.setState({ messageText: '' });
     this.props.chatActions.sendMessage(messageData);
     this.props.onMessageTypingEnd();
   };
@@ -54,13 +56,16 @@ class MessageField extends React.Component {
       'FILE',
       this.props.user.userId,
       ...this.state.uploadedFile,
+      this.state.fileMessageText,
     ];
     this.setState({
       uploadedFile: [],
       fileUploadModal: false,
       fileToUpload: '',
+      fileMessageText: '',
     });
     this.props.chatActions.sendFileMessage(fileMessageData);
+    this.props.onMessageTypingEnd();
   };
 
   fileUploadModal = () => {
@@ -80,13 +85,17 @@ class MessageField extends React.Component {
       };
       // reader.onabort = () => console.log('file reading was aborted');
       // reader.onerror = () => console.log('file reading has failed');
-
       reader.readAsBinaryString(file);
     });
   };
 
   render() {
-    const { fileToUpload, messageInput, fileUploadModal } = this.state;
+    const {
+      fileToUpload,
+      messageText,
+      fileUploadModal,
+      fileMessageText,
+    } = this.state;
     const { userTyping, user, membersTyping } = this.props;
     return (
       <div>
@@ -95,7 +104,8 @@ class MessageField extends React.Component {
             <input
               type="text"
               onInput={this.handleTextInput}
-              value={messageInput}
+              name="messageText"
+              value={messageText}
             />
             {userTyping && userTyping !== user.userName ? (
               <span className="typing-indicator">
@@ -135,7 +145,7 @@ class MessageField extends React.Component {
             <button
               className="send-message-btn"
               type="submit"
-              disabled={!messageInput}
+              disabled={!messageText}
             >
               Отправить
               {this.props.sendingMessage ? (
@@ -174,7 +184,14 @@ class MessageField extends React.Component {
                 </div>
               </div>
             ) : null}
-            <button type="submit">Загрузить</button>
+            <input
+              type="text"
+              placeholder="Сообщение"
+              name="fileMessageText"
+              value={fileMessageText}
+              onChange={this.handleTextInput}
+            />
+            <button type="submit">Отправить</button>
           </form>
         </Modal>
       </div>

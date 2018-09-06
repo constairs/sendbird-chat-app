@@ -17,9 +17,9 @@ export const sendFileMessage = fileMessageData => ({
   type: TYPES.SEND_FILE_MESSAGE,
   fileMessageData,
 });
-export const sendFileMessageSuccessed = updMessages => ({
+export const sendFileMessageSuccessed = (channel, fileMessage) => ({
   type: TYPES.SEND_FILE_MESSAGE_SUCCESSED,
-  payload: updMessages,
+  payload: { channel, fileMessage },
 });
 export const sendFileMessageFailed = error => ({
   type: TYPES.SEND_FILE_MESSAGE_FAILED,
@@ -121,9 +121,9 @@ export const cleanChat = () => ({
   type: TYPES.CLEAN_CHAT,
 });
 
-export const readReceipt = receipt => ({
+export const readReceipt = (receipt, channelUrl) => ({
   type: TYPES.READ_RECEIPT,
-  payload: receipt,
+  payload: { receipt, channelUrl },
 });
 
 export const markAsRead = () => ({

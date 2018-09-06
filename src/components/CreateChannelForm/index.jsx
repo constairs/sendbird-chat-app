@@ -20,7 +20,6 @@ export class CreateChannelForm extends React.Component {
   handleSubmit = (e) => {
     e.preventDefault();
     const formData = [
-      'open',
       this.state.channelName,
       this.state.coverUrl,
       this.state.coverFile,

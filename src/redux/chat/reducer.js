@@ -30,13 +30,14 @@ const sendMessageFailed = (state, error) => ({
   sendingMessage: false,
 });
 
-const sendFileMessage = (state, sendRes) => ({
+const sendFileMessage = (state, fileMessageData) => ({
   ...state,
-  fileToSend: sendRes.fileMessage,
+  fileToSend: fileMessageData,
 });
 
-const sendFileMessageSuccessed = state => ({
+const sendFileMessageSuccessed = (state, sendRes) => ({
   ...state,
+  messages: [...state.messages, sendRes.fileMessage],
 });
 
 const sendFileMessageFailed = (state, error) => ({
@@ -172,11 +173,15 @@ const changeChannelGroup = (state, groupChannelData) => ({
 const changeOpenChannel = (state, openChannel) => ({
   ...state,
   currentChannel: openChannel,
+  receipt: 0,
 });
 
-const readReceipt = (state, receipt) => ({
+const readReceipt = (state, receiptData) => ({
   ...state,
-  receipt,
+  receipt:
+    state.currentChannel && receiptData.channelUrl === state.currentChannel.url
+      ? receiptData.receipt
+      : state.receipt,
 });
 
 const handlers = {

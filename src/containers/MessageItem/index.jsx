@@ -17,9 +17,9 @@ export class MessageItem extends React.Component {
     super(props);
     this.state = {
       onEdit: false,
-      messageInput: props.message.updatedAt
+      messageInput: props.message.message
         ? props.message.message
-        : props.message.customType,
+        : props.message.data,
     };
   }
 
@@ -32,12 +32,10 @@ export class MessageItem extends React.Component {
   handleEditMessage = () => {
     this.setState({ onEdit: true });
   };
-  handleEditFileMessage = () => {
-    this.props.onEditFileMessage(this.props.message.messageId);
-  };
   handleSubmit = (e) => {
     e.preventDefault();
     this.props.onEditMessage([
+      this.props.message.messageType,
       this.props.message.messageId,
       this.state.messageInput,
     ]);
@@ -75,18 +73,20 @@ export class MessageItem extends React.Component {
           </p>
           {message.messageType === 'file' ? (
             <div className="file-message-item">
-              <div className="message-file-preview">
-                {new RegExp('^image?', 'i').test(message.type) ? (
-                  <img src={message.url} alt={message.name} />
-                ) : (
-                  <FontAwesomeIcon icon={faFile} />
-                )}
+              <div className="file-info">
+                <div className="message-file-preview">
+                  {new RegExp('^image?', 'i').test(message.type) ? (
+                    <img src={message.url} alt={message.name} />
+                  ) : (
+                    <FontAwesomeIcon icon={faFile} />
+                  )}
+                </div>
+                <p>
+                  <a href={message.url} target="_blank">
+                    {message.name} ({message.size} кб)
+                  </a>
+                </p>
               </div>
-              <p>
-                <a href={message.url} target="_blank">
-                  {message.name} ({message.size} кб)
-                </a>
-              </p>
             </div>
           ) : null}
           {this.state.onEdit ? (
@@ -107,7 +107,10 @@ export class MessageItem extends React.Component {
                   <FontAwesomeIcon icon={faCircle} />
                 ) : null}
               </span>
-              {message.updatedAt ? message.message : message.customType}
+              {message.message ? message.message : null}
+              {message.messageType === 'file' && message.data
+                ? message.data
+                : null}
             </p>
           )}
         </div>
@@ -116,11 +119,9 @@ export class MessageItem extends React.Component {
             <button onClick={this.handleDeleteBtn} className="x-btn">
               <FontAwesomeIcon icon={faTimes} />
             </button>
-            {message.messageType === 'file' ? null : ( // </button> //   <FontAwesomeIcon icon={faPen} /> // <button onClick={this.handleEditFileMessage} className="edit-btn">
-              <button onClick={this.handleEditMessage} className="edit-btn">
-                <FontAwesomeIcon icon={faPen} />
-              </button>
-            )}
+            <button onClick={this.handleEditMessage} className="edit-btn">
+              <FontAwesomeIcon icon={faPen} />
+            </button>
           </div>
         ) : null}
       </div>
@@ -131,8 +132,11 @@ export class MessageItem extends React.Component {
 MessageItem.propTypes = {
   onDeleteMessage: PropTypes.func.isRequired,
   onEditMessage: PropTypes.func.isRequired,
-  onEditFileMessage: PropTypes.func.isRequired,
   message: PropTypes.objectOf(PropTypes.any).isRequired,
   userId: PropTypes.string.isRequired,
   isNotRead: PropTypes.bool,
+};
+
+MessageItem.defaultProps = {
+  isNotRead: false,
 };

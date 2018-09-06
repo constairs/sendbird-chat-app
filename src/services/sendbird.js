@@ -21,7 +21,6 @@ import {
   onUserJoined,
   onUserLeft,
   onUserTyping,
-  // onReadReceiptUpdated,
 } from '../redux/groupChannels/actions';
 
 export const sb = new SendBird({ appId: APP_ID });
@@ -74,11 +73,10 @@ ChatHandler.onTypingStatusUpdated = function(groupChannel) {
   store.store.dispatch(onUserTyping(groupChannel, typingMembers));
 };
 ChatHandler.onReadReceiptUpdated = function(channel) {
-  // store.store.dispatch(onReadReceiptUpdated(channel));
   const receipt = Object.values(channel.cachedReadReceiptStatus).sort(
     (a, b) => a > b
   )[0];
-  store.store.dispatch(readReceipt(receipt));
+  store.store.dispatch(readReceipt(receipt, channel.url));
 };
 
 GroupChannelHandler.onChannelChanged = function(channel) {
@@ -350,7 +348,7 @@ export function getRecentlyMessages(channelUrl, quantity) {
 export function sendMessage(channelUrl, channelType, mType, user, message) {
   return new Promise((resolve, reject) => {
     getChannel(channelUrl, channelType).then(channel => {
-      channel.sendUserMessage(mType, user, message, (messages, err) => {
+      channel.sendUserMessage(message, (messages, err) => {
         if (err) {
           reject(err);
         }
@@ -413,6 +411,7 @@ export function deleteMessage(channelUrl, channelType, message) {
 export function editMessage(
   channelUrl,
   channelType,
+  messageType,
   messageId,
   message,
   data,
@@ -420,18 +419,32 @@ export function editMessage(
 ) {
   return new Promise((resolve, reject) => {
     getChannel(channelUrl, channelType).then(channel => {
-      channel.updateUserMessage(
-        messageId,
-        message,
-        data,
-        customType,
-        (userMessage, err) => {
-          if (err) {
-            reject(err);
+      if (messageType === 'file') {
+        channel.updateFileMessage(
+          messageId,
+          message, // data prop in file message
+          customType,
+          (fileMessage, error) => {
+            if (error) {
+              reject(error);
+            }
+            resolve(fileMessage);
           }
-          resolve(userMessage);
-        }
-      );
+        );
+      } else {
+        channel.updateUserMessage(
+          messageId,
+          message,
+          data,
+          customType,
+          (userMessage, err) => {
+            if (err) {
+              reject(err);
+            }
+            resolve(userMessage);
+          }
+        );
+      }
     });
   });
 }
@@ -450,24 +463,7 @@ export function editFileMessage(
   customType
 ) {
   return new Promise((resolve, reject) => {
-    getChannel(channelUrl, channelType).then(channel => {
-      channel.updateFileMessage(
-        messageId,
-        file,
-        name,
-        type,
-        size,
-        data,
-        customType,
-        (fileMessage, error) => {
-          if (error) {
-            reject(error);
-          }
-          console.log(fileMessage);
-          resolve(fileMessage);
-        }
-      );
-    });
+    getChannel(channelUrl, channelType).then(channel => {});
   });
 }
 

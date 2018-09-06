@@ -10,7 +10,6 @@ import { ENTER_CHANNEL_SUCCESSED } from '../openChannels/types';
 import {
   GET_GROUP_CHANNEL_SUCCESSED,
   LEAVE_GROUP_SUCCESSED,
-  // ON_READ_RECEIPT_UPDATED,
 } from '../groupChannels/types';
 import {
   sendMessage,
@@ -47,7 +46,6 @@ import {
   cleanChat,
   editFileMessageSuccessed,
   editFileMessageFailed,
-  // readReceipt,
   markAsRead,
 } from './actions';
 
@@ -67,7 +65,7 @@ function* sendMessageAsync(action) {
 function* sendFileMessageAsync(action) {
   try {
     const sendRes = yield call(sendFileMessage, ...action.fileMessageData);
-    yield put(sendMessageSuccessed(sendRes));
+    yield put(sendMessageSuccessed(sendRes.channel, sendRes.fileMessage));
     if (sendRes.channel.channelType === 'group') {
       yield call(markAsReadSb, sendRes.channel);
       yield put(markAsRead());
@@ -164,14 +162,6 @@ function* markAsReadSaga(action) {
   }
 }
 
-// function* onReadReceiptUpdatedSaga(action) {
-//   console.log(action.payload);
-//   const receipt = Object.values(action.payload.cachedReadReceiptStatus).sort(
-//     (a, b) => a > b
-//   )[0];
-//   yield put(readReceipt(receipt));
-// }
-
 export function* chatSagas() {
   yield all([
     yield takeLatest(MESSAGE_RECEIVED, markAsReadSaga),
@@ -183,7 +173,6 @@ export function* chatSagas() {
     yield takeEvery(ENTER_CHANNEL_SUCCESSED, getMessagesAsync),
     yield takeEvery(GET_GROUP_CHANNEL_SUCCESSED, getGroupMessges),
     yield take(LEAVE_GROUP_SUCCESSED, cleanChatSaga),
-    // yield takeLatest(ON_READ_RECEIPT_UPDATED, onReadReceiptUpdatedSaga),
     yield takeLatest(ON_MESSAGE_TYPING, onMessageTypingSaga),
   ]);
 }
