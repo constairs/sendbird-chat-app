@@ -92,12 +92,15 @@ export class MessageItem extends React.Component {
                     <span className="loading-progress">
                       {uploadProgress.progress} %
                     </span>
-                    <button
-                      onClick={this.handleCancelUploading}
-                      className="cancel-button"
-                    >
-                      <FontAwesomeIcon icon={faTimes} />
-                    </button>
+                    {uploadProgress.progress !== 0 &&
+                    uploadProgress.progress !== 100 ? (
+                      <button
+                        onClick={this.handleCancelUploading}
+                        className="cancel-button"
+                      >
+                        <FontAwesomeIcon icon={faTimes} />
+                      </button>
+                    ) : null}
                   </div>
                 ) : (
                   <div className="message-file-preview">

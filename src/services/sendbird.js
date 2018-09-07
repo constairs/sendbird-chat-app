@@ -357,7 +357,7 @@ export function sendMessage(
 ) {
   return new Promise((resolve, reject) => {
     getChannel(channelUrl, channelType).then(channel => {
-      channel.sendUserMessage(message, data, customType, (messages, err) => {
+      channel.sendUserMessage(message, (messages, err) => {
         if (err) {
           reject(err);
         }
