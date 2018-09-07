@@ -134,3 +134,8 @@ export const preloadFileMessage = progress => ({
   type: TYPES.PRELOAD_FILE_MESSAGE,
   payload: progress,
 });
+
+export const replaceMessage = replacer => ({
+  type: TYPES.REPLACE_MESSAGE,
+  payload: replacer,
+});

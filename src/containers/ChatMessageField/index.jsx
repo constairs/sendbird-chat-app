@@ -64,12 +64,6 @@ class MessageField extends React.Component {
       fileToUpload: '',
       fileMessageText: '',
     });
-    // this.props.onCreateFileMessage({
-    //   message: this.state.fileMessageText,
-    //   name: this.state.uploadedFile[1],
-    //   type: this.state.uploadedFile[2],
-    //   size: this.state.uploadedFile[3],
-    // });
     this.props.onMessageTypingEnd();
     this.props.chatActions.sendFileMessage(fileMessageData);
   };
@@ -215,7 +209,6 @@ MessageField.propTypes = {
   chatActions: PropTypes.objectOf(PropTypes.func).isRequired,
   onMessageTyping: PropTypes.func.isRequired,
   onMessageTypingEnd: PropTypes.func.isRequired,
-  onCreateFileMessage: PropTypes.func.isRequired,
 };
 
 MessageField.defaultProps = {

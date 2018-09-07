@@ -346,10 +346,18 @@ export function getRecentlyMessages(channelUrl, quantity) {
   });
 }
 
-export function sendMessage(channelUrl, channelType, mType, user, message) {
+export function sendMessage(
+  channelUrl,
+  channelType,
+  mType,
+  user,
+  message,
+  data,
+  customType
+) {
   return new Promise((resolve, reject) => {
     getChannel(channelUrl, channelType).then(channel => {
-      channel.sendUserMessage(message, (messages, err) => {
+      channel.sendUserMessage(message, data, customType, (messages, err) => {
         if (err) {
           reject(err);
         }

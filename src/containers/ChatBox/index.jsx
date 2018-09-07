@@ -94,7 +94,6 @@ export class Chat extends React.Component {
         <ChatMessageField
           onMessageTyping={this.handleTyping}
           onMessageTypingEnd={this.handleTypingEnd}
-          onCreateFileMessage={this.handleGreateFileMessage}
           channelUrl={url}
           channelType={channelType}
           channel={this.props.currentChannel}

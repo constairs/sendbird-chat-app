@@ -48,6 +48,7 @@ import {
   editFileMessageSuccessed,
   editFileMessageFailed,
   markAsRead,
+  replaceMessage,
 } from './actions';
 
 function* sendMessageAsync(action) {
@@ -67,14 +68,6 @@ function* sendFileMessageAsync(action) {
   try {
     const fakeId = v4();
     const creationTime = new Date();
-
-    // this.props.channelUrl,
-    // this.props.channelType,
-    // 'FILE',
-    // this.props.user,
-    // ...this.state.uploadedFile,
-    // this.state.fileMessageText,
-
     const fakeMessage = {
       isFake: true,
       messageType: 'file',
@@ -105,22 +98,12 @@ function* sendFileMessageAsync(action) {
 
     const sendRes = yield call(sendFileMessage, ...action.fileMessageData);
 
-    // yield put(editFileMessage([
-    //   action.fileMessageData[0],
-    //   action.fileMessageData[1],
-    //   'FILE',
-    //   fakeMessage.messageId,
-    //   fakeMessage.data,
-    // ]));
-    const replacingRes = yield call(editFileMessage, [
-      action.fileMessageData[0],
-      action.fileMessageData[1],
-      'FILE',
-      fakeId,
-      sendRes.fileMessage,
-    ]);
+    const replacer = {
+      messageId: fakeId,
+      message: sendRes.fileMessage,
+    };
 
-    // yield put(sendMessageSuccessed(sendRes.channel, sendRes.fileMessage));
+    yield put(replaceMessage(replacer));
 
     if (sendRes.channel.channelType === 'group') {
       yield call(markAsReadSb, sendRes.channel);

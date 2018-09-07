@@ -13,6 +13,7 @@ const initState = {
   messages: [],
   userTyping: '',
   typedMessage: '',
+  uploadProgress: 0,
 };
 
 const sendMessage = state => ({
@@ -189,6 +190,14 @@ const preloadFileMessage = (state, progress) => ({
   uploadProgress: progress,
 });
 
+const replaceMessage = (state, replacer) => ({
+  ...state,
+  messages: state.messages.map(
+    message =>
+      (message.messageId === replacer.messageId ? replacer.message : message)
+  ),
+});
+
 const handlers = {
   [TYPES.SEND_MESSAGE]: sendMessage,
   [TYPES.SEND_MESSAGE_SUCCESSED]: sendMessageSuccessed,
@@ -233,6 +242,8 @@ const handlers = {
   [TYPES.EDIT_FILE_MESSAGE_FAILED]: editFileMessageFailed,
   [TYPES.READ_RECEIPT]: readReceipt,
   [TYPES.PRELOAD_FILE_MESSAGE]: preloadFileMessage,
+
+  [TYPES.REPLACE_MESSAGE]: replaceMessage,
 };
 
 export const chatReducer = createReducer(initState, handlers);

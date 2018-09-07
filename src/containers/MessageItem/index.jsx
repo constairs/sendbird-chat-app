@@ -150,6 +150,7 @@ MessageItem.propTypes = {
   message: PropTypes.objectOf(PropTypes.any).isRequired,
   userId: PropTypes.string.isRequired,
   isNotRead: PropTypes.bool,
+  uploadProgress: PropTypes.number.isRequired,
 };
 
 MessageItem.defaultProps = {
