@@ -21,6 +21,7 @@ import {
   onMessageTyping,
   markAsReadSb,
   editFileMessage,
+  cancelUploadingMessage,
 } from '../../services/sendbird';
 import {
   SEND_MESSAGE,
@@ -30,6 +31,7 @@ import {
   SEND_FILE_MESSAGE,
   EDIT_FILE_MESSAGE,
   MESSAGE_RECEIVED,
+  CANCEL_UPLOADING,
 } from './types';
 import {
   sendMessageSuccessed,
@@ -49,6 +51,8 @@ import {
   editFileMessageFailed,
   markAsRead,
   replaceMessage,
+  cancelUploadingSuccessed,
+  cancelUploadingFailed,
 } from './actions';
 
 function* sendMessageAsync(action) {
@@ -61,6 +65,19 @@ function* sendMessageAsync(action) {
     }
   } catch (error) {
     yield put(sendMessageFailed(error));
+  }
+}
+
+function* cancelUploadingSaga(action) {
+  try {
+    const cancelRes = yield call(
+      cancelUploadingMessage,
+      true,
+      ...action.payload
+    );
+    yield put(cancelUploadingSuccessed(cancelRes));
+  } catch (error) {
+    yield put(cancelUploadingFailed(error));
   }
 }
 
@@ -204,6 +221,7 @@ function* markAsReadSaga(action) {
 export function* chatSagas() {
   yield all([
     yield takeLatest(MESSAGE_RECEIVED, markAsReadSaga),
+    yield takeLatest(CANCEL_UPLOADING, cancelUploadingSaga),
     yield takeLatest(SEND_MESSAGE, sendMessageAsync),
     yield takeLatest(SEND_FILE_MESSAGE, sendFileMessageAsync),
     yield takeLatest(DELETE_MESSAGE, deleteMessageAsync),

@@ -71,7 +71,7 @@ class ListItem extends React.Component {
         {this.state.inviteForm ? (
           <form onSubmit={this.handleFormSubmit} className="form invite-form">
             <label htmlFor="userId">
-              <span>user id</span>
+              <span>user ids</span>
               <input
                 id="userId"
                 value={this.state.usersIdsInput}

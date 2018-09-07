@@ -108,6 +108,21 @@
   .PreLoading-Spinner {
     position: absolute;
   }
+  &:hover {
+    .cancel-button {
+      opacity: 1;
+    }
+  }
+  .cancel-button {
+    opacity: 0;
+    background-color: $brand-color;
+    position: absolute;
+    width: 40px;
+    height: 40px;
+    border-radius: 100%;
+    font-size: 20px;
+    transition: all .2s
+  }
 }
 
 .isReadIndicator {

@@ -13,7 +13,7 @@ const initState = {
   messages: [],
   userTyping: '',
   typedMessage: '',
-  uploadProgress: 0,
+  uploadProgress: { reqId: '', progress: 0 },
 };
 
 const sendMessage = state => ({
@@ -196,6 +196,17 @@ const replaceMessage = (state, replacer) => ({
     message =>
       (message.messageId === replacer.messageId ? replacer.message : message)
   ),
+  uploadProgress: { reqId: '', progress: 0 },
+});
+
+const cancelUploadingSuccessed = (state, messageId) => ({
+  ...state,
+  messages: state.messages.filter(message => message.messageId !== messageId),
+});
+
+const cancelUploadingFailed = (state, error) => ({
+  ...state,
+  error,
 });
 
 const handlers = {
@@ -244,6 +255,8 @@ const handlers = {
   [TYPES.PRELOAD_FILE_MESSAGE]: preloadFileMessage,
 
   [TYPES.REPLACE_MESSAGE]: replaceMessage,
+  [TYPES.CANCEL_UPLOADING_SUCESSED]: cancelUploadingSuccessed,
+  [TYPES.CANCEL_UPLOADING_FAILED]: cancelUploadingFailed,
 };
 
 export const chatReducer = createReducer(initState, handlers);

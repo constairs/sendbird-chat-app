@@ -41,8 +41,16 @@ export class MessageItem extends React.Component {
     ]);
     this.setState({ onEdit: false });
   };
+
+  handleCancelUploading = () => {
+    this.props.onCancelUploading([
+      this.props.uploadProgress.reqId,
+      this.props.message.messageId,
+    ]);
+  };
+
   render() {
-    const { message, userId } = this.props;
+    const { message, userId, uploadProgress } = this.props;
     return (
       <div className="message-item">
         <div className="sender-img">
@@ -74,7 +82,6 @@ export class MessageItem extends React.Component {
           {message.messageType === 'file' ? (
             <div className="file-message-item">
               <div className="file-info">
-                {/* <div className="message-file-preview"> */}
                 {message.isFake ? (
                   <div className="message-file-preview">
                     <Spinner
@@ -83,8 +90,14 @@ export class MessageItem extends React.Component {
                       size={70}
                     />
                     <span className="loading-progress">
-                      {this.props.uploadProgress} %
+                      {uploadProgress.progress} %
                     </span>
+                    <button
+                      onClick={this.handleCancelUploading}
+                      className="cancel-button"
+                    >
+                      <FontAwesomeIcon icon={faTimes} />
+                    </button>
                   </div>
                 ) : (
                   <div className="message-file-preview">
@@ -95,7 +108,6 @@ export class MessageItem extends React.Component {
                     )}
                   </div>
                 )}
-                {/* </div> */}
                 <p>
                   <a href={message.url || '#'} target="_blank">
                     {message.name} ({message.size} кб)
@@ -150,7 +162,8 @@ MessageItem.propTypes = {
   message: PropTypes.objectOf(PropTypes.any).isRequired,
   userId: PropTypes.string.isRequired,
   isNotRead: PropTypes.bool,
-  uploadProgress: PropTypes.number.isRequired,
+  uploadProgress: PropTypes.objectOf(PropTypes.any).isRequired,
+  onCancelUploading: PropTypes.func.isRequired,
 };
 
 MessageItem.defaultProps = {

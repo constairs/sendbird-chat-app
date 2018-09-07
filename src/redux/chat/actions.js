@@ -139,3 +139,18 @@ export const replaceMessage = replacer => ({
   type: TYPES.REPLACE_MESSAGE,
   payload: replacer,
 });
+
+export const cancelUploadingMessage = messageData => ({
+  type: TYPES.CANCEL_UPLOADING,
+  payload: messageData,
+});
+
+export const cancelUploadingSuccessed = messageId => ({
+  type: TYPES.CANCEL_UPLOADING_SUCESSED,
+  payload: messageId,
+});
+
+export const cancelUploadingFailed = error => ({
+  type: TYPES.CANCEL_UPLOADING_FAILED,
+  payload: error,
+});

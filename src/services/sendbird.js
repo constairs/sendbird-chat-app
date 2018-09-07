@@ -367,6 +367,26 @@ export function sendMessage(
   });
 }
 
+export function cancelUploadingMessage(
+  cancel = false,
+  channelUrl,
+  channelType,
+  reqId, // id of sendFileMessage request
+  messageId // fakeId of preloading-message
+) {
+  return new Promise((resolve, reject) => {
+    getChannel(channelUrl, channelType).then(channel => {
+      if (cancel) {
+        const cancelResult = channel.cancelUploadingFileMessage(reqId);
+        if (cancelResult) {
+          resolve(messageId);
+        }
+        reject(cancelResult);
+      }
+    });
+  });
+}
+
 export function sendFileMessage(
   channelUrl,
   channelType,
@@ -389,13 +409,13 @@ export function sendFileMessage(
         data,
         customType,
         event => {
-          console.log(
-            parseInt(Math.floor((event.loaded / event.total) * 100)) + '%'
-          );
           store.store.dispatch(
-            preloadFileMessage(
-              parseInt(Math.floor((event.loaded / event.total) * 100))
-            )
+            preloadFileMessage({
+              reqId: sentFileMessage.reqId,
+              progress: parseInt(
+                Math.floor((event.loaded / event.total) * 100)
+              ),
+            })
           );
         },
         (fileMessage, error) => {
@@ -405,10 +425,6 @@ export function sendFileMessage(
           resolve({ channel, fileMessage });
         }
       );
-
-      // const cancelResult = channel.cancelUploadingFileMessage(
-      //   sentFileMessage.reqId
-      // );
     });
   });
 }

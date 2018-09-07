@@ -35,6 +35,14 @@ export class Chat extends React.Component {
     ]);
   };
 
+  handleCancelUploading = (messageData) => {
+    this.props.chatActions.cancelUploadingMessage([
+      this.props.currentChannel.url,
+      this.props.currentChannel.channelType,
+      ...messageData,
+    ]);
+  };
+
   handleGreateFileMessage = (fileMessageData) => {
     const creationTime = new Date();
     const fakeMessage = {
@@ -84,6 +92,7 @@ export class Chat extends React.Component {
               key={message.createdAt}
               userId={user.userId}
               uploadProgress={this.props.uploadProgress}
+              onCancelUploading={this.handleCancelUploading}
               isNotRead={
                 this.props.readReceipt < message.createdAt &&
                 this.props.readReceipt !== 0
@@ -135,11 +144,10 @@ Chat.propTypes = {
   user: PropTypes.objectOf(PropTypes.any).isRequired,
   currentChannel: PropTypes.objectOf(PropTypes.any).isRequired,
   readReceipt: PropTypes.number,
-  uploadProgress: PropTypes.number,
+  uploadProgress: PropTypes.objectOf(PropTypes.any).isRequired,
 };
 
 Chat.defaultProps = {
   messages: [],
   readReceipt: 0,
-  uploadProgress: 0,
 };
