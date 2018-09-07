@@ -28,12 +28,10 @@ const userReconnect = state => ({
   ...state,
   userFetching: true,
 });
-
 const userReconnectSuccessed = state => ({
   ...state,
   userFetching: false,
 });
-
 const userReconnectFailed = (state, err) => ({
   ...state,
   userFetching: false,

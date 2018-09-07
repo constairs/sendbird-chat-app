@@ -15,9 +15,8 @@ const initState = {
   },
 };
 
-const createGroupChannel = (state, formData) => ({
+const createGroupChannel = state => ({
   ...state,
-  formData,
   fetching: true,
 });
 
@@ -52,14 +51,12 @@ const getGroup = state => ({
   ...state,
   fetching: true,
 });
-
 const getGroupSuccessed = (state, groupData) => ({
   ...state,
   groupChannel: groupData.groupChannel,
   receipt: groupData.receipt,
   fetching: false,
 });
-
 const getGroupFailed = (state, error) => ({
   ...state,
   error,
@@ -70,13 +67,11 @@ const inviteUsers = state => ({
   ...state,
   fetching: true,
 });
-
 const inviteUsersSuccessed = (state, inviteRes) => ({
   ...state,
   inviteRes,
   fetching: false,
 });
-
 const inviteUsersFailed = (state, error) => ({
   ...state,
   error,
@@ -86,12 +81,10 @@ const inviteUsersFailed = (state, error) => ({
 const leaveGroup = state => ({
   ...state,
 });
-
 const leaveGroupSuccessed = state => ({
   ...state,
   groupChannel: null,
 });
-
 const leaveGroupFailed = (state, error) => ({
   ...state,
   error,

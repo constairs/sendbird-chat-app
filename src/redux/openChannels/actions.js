@@ -103,3 +103,18 @@ export const createGroupChannelFailed = error => ({
   type: TYPES.CREATE_GROUP_CHANNEL_FAILED,
   payload: error,
 });
+
+export const updateChannel = updateData => ({
+  type: TYPES.UPDATE_CHANNEL,
+  payload: updateData,
+});
+
+export const updateChannelSuccessed = updRes => ({
+  type: TYPES.UPDATE_CHANNEL_SUCCESSED,
+  payload: updRes,
+});
+
+export const updateChannelFailed = error => ({
+  type: TYPES.UPDATE_CHANNEL_FAILED,
+  payload: error,
+});

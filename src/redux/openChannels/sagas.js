@@ -6,6 +6,7 @@ import {
   enterChannel,
   exitChannel,
   getRecentlyMessages,
+  updateChannel,
 } from '../../services/sendbird';
 import {
   CREATE_OPEN_CHANNEL,
@@ -14,6 +15,7 @@ import {
   ENTER_CHANNEL,
   LEAVE_CHANNEL,
   GET_RECENTLY_MESSAGES,
+  UPDATE_CHANNEL,
 } from './types';
 import {
   createOpenChannelSuccessed,
@@ -28,11 +30,13 @@ import {
   leaveChannelFailed,
   getRecentlyMessagesSuccessed,
   getRecentlyMessagesFailed,
+  updateChannelSuccessed,
+  updateChannelFailed,
 } from './actions';
 
 import { USER_LOGIN_SUCCESSED, USER_RECONNECT_SUCCESSED } from '../user/types';
 
-export function* createChannelAsync(action) {
+function* createChannelAsync(action) {
   try {
     const createdChannel = yield call(createOpenChannel, ...action.payload);
     yield put(createOpenChannelSuccessed(createdChannel));
@@ -41,7 +45,7 @@ export function* createChannelAsync(action) {
   }
 }
 
-export function* openChannels() {
+function* openChannels() {
   try {
     const channelList = yield call(openChannelList);
     yield put(openChannelsListSuccessed(channelList));
@@ -50,7 +54,7 @@ export function* openChannels() {
   }
 }
 
-export function* selectChannel(action) {
+function* selectChannel(action) {
   try {
     const channel = yield call(getChannel, action.channelUrl);
     yield put(getSelectedChannelSuccessed(channel));
@@ -68,7 +72,7 @@ export function* enterSelectedChannel(action) {
   }
 }
 
-export function* leaveChannel(action) {
+function* leaveChannel(action) {
   try {
     const res = yield call(exitChannel, action.payload);
     yield put(leaveChannelSuccessed(res));
@@ -77,13 +81,23 @@ export function* leaveChannel(action) {
   }
 }
 
-export function* getRecentMessages(action) {
+function* getRecentMessages(action) {
   try {
     let messages = yield call(getRecentlyMessages, ...action.payload);
     messages = { messages, channel: action.payload[0] };
     yield put(getRecentlyMessagesSuccessed(messages));
   } catch (error) {
     yield put(getRecentlyMessagesFailed(error));
+  }
+}
+
+function* updateChannelSaga(action) {
+  try {
+    const updRes = yield call(updateChannel, ...action.payload);
+    yield put(updateChannelSuccessed(updRes));
+    console(updRes);
+  } catch (error) {
+    yield put(updateChannelFailed(error));
   }
 }
 
@@ -102,5 +116,6 @@ export function* openChannelSagas() {
     yield takeLatest(ENTER_CHANNEL, enterSelectedChannel),
     yield takeLatest(LEAVE_CHANNEL, leaveChannel),
     yield takeEvery(GET_RECENTLY_MESSAGES, getRecentMessages),
+    yield takeLatest(UPDATE_CHANNEL, updateChannelSaga),
   ]);
 }

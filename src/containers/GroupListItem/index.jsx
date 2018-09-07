@@ -6,6 +6,7 @@ class ListItem extends React.Component {
   state = {
     inviteForm: false,
     usersIdsInput: '',
+    usersToInvite: [],
   };
 
   handleItemClick = () => {
@@ -17,6 +18,21 @@ class ListItem extends React.Component {
 
   handleInviteClick = () => {
     this.setState({ inviteForm: !this.state.inviteForm });
+  };
+
+  handleAddUser = () => {
+    this.setState({
+      usersToInvite: [...this.state.usersToInvite, this.state.usersIdsInput],
+      usersIdsInput: '',
+    });
+  };
+
+  handleDelUser = (e) => {
+    this.setState({
+      usersToInvite: this.state.usersToInvite.filter(
+        userId => userId !== e.target.id
+      ),
+    });
   };
 
   handleLeaveClick = () => {
@@ -31,13 +47,14 @@ class ListItem extends React.Component {
     e.preventDefault();
     this.props.onInviteUsers([
       this.props.channelItem.url,
-      this.state.usersIdsInput,
+      this.state.usersToInvite,
     ]);
-    this.setState({ inviteForm: false, usersIdsInput: '' });
+    this.setState({ inviteForm: false, usersIdsInput: '', usersToInvite: [] });
   };
 
   render() {
     const { channelItem } = this.props;
+    const { usersToInvite, usersIdsInput, inviteForm } = this.state;
     return (
       <li>
         <button className="channel-list-item" onClick={this.handleItemClick}>
@@ -59,27 +76,53 @@ class ListItem extends React.Component {
               <div className="recently-messages">
                 Последнее сообщение:
                 <br />
-                <span>{channelItem.lastMessage.customType}</span>
+                <span>{channelItem.lastMessage.message}</span>
               </div>
             </div>
           ) : null}
         </button>
-        <div className="btns">
-          <button onClick={this.handleInviteClick}>Пригласить</button>
-          <button onClick={this.handleLeaveClick}>Покинуть</button>
-        </div>
-        {this.state.inviteForm ? (
+        {!channelItem.isDistinct ? (
+          <div className="btns">
+            <button onClick={this.handleInviteClick}>Пригласить</button>
+            <button onClick={this.handleLeaveClick}>Покинуть</button>
+          </div>
+        ) : null}
+
+        {inviteForm ? (
           <form onSubmit={this.handleFormSubmit} className="form invite-form">
-            <label htmlFor="userId">
+            <label htmlFor="userId" className="groupUsers">
               <span>user ids</span>
               <input
                 id="userId"
-                value={this.state.usersIdsInput}
+                value={usersIdsInput}
                 onChange={this.handleInput}
                 type="text"
               />
+              <button
+                className="invite-button"
+                onClick={this.handleAddUser}
+                type="button"
+              >
+                ок
+              </button>
+              {usersToInvite.length !== 0 ? (
+                <ul className="users-to-invite">
+                  {usersToInvite.map(item => (
+                    <li key={item}>
+                      {item}{' '}
+                      <button
+                        id={item}
+                        onClick={this.handleDelUser}
+                        type="button"
+                      >
+                        x
+                      </button>
+                    </li>
+                  ))}
+                </ul>
+              ) : null}
             </label>
-            <button>ok</button>
+            <button type="submit">Пригласить</button>
           </form>
         ) : null}
       </li>

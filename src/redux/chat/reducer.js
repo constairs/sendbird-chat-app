@@ -16,10 +16,6 @@ const initState = {
   uploadProgress: { reqId: '', progress: 0 },
 };
 
-const sendMessage = state => ({
-  ...state,
-  sendingMessage: true,
-});
 const sendMessageSuccessed = (state, sendRes) => ({
   ...state,
   messages: [...state.messages, sendRes.messages],
@@ -29,11 +25,6 @@ const sendMessageFailed = (state, error) => ({
   ...state,
   error,
   sendingMessage: false,
-});
-
-const sendFileMessage = (state, fileMessageData) => ({
-  ...state,
-  fileToSend: fileMessageData,
 });
 
 const sendFileMessageSuccessed = (state, sendRes) => ({
@@ -46,9 +37,6 @@ const sendFileMessageFailed = (state, error) => ({
   error,
 });
 
-const deleteMessage = state => ({
-  ...state,
-});
 const deleteMessageSuccessed = (state, delRes) => ({
   ...state,
   messages: state.messages.filter(cur => cur.messageId !== delRes.messageId),
@@ -58,9 +46,6 @@ const deleteMessageFailed = (state, error) => ({
   error,
 });
 
-const editMessage = state => ({
-  ...state,
-});
 const editMessageSuccessed = (state, editRes) => ({
   ...state,
   messages: state.messages.map(
@@ -70,10 +55,6 @@ const editMessageSuccessed = (state, editRes) => ({
 const editMessageFailed = (state, error) => ({
   ...state,
   error,
-});
-
-const editFileMessage = state => ({
-  ...state,
 });
 
 const editFileMessageSuccessed = (state, editRes) => ({
@@ -210,19 +191,15 @@ const cancelUploadingFailed = (state, error) => ({
 });
 
 const handlers = {
-  [TYPES.SEND_MESSAGE]: sendMessage,
   [TYPES.SEND_MESSAGE_SUCCESSED]: sendMessageSuccessed,
   [TYPES.SEND_MESSAGE_FAILED]: sendMessageFailed,
 
-  [TYPES.SEND_FILE_MESSAGE]: sendFileMessage,
   [TYPES.SEND_FILE_MESSAGE_SUCCESSED]: sendFileMessageSuccessed,
   [TYPES.SEND_FILE_MESSAGE_FAILED]: sendFileMessageFailed,
 
-  [TYPES.DELETE_MESSAGE]: deleteMessage,
   [TYPES.DELETE_MESSAGE_SUCCESSED]: deleteMessageSuccessed,
   [TYPES.DELETE_MESSAGE_FAILED]: deleteMessageFailed,
 
-  [TYPES.EDIT_MESSAGE]: editMessage,
   [TYPES.EDIT_MESSAGE_SUCCESSED]: editMessageSuccessed,
   [TYPES.EDIT_MESSAGE_FAILED]: editMessageFailed,
 
@@ -248,7 +225,6 @@ const handlers = {
   [GET_GROUP_CHANNEL_SUCCESSED]: changeChannelGroup,
   [ENTER_CHANNEL_SUCCESSED]: changeOpenChannel,
 
-  [TYPES.EDIT_FILE_MESSAGE]: editFileMessage,
   [TYPES.EDIT_FILE_MESSAGE_SUCCESSED]: editFileMessageSuccessed,
   [TYPES.EDIT_FILE_MESSAGE_FAILED]: editFileMessageFailed,
   [TYPES.READ_RECEIPT]: readReceipt,

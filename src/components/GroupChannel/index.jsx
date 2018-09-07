@@ -1,10 +1,31 @@
 import React from 'react';
 import PropTypes from 'prop-types';
+// import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+// import { faPen } from '@fortawesome/free-solid-svg-icons';
+import Modal from 'react-modal';
+import { UpdateChannelForm } from '../UpdateChannelForm';
 import { ChatBox } from '../../containers/ChatBox';
 
 export class GroupChannel extends React.Component {
+  state = {
+    modalIsOpen: false,
+  };
   handleLeaveBtn = () => {
     this.props.onLeave(this.props.channel.url);
+  };
+
+  handleOpenEditor = () => {
+    this.setState({
+      modalIsOpen: !this.state.modalIsOpen,
+    });
+  };
+
+  handleChannelEdit = (updateData) => {
+    this.props.onUpdateChannel([
+      this.props.channel.url,
+      this.props.channel.channelType,
+      ...updateData,
+    ]);
   };
 
   render() {
@@ -21,6 +42,9 @@ export class GroupChannel extends React.Component {
                 }
                 alt={channel.name}
               />
+              {/* <button onClick={this.handleOpenEditor}>
+                <FontAwesomeIcon icon={faPen} />
+              </button> */}
             </div>
             <div>
               <h1 className="channel-name">{channel.name}</h1>
@@ -50,9 +74,21 @@ export class GroupChannel extends React.Component {
               ))}
             </ul>
           </div>
-          {/* <button onClick={this.handleLeaveBtn}>Покинуть канал</button> */}
         </div>
         <ChatBox currentChannel={channel} />
+        <Modal
+          className="modal"
+          isOpen={this.state.modalIsOpen}
+          onAfterOpen={this.afterOpenModal}
+          onRequestClose={this.closeModal}
+          contentLabel="Example Modal"
+          ariaHideApp={false}
+        >
+          <button className="x-btn" onClick={this.closeModal}>
+            x
+          </button>
+          <UpdateChannelForm onSubmitForm={this.handleChannelEdit} />
+        </Modal>
       </div>
     );
   }
@@ -61,4 +97,5 @@ export class GroupChannel extends React.Component {
 GroupChannel.propTypes = {
   channel: PropTypes.objectOf(PropTypes.any).isRequired,
   onLeave: PropTypes.func.isRequired,
+  onUpdateChannel: PropTypes.func.isRequired,
 };

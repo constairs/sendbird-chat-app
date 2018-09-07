@@ -11,7 +11,7 @@ export class ChannelList extends React.Component {
     this.props.selectedChan(el);
   };
 
-  handleInviteUser = (formData) => {
+  handleInviteUsers = (formData) => {
     this.props.inviteUsers(formData);
   };
   handleLeaveGroup = (channelUrl) => {
@@ -32,7 +32,7 @@ export class ChannelList extends React.Component {
                 channelItem={channelItem}
                 key={channelItem.createdAt}
                 selectedChan={this.handleChanSelect}
-                onInviteUsers={this.handleInviteUser}
+                onInviteUsers={this.handleInviteUsers}
                 onLeaveGroup={this.handleLeaveGroup}
               />
             ) : (

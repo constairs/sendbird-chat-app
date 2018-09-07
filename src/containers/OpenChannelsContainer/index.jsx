@@ -29,6 +29,10 @@ class OpenChannel extends React.Component {
     this.setState({ modalIsOpen: false });
   };
 
+  handleUpdateChannel = (updateData) => {
+    this.props.openChannelsActions.updateChannel(updateData);
+  };
+
   handleGetChannel = (selectedChan) => {
     if (selectedChan.channelType === 'open') {
       this.props.openChannelsActions.enterChannel(selectedChan.channelUrl);
@@ -122,6 +126,7 @@ class OpenChannel extends React.Component {
               ) : (
                 <GroupChannel
                   onLeave={this.handleLeaveChannel}
+                  onUpdateChannel={this.handleUpdateChannel}
                   user={this.props.user}
                   channel={groupChannel}
                 />

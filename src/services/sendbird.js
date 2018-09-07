@@ -157,11 +157,17 @@ export function createOpenChannel(channelName, coverUrl, coverFile) {
   });
 }
 
-export function createGroupChannel(userIds, channelName, coverUrl, coverFile) {
+export function createGroupChannel(
+  userIds,
+  channelDistinct,
+  channelName,
+  coverUrl,
+  coverFile
+) {
   return new Promise((resolve, reject) => {
     sb.GroupChannel.createChannelWithUserIds(
-      userIds,
-      false,
+      [...userIds],
+      channelDistinct,
       channelName,
       coverUrl,
       coverFile,
@@ -177,6 +183,21 @@ export function createGroupChannel(userIds, channelName, coverUrl, coverFile) {
         });
       }
     );
+  });
+}
+
+export function updateChannel(channelUrl, channelType, channelName, coverUrl) {
+  return new Promise((resolve, reject) => {
+    getChannel(channelUrl, channelType).then(channel => {
+      const res = channel.update(coverUrl);
+      resolve(res);
+      //   , function(res, error) {
+      //   if (error) {
+      //     reject(error);
+      //   }
+      //   resolve(res);
+      // });
+    });
   });
 }
 
@@ -232,7 +253,7 @@ export function getChannel(channelUrl, channelType) {
 export function inviteToGroup(channelUrl, userIds) {
   return new Promise((resolve, reject) => {
     getChannel(channelUrl, 'group').then(groupChannel => {
-      groupChannel.inviteWithUserIds([userIds], function(response, error) {
+      groupChannel.inviteWithUserIds([...userIds], function(response, error) {
         if (error) {
           reject(error);
         }
@@ -480,24 +501,6 @@ export function editMessage(
         );
       }
     });
-  });
-}
-
-export function editFileMessage(
-  channelUrl,
-  channelType,
-  messageType,
-  messageId,
-  user,
-  file,
-  name,
-  type,
-  size,
-  data,
-  customType
-) {
-  return new Promise((resolve, reject) => {
-    getChannel(channelUrl, channelType).then(channel => {});
   });
 }
 

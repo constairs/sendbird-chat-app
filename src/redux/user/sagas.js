@@ -1,4 +1,5 @@
-import { call, put, takeLatest, all } from 'redux-saga/effects';
+import { call, put, takeLatest, all, race } from 'redux-saga/effects';
+import { delay } from 'redux-saga';
 import { REHYDRATE } from 'redux-persist';
 import { push } from 'connected-react-router';
 import {
@@ -27,8 +28,15 @@ import {
 
 function* loginUserAsync(action) {
   try {
-    const user = yield call(connectToSB, action.payload.userId);
-    yield put(loginUserSuccessed(user));
+    const { user, timeout } = yield race({
+      user: call(connectToSB, action.payload.userId),
+      timeout: call(delay, 10000),
+    });
+    if (user) {
+      yield put(loginUserSuccessed(user));
+    } else {
+      yield put(loginUserError(`LOGIN TIMEOUT ${timeout} s`));
+    }
   } catch (err) {
     yield put(loginUserError(err));
   }

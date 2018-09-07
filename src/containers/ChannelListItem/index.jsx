@@ -36,7 +36,7 @@ export class ListItem extends React.Component {
             <ul className="recently-messages">
               Последнее сообщение:
               {channelItem.messages.map(message => (
-                <li key={message.messageId}>{message.customType}</li>
+                <li key={message.messageId}>{message.message}</li>
               ))}
             </ul>
           ) : null}

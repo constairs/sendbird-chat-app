@@ -47,7 +47,7 @@ export class UpdateChannelForm extends React.Component {
               type="text"
             />
           </label>
-          <button disabled={!channelName}>Изменить</button>
+          <button disabled={!coverUrl || !channelName}>Изменить</button>
         </form>
       </div>
     );
