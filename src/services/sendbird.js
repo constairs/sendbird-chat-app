@@ -41,52 +41,52 @@ function getPatticipants(channel) {
 }
 /* eslint-disable */
 
-ChannelHandler.onChannelChanged = function(channel) {
+ChannelHandler.onChannelChanged = function (channel) {
   if (channel.channelType === 'open') {
     store.store.dispatch(channelUpdated(channel));
   } else {
     store.store.dispatch(groupUpdated(channel));
   }
 };
-ChannelHandler.onUserEntered = function(channel, user) {
+ChannelHandler.onUserEntered = function (channel, user) {
   store.store.dispatch(userEntered({ channel, user }));
   getPatticipants(channel);
 };
-ChannelHandler.onUserExited = function(channel, user) {
+ChannelHandler.onUserExited = function (channel, user) {
   store.store.dispatch(userExited({ channel, user }));
   getPatticipants(channel);
 };
-ChannelHandler.onMetaDataUpdated = function(channel, metaData) {
+ChannelHandler.onMetaDataUpdated = function (channel, metaData) {
   store.store.dispatch(userTyping(metaData));
 };
 
-ChatHandler.onMessageReceived = function(channel, message) {
+ChatHandler.onMessageReceived = function (channel, message) {
   store.store.dispatch(messageReceived(channel, message));
 };
-ChatHandler.onMessageUpdated = function(channel, message) {
+ChatHandler.onMessageUpdated = function (channel, message) {
   store.store.dispatch(messageUpdated(channel, message));
 };
-ChatHandler.onMessageDeleted = function(channel, messageId) {
+ChatHandler.onMessageDeleted = function (channel, messageId) {
   store.store.dispatch(messageDeleted(channel, messageId));
 };
-ChatHandler.onTypingStatusUpdated = function(groupChannel) {
+ChatHandler.onTypingStatusUpdated = function (groupChannel) {
   const typingMembers = groupChannel.getTypingMembers();
   store.store.dispatch(onUserTyping(groupChannel, typingMembers));
 };
-ChatHandler.onReadReceiptUpdated = function(channel) {
+ChatHandler.onReadReceiptUpdated = function (channel) {
   const receipt = Object.values(channel.cachedReadReceiptStatus).sort(
     (a, b) => a > b
   )[0];
   store.store.dispatch(readReceipt(receipt, channel.url));
 };
 
-GroupChannelHandler.onChannelChanged = function(channel) {
+GroupChannelHandler.onChannelChanged = function (channel) {
   store.store.dispatch(groupUpdated(channel));
 };
-GroupChannelHandler.onUserJoined = function(groupChannel, user) {
+GroupChannelHandler.onUserJoined = function (groupChannel, user) {
   store.store.dispatch(onUserJoined({ groupChannel, user }));
 };
-GroupChannelHandler.onUserLeft = function(groupChannel, user) {
+GroupChannelHandler.onUserLeft = function (groupChannel, user) {
   store.store.dispatch(onUserLeft({ groupChannel, user }));
 };
 
@@ -171,7 +171,7 @@ export function createGroupChannel(
       channelName,
       coverUrl,
       coverFile,
-      function(createdChannel, error) {
+      function (createdChannel, error) {
         if (error) {
           reject(error);
         }
@@ -191,12 +191,6 @@ export function updateChannel(channelUrl, channelType, channelName, coverUrl) {
     getChannel(channelUrl, channelType).then(channel => {
       const res = channel.update(coverUrl);
       resolve(res);
-      //   , function(res, error) {
-      //   if (error) {
-      //     reject(error);
-      //   }
-      //   resolve(res);
-      // });
     });
   });
 }
@@ -220,7 +214,7 @@ export function groupChannelList() {
     groupChannelListQuery.limit = 20;
     groupChannelListQuery.showReadReceipt = true;
     if (groupChannelListQuery.hasNext) {
-      groupChannelListQuery.next(function(channelList, error) {
+      groupChannelListQuery.next(function (channelList, error) {
         if (error) {
           reject(error);
         }
@@ -253,7 +247,7 @@ export function getChannel(channelUrl, channelType) {
 export function inviteToGroup(channelUrl, userIds) {
   return new Promise((resolve, reject) => {
     getChannel(channelUrl, 'group').then(groupChannel => {
-      groupChannel.inviteWithUserIds([...userIds], function(response, error) {
+      groupChannel.inviteWithUserIds([...userIds], function (response, error) {
         if (error) {
           reject(error);
         }
@@ -266,7 +260,7 @@ export function inviteToGroup(channelUrl, userIds) {
 export function leaveGroup(channelUrl) {
   return new Promise((resolve, reject) => {
     getChannel(channelUrl, 'group').then(groupChannel => {
-      groupChannel.leave(function(response, error) {
+      groupChannel.leave(function (response, error) {
         if (error) {
           reject(error);
         }

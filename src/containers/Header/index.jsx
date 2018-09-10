@@ -21,11 +21,11 @@ class Head extends React.Component {
                 Home
               </Link>
             </li>
-            <li>
-              <Link href="/profile" to="/profile">
+              <li>
+                <Link href="/profile" to="/profile">
                 Profile
-              </Link>
-            </li>
+                </Link>
+              </li>
             {logged ? (
               <li>
                 <Link href="/channels" to="/channels">

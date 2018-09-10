@@ -4,10 +4,13 @@ import { connect } from 'react-redux';
 import { Spinner } from 'react-preloading-component';
 import PropTypes from 'prop-types';
 import { Redirect } from 'react-router';
+import Modal from 'react-modal';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faTimes } from '@fortawesome/free-solid-svg-icons';
 import * as userActions from '../../redux/user/actions';
 import { LoginForm } from '../../components/LoginForm';
 
-import './index.css';
+import './index.scss';
 
 class LoginConnected extends React.Component {
   handleLogin = (data) => {
@@ -36,6 +39,22 @@ class LoginConnected extends React.Component {
         ) : (
           <LoginForm onLogin={this.handleLogin} />
         )}
+        {
+          <Modal
+            className="modal file-upload-modal"
+            isOpen={!!user.error}
+            onAfterOpen={this.afterOpenModal}
+            onRequestClose={this.fileUploadModal}
+            contentLabel="Example Modal"
+            ariaHideApp={false}
+          >
+            <button className="x-btn" onClick={this.props.userActions.clearLoginError}>
+              <FontAwesomeIcon icon={faTimes} />
+            </button>
+              <h3>{user.error}</h3>
+          </Modal>
+        }
+
       </div>
     );
   }

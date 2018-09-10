@@ -29,25 +29,25 @@ export class UserForm extends React.Component {
         <form onSubmit={this.handleSubmit}>
           <label htmlFor="userNick">
             <span>UserNick</span>
-            <input
-              id="userNick"
-              name="userNick"
-              value={this.state.userNick}
-              onChange={this.handleTextInput}
-              type="text"
-            />
+              <input
+                id="userNick"
+                name="userNick"
+                value={this.state.userNick}
+                onChange={this.handleTextInput}
+                type="text"
+              />
           </label>
-          <label htmlFor="userImg">
-            <span>Cover image</span>
-            <input
-              id="userImg"
-              name="userImg"
-              value={this.state.userImg}
-              onChange={this.handleTextInput}
-              type="text"
-            />
-          </label>
-          <button disabled={!this.state.userNick}>Change</button>
+            <label htmlFor="userImg">
+              <span>Cover image</span>
+                <input
+                  id="userImg"
+                  name="userImg"
+                  value={this.state.userImg}
+                  onChange={this.handleTextInput}
+                  type="text"
+                />
+            </label>
+              <button disabled={!this.state.userNick}>Change</button>
         </form>
       </div>
     );

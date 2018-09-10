@@ -104,13 +104,13 @@ export class Chat extends React.Component {
             />
           ))}
         </div>
-        <ChatMessageField
-          onMessageTyping={this.handleTyping}
-          onMessageTypingEnd={this.handleTypingEnd}
-          channelUrl={url}
-          channelType={channelType}
-          channel={this.props.currentChannel}
-        />
+          <ChatMessageField
+            onMessageTyping={this.handleTyping}
+            onMessageTypingEnd={this.handleTypingEnd}
+            channelUrl={url}
+            channelType={channelType}
+            channel={this.props.currentChannel}
+          />
       </div>
     );
   }

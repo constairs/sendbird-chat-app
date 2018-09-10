@@ -30,14 +30,23 @@ export class ListItem extends React.Component {
                 alt={channelItem.name}
               />
             </span>
-            <span className="channel-item-name">{channelItem.name}</span>
+              <span className="channel-item-name">{channelItem.name}</span>
           </div>
           {channelItem.messages && channelItem.messages.length > 0 ? (
             <ul className="recently-messages">
               Последнее сообщение:
-              {channelItem.messages.map(message => (
-                <li key={message.messageId}>{message.message}</li>
-              ))}
+              {channelItem.messages.map(
+                message =>
+                  (message.type === 'file' ? (
+                    <li key={message.messageId}>{message.message}</li>
+                  ) : (
+                    <li key={message.messageId}>
+                      [Файл] ({message.size} кб)
+                        <br />
+                      {message.data}
+                    </li>
+                  ))
+              )}
             </ul>
           ) : null}
         </button>

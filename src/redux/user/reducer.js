@@ -23,6 +23,16 @@ const userLoginFailed = (state, error) => ({
   userFetching: false,
   error,
 });
+const userLoginTimeout = (state, error) => ({
+  ...state,
+  userFetching: false,
+  error
+});
+
+const clearLoginError = state => ({
+  ...state,
+  error: ''
+});
 
 const userReconnect = state => ({
   ...state,
@@ -71,6 +81,8 @@ const handlers = {
   [TYPES.USER_LOGIN_REQUEST]: userLoginRequest,
   [TYPES.USER_LOGIN_SUCCESSED]: userLoginSuccessed,
   [TYPES.USER_LOGIN_FAILED]: userLoginFailed,
+  [TYPES.USER_LOGIN_TIMEOUT]: userLoginTimeout,
+  [TYPES.CLEAR_LOGIN_ERROR]: clearLoginError,
   [TYPES.USER_LOGOUT_REQUEST]: userLogoutRequest,
   [TYPES.USER_LOGOUT_SUCCESSED]: userLogoutSuccessed,
   [TYPES.USER_LOGOUT_FAILED]: userLogoutFailed,

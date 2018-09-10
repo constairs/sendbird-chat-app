@@ -15,6 +15,15 @@ export const loginUserFailed = err => ({
   payload: err,
 });
 
+export const loginUserTimeout = err => ({
+  type: TYPES.USER_LOGIN_TIMEOUT,
+  payload: err
+});
+
+export const clearLoginError = () => ({
+  type: TYPES.CLEAR_LOGIN_ERROR
+});
+
 export const userReconnect = () => ({ type: TYPES.USER_RECONNECT });
 
 export const userReconnectSuccessed = user => ({

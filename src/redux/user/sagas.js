@@ -16,7 +16,8 @@ import {
 } from './types';
 import {
   loginUserSuccessed,
-  loginUserError,
+  loginUserFailed,
+  loginUserTimeout,
   userReconnect,
   userReconnectSuccessed,
   userReconnectFailed,
@@ -34,11 +35,11 @@ function* loginUserAsync(action) {
     });
     if (user) {
       yield put(loginUserSuccessed(user));
-    } else {
-      yield put(loginUserError(`LOGIN TIMEOUT ${timeout} s`));
+    } else if (timeout) {
+      yield put(loginUserTimeout('Login timeout'));
     }
   } catch (err) {
-    yield put(loginUserError(err));
+    yield put(loginUserFailed(err));
   }
 }
 
@@ -50,8 +51,15 @@ function* userReconnectAsync(action) {
   if (action.payload && action.payload.userId) {
     try {
       yield put(userReconnect());
-      yield call(connectToSB, action.payload.userId);
-      yield put(userReconnectSuccessed(action.payload));
+      const { user, timeout } = yield race({
+        user: call(connectToSB, action.payload.userId),
+        timeout: call(delay, 10000),
+      });
+      if (user) {
+        yield put(userReconnectSuccessed(action.payload));
+      } else if (timeout) {
+        yield put(loginUserTimeout('Login timeout'));
+      }
     } catch (err) {
       yield put(userReconnectFailed(err));
     }

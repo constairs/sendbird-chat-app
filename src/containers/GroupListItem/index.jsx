@@ -29,9 +29,7 @@ class ListItem extends React.Component {
 
   handleDelUser = (e) => {
     this.setState({
-      usersToInvite: this.state.usersToInvite.filter(
-        userId => userId !== e.target.id
-      ),
+      usersToInvite: this.state.usersToInvite.filter(userId => userId !== e.target.id),
     });
   };
 
@@ -45,10 +43,7 @@ class ListItem extends React.Component {
 
   handleFormSubmit = (e) => {
     e.preventDefault();
-    this.props.onInviteUsers([
-      this.props.channelItem.url,
-      this.state.usersToInvite,
-    ]);
+    this.props.onInviteUsers([this.props.channelItem.url, this.state.usersToInvite]);
     this.setState({ inviteForm: false, usersIdsInput: '', usersToInvite: [] });
   };
 
@@ -69,14 +64,22 @@ class ListItem extends React.Component {
                 alt={channelItem.name}
               />
             </span>
-            <span className="channel-item-name">{channelItem.name}</span>
+              <span className="channel-item-name">{channelItem.name}</span>
           </div>
           {channelItem.lastMessage ? (
             <div>
               <div className="recently-messages">
                 Последнее сообщение:
                 <br />
-                <span>{channelItem.lastMessage.message}</span>
+                {channelItem.lastMessage.messageType === 'file' ? (
+                  <span>
+                    [Файл] ({channelItem.lastMessage.size} кб)
+                      <br />
+                    {channelItem.lastMessage.data}
+                  </span>
+                ) : (
+                  <span>{channelItem.lastMessage.message}</span>
+                )}
               </div>
             </div>
           ) : null}
@@ -84,7 +87,7 @@ class ListItem extends React.Component {
         {!channelItem.isDistinct ? (
           <div className="btns">
             <button onClick={this.handleInviteClick}>Пригласить</button>
-            <button onClick={this.handleLeaveClick}>Покинуть</button>
+              <button onClick={this.handleLeaveClick}>Покинуть</button>
           </div>
         ) : null}
 
@@ -92,37 +95,24 @@ class ListItem extends React.Component {
           <form onSubmit={this.handleFormSubmit} className="form invite-form">
             <label htmlFor="userId" className="groupUsers">
               <span>user ids</span>
-              <input
-                id="userId"
-                value={usersIdsInput}
-                onChange={this.handleInput}
-                type="text"
-              />
-              <button
-                className="invite-button"
-                onClick={this.handleAddUser}
-                type="button"
-              >
-                ок
-              </button>
+                <input id="userId" value={usersIdsInput} onChange={this.handleInput} type="text" />
+                  <button className="invite-button" onClick={this.handleAddUser} type="button">
+                    ок
+                  </button>
               {usersToInvite.length !== 0 ? (
                 <ul className="users-to-invite">
                   {usersToInvite.map(item => (
                     <li key={item}>
                       {item}{' '}
-                      <button
-                        id={item}
-                        onClick={this.handleDelUser}
-                        type="button"
-                      >
+                        <button id={item} onClick={this.handleDelUser} type="button">
                         x
-                      </button>
+                        </button>
                     </li>
                   ))}
                 </ul>
               ) : null}
             </label>
-            <button type="submit">Пригласить</button>
+              <button type="submit">Пригласить</button>
           </form>
         ) : null}
       </li>
