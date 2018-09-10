@@ -13,7 +13,7 @@ import { Channel } from '../../components/Channel';
 import { GroupChannel } from '../../components/GroupChannel';
 import { NotificationWindow } from '../NotificationWindow';
 
-class OpenChannel extends React.Component {
+class Channels extends React.Component {
   state = {
     modalIsOpen: false,
     groupChModal: false,
@@ -70,12 +70,14 @@ class OpenChannel extends React.Component {
   };
 
   render() {
-    const { channelsList, channel } = this.props.openChannels;
-    const { groupChannelsList, groupChannel } = this.props.groupChannels;
+    // const { channelsList, channel } = this.props.openChannels;
+    // const { groupChannelsList, groupChannel } = this.props.groupChannels;
     const { groupChModal } = this.state;
+    const { channelsList, channel, channelFetching } = this.props.channels;
+    const { userFetching } = this.props.user;
     return (
       <div className="page channel-page">
-        {this.props.openChannels.fetching || this.props.user.userFetching ? (
+        {channelFetching || userFetching ? (
           <div className="preloader">
             <Spinner color="#ffffff" secondaryColor="#40c9ff" size={100} />
           </div>
@@ -91,15 +93,14 @@ class OpenChannel extends React.Component {
                 <ChannelList
                   selectedChan={this.handleGetChannel}
                   channels={channelsList}
-                  fetching={this.props.openChannels.fetching}
-                  group={false}
+                  fetching={channelFetching}
                 />
               </div>
             ) : null}
             <button name="createGroup" onClick={this.handleOpenModal}>
               Создать групповой канал
             </button>
-            {groupChannelsList.length > 0 ? (
+            {/* {groupChannelsList.length > 0 ? (
               <div>
                 <p>
                     Групповые каналы
@@ -113,9 +114,9 @@ class OpenChannel extends React.Component {
                   group
                 />
               </div>
-            ) : null}
+            ) : null} */}
           </div>
-          {channel || groupChannel ? (
+          {/* {channel || groupChannel ? (
             <div className="channel-page-content">
               {channel ? (
                 <Channel
@@ -134,7 +135,7 @@ class OpenChannel extends React.Component {
                 />
               )}
             </div>
-          ) : null}
+          ) : null} */}
         </div>
         <Modal
           className="modal"
@@ -165,16 +166,17 @@ class OpenChannel extends React.Component {
   }
 }
 
-OpenChannel.defaultProps = {
+Channels.defaultProps = {
   notificationShow: false,
 };
 
-OpenChannel.propTypes = {
+Channels.propTypes = {
   openChannelsActions: PropTypes.objectOf(PropTypes.func).isRequired,
   groupChannelsActions: PropTypes.objectOf(PropTypes.func).isRequired,
   user: PropTypes.objectOf(PropTypes.any).isRequired,
-  openChannels: PropTypes.objectOf(PropTypes.any).isRequired,
-  groupChannels: PropTypes.objectOf(PropTypes.any).isRequired,
+  channels: PropTypes.objectOf(PropTypes.any).isRequired,
+  // openChannels: PropTypes.objectOf(PropTypes.any).isRequired,
+  // groupChannels: PropTypes.objectOf(PropTypes.any).isRequired,
   notificationShow: PropTypes.bool,
   notification: PropTypes.objectOf(PropTypes.any).isRequired,
 };
@@ -182,8 +184,8 @@ OpenChannel.propTypes = {
 function mapStateToProps(state) {
   return {
     user: state.persistedUserReducer,
-    openChannels: state.openChannelsReducer,
-    groupChannels: state.groupChannelsReducer,
+    // openChannels: state.openChannelsReducer,
+    // groupChannels: state.groupChannelsReducer,
     channels: state.channelsReducer,
     notification: state.groupChannelsReducer.notification,
     notificationShow: state.groupChannelsReducer.notificationShow,
@@ -197,7 +199,7 @@ function mapDispatchToProps(dispatch) {
   };
 }
 
-export const OpenChannelsContainer = connect(
+export const ChannelsConstainer = connect(
   mapStateToProps,
   mapDispatchToProps
-)(OpenChannel);
+)(Channels);

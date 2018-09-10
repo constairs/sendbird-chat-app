@@ -5,6 +5,7 @@ import { chatReducer } from './chat/reducer';
 import { userReducer } from './user/reducer';
 import { openChannelsReducer } from './openChannels/reducer';
 import { groupChannelsReducer } from './groupChannels/reducer';
+import { channelsReducer } from './channels/reducer';
 
 const persistedUserReducer = persistReducer(
   { key: 'user', storage },
@@ -16,4 +17,5 @@ export const rootReducer = combineReducers({
   persistedUserReducer,
   openChannelsReducer,
   groupChannelsReducer,
+  channelsReducer,
 });

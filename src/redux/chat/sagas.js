@@ -6,6 +6,7 @@ import {
   take,
   all,
 } from 'redux-saga/effects';
+import { delay } from 'redux-saga';
 import { v4 } from 'uuid';
 import { ENTER_CHANNEL_SUCCESSED } from '../openChannels/types';
 import {
@@ -199,6 +200,12 @@ function* onMessageTypingSaga(action) {
   }
 }
 
+function* userTyping(action) {
+  yield call(action.payload.startTyping);
+  yield call(delay, 2000);
+  yield call(action.payload.endTyping);
+}
+
 function* cleanChatSaga() {
   yield put(cleanChat());
 }
@@ -233,5 +240,6 @@ export function* chatSagas() {
     yield takeEvery(GET_GROUP_CHANNEL_SUCCESSED, getGroupMessges),
     yield take(LEAVE_GROUP_SUCCESSED, cleanChatSaga),
     yield takeLatest(ON_MESSAGE_TYPING, onMessageTypingSaga),
+    yield takeLatest(USER_TYPING, userTyping),
   ]);
 }

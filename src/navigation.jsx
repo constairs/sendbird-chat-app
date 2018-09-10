@@ -4,6 +4,7 @@ import { Switch, Route, Redirect } from 'react-router-dom';
 import { connect } from 'react-redux';
 import { LoginContainer } from './containers/LoginContainer/';
 import { OpenChannelsContainer } from './containers/OpenChannelsContainer';
+import { ChannelsConstainer } from './containers/ChannelsContainer';
 import { Banner } from './components/Banner';
 import { UserProfileContainer } from './containers/UserProfileContainer';
 
@@ -47,7 +48,7 @@ export const Navigation = () => (
   <Switch>
     <Route exact path="/" component={Banner} />
     <Route exact path="/login/" component={LoginContainer} />
-    <PrivateRoute component={OpenChannelsContainer} path="/channels/" />
+    <PrivateRoute component={ChannelsConstainer} path="/channels/" />
     <PrivateRoute component={UserProfileContainer} path="/profile/" />
   </Switch>
 );

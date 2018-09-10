@@ -27,7 +27,7 @@ export class ChannelList extends React.Component {
         ) : null}
         {this.props.channels.map(
           channelItem =>
-            (this.props.group ? (
+            (channelItem.channelType === 'group' ? (
               <GroupListItem
                 channelItem={channelItem}
                 key={channelItem.createdAt}
@@ -60,7 +60,6 @@ ChannelList.propTypes = {
   channels: PropTypes.arrayOf(PropTypes.any).isRequired,
   fetching: PropTypes.bool,
   groupsFetching: PropTypes.bool,
-  group: PropTypes.bool.isRequired,
   inviteUsers: PropTypes.func,
   leaveGroup: PropTypes.func,
 };

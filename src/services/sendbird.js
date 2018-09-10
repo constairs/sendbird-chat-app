@@ -195,6 +195,31 @@ export function updateChannel(channelUrl, channelType, channelName, coverUrl) {
   });
 }
 
+export function getChannelsList() {
+  return new Promise((resolve, reject) => {
+    const openChannelListQuery = sb.OpenChannel.createOpenChannelListQuery();
+    const groupChannelListQuery = sb.GroupChannel.createMyGroupChannelListQuery();
+    groupChannelListQuery.includeEmpty = true;
+    groupChannelListQuery.limit = 20;
+    groupChannelListQuery.showReadReceipt = true;
+    openChannelListQuery.next((openChannels, error) => {
+      if (error) {
+        reject(error);
+      }
+
+      if (groupChannelListQuery.hasNext) {
+        groupChannelListQuery.next(function (groupChannels, error) {
+          if (error) {
+            reject(error);
+          }
+          resolve([...openChannels, ...groupChannels]);
+        });
+      }
+
+    });
+  });
+}
+
 export function openChannelList() {
   return new Promise((resolve, reject) => {
     const openChannelListQuery = sb.OpenChannel.createOpenChannelListQuery();
@@ -302,6 +327,24 @@ export function getParticipantsReq(channelUrl) {
     });
   });
 }
+
+
+// export function getParticipantsReq(channelUrl) {
+//   return new Promise((resolve, reject) => {
+//     sb.OpenChannel.getChannel(channelUrl, (channel, error) => {
+//       if (error) {
+//         reject(error);
+//       }
+//       const participantListQuery = channel.createParticipantListQuery();
+//       participantListQuery.next((participantList, err) => {
+//         if (err) {
+//           reject(err);
+//         }
+//         resolve(participantList);
+//       });
+//     });
+//   });
+// }
 
 export function refreshGroupMembers(channel) {
   return new Promise((resolve, reject) => {

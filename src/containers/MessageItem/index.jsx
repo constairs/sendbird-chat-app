@@ -82,7 +82,7 @@ export class MessageItem extends React.Component {
                   ) : (
                     <div className="message-file-preview">
                       {new RegExp('^image?', 'i').test(message.type) ? (
-                        <LazyLoad height="100%" placeholder={<Spinner color="#ffffff" secondaryColor="#40c9ff" size={30} />} offset={100} overflow>
+                        <LazyLoad height="100%" placeholder={<Spinner color="#ffffff" secondaryColor="#40c9ff" size={30} />} offset={100}>
                           <img src={message.url} alt={message.name} />
                         </LazyLoad>
                       ) : (

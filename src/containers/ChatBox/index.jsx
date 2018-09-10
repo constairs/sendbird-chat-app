@@ -67,7 +67,8 @@ export class Chat extends React.Component {
 
   handleTyping = () => {
     if (this.props.currentChannel.channelType === 'group') {
-      this.props.currentChannel.startTyping();
+      // this.props.currentChannel.startTyping();
+      this.props.chatActions.userTyping(this.props.currentChannel);
     }
   };
 
