@@ -451,7 +451,7 @@ export function deleteMessage(channelUrl, channelType, message) {
         if (err) {
           reject(err);
         }
-        resolve(message);
+        resolve(channel);
       });
     });
   });

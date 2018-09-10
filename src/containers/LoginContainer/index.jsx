@@ -51,7 +51,7 @@ class LoginConnected extends React.Component {
             <button className="x-btn" onClick={this.props.userActions.clearLoginError}>
               <FontAwesomeIcon icon={faTimes} />
             </button>
-              <h3>{user.error}</h3>
+            <h3>{user.error}</h3>
           </Modal>
         }
 

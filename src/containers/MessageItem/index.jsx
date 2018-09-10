@@ -53,32 +53,32 @@ export class MessageItem extends React.Component {
             alt={message.sender.nickname}
           />
         </div>
-          <div className="message-body">
-            <p className="sender-info">
-              <span className="sender-nick">{message.sender.nickname || 'noname'}</span>
-              {message.updatedAt ? (
-                <span className="sending-date">
+        <div className="message-body">
+          <p className="sender-info">
+            <span className="sender-nick">{message.sender.nickname || 'noname'}</span>
+            {message.updatedAt ? (
+              <span className="sending-date">
                   Обновлено: {moment(message.updatedAt).format('DD/MM/YY hh:mm a')}
-                </span>
+              </span>
               ) : (
                 <span className="sending-date">
                   {moment(message.createdAt).format('DD/MM/YY hh:mm a')}
                 </span>
                 )}
-            </p>
-            {message.messageType === 'file' ? (
-              <div className="file-message-item">
-                <div className="file-info">
-                  {message.isFake ? (
-                    <div className="message-file-preview">
-                      <Spinner color="#ffffff" secondaryColor="#40c9ff" size={70} />
-                        <span className="loading-progress">{uploadProgress.progress} %</span>
-                      {uploadProgress.progress !== 100 ? (
-                        <button onClick={this.handleCancelUploading} className="cancel-button">
-                          <FontAwesomeIcon icon={faTimes} />
-                        </button>
+          </p>
+          {message.messageType === 'file' ? (
+            <div className="file-message-item">
+              <div className="file-info">
+                {message.isFake ? (
+                  <div className="message-file-preview">
+                    <Spinner color="#ffffff" secondaryColor="#40c9ff" size={70} />
+                    <span className="loading-progress">{uploadProgress.progress} %</span>
+                    {uploadProgress.progress !== 100 ? (
+                      <button onClick={this.handleCancelUploading} className="cancel-button">
+                        <FontAwesomeIcon icon={faTimes} />
+                      </button>
                       ) : null}
-                    </div>
+                  </div>
                   ) : (
                     <div className="message-file-preview">
                       {new RegExp('^image?', 'i').test(message.type) ? (
@@ -90,21 +90,21 @@ export class MessageItem extends React.Component {
                         )}
                     </div>
                     )}
-                      <p>
-                        <a href={message.url || '#'} target="_blank">
-                          {message.name} ({message.size} кб)
-                        </a>
-                      </p>
-                </div>
+                <p>
+                  <a href={message.url || '#'} target="_blank">
+                    {message.name} ({message.size} кб)
+                  </a>
+                </p>
               </div>
+            </div>
             ) : null}
-            {this.state.onEdit ? (
-              <form onSubmit={this.handleSubmit} className="edit-message-form">
-                <input type="text" onChange={this.handleTextInput} value={this.state.messageInput} />
-                  <button>
-                    <FontAwesomeIcon icon={faPaperPlane} />
-                  </button>
-              </form>
+          {this.state.onEdit ? (
+            <form onSubmit={this.handleSubmit} className="edit-message-form">
+              <input type="text" onChange={this.handleTextInput} value={this.state.messageInput} />
+              <button>
+                <FontAwesomeIcon icon={faPaperPlane} />
+              </button>
+            </form>
             ) : (
               <p className="message-text">
                 <span className="isReadIndicator">
@@ -116,15 +116,15 @@ export class MessageItem extends React.Component {
                 {message.messageType === 'file' && message.data ? message.data : null}
               </p>
               )}
-          </div>
+        </div>
         {userId === message.sender.userId ? (
           <div>
             <button onClick={this.handleDeleteBtn} className="x-btn">
               <FontAwesomeIcon icon={faTimes} />
             </button>
-              <button onClick={this.handleEditMessage} className="edit-btn">
-                <FontAwesomeIcon icon={faPen} />
-              </button>
+            <button onClick={this.handleEditMessage} className="edit-btn">
+              <FontAwesomeIcon icon={faPen} />
+            </button>
           </div>
         ) : null}
       </div>

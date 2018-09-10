@@ -30,7 +30,7 @@ export class ListItem extends React.Component {
                 alt={channelItem.name}
               />
             </span>
-              <span className="channel-item-name">{channelItem.name}</span>
+            <span className="channel-item-name">{channelItem.name}</span>
           </div>
           {channelItem.messages && channelItem.messages.length > 0 ? (
             <ul className="recently-messages">
@@ -42,7 +42,7 @@ export class ListItem extends React.Component {
                   ) : (
                     <li key={message.messageId}>
                       [Файл] ({message.size} кб)
-                        <br />
+                      <br />
                       {message.data}
                     </li>
                   ))

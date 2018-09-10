@@ -80,51 +80,51 @@ class OpenChannel extends React.Component {
             <Spinner color="#ffffff" secondaryColor="#40c9ff" size={100} />
           </div>
         ) : null}
-          <div className="flex-container">
-            <div className="channel-sidebar">
-              <button name="createOpen" onClick={this.handleOpenModal}>
+        <div className="flex-container">
+          <div className="channel-sidebar">
+            <button name="createOpen" onClick={this.handleOpenModal}>
               Создать открытый канал
-              </button>
-              {channelsList ? (
-                <div>
-                  <p>Открытые каналы</p>
-                    <ChannelList
-                      selectedChan={this.handleGetChannel}
-                      channels={channelsList}
-                      fetching={this.props.openChannels.fetching}
-                      group={false}
-                    />
-                </div>
+            </button>
+            {channelsList ? (
+              <div>
+                <p>Открытые каналы</p>
+                <ChannelList
+                  selectedChan={this.handleGetChannel}
+                  channels={channelsList}
+                  fetching={this.props.openChannels.fetching}
+                  group={false}
+                />
+              </div>
             ) : null}
-              <button name="createGroup" onClick={this.handleOpenModal}>
+            <button name="createGroup" onClick={this.handleOpenModal}>
               Создать групповой канал
-              </button>
-              {groupChannelsList.length > 0 ? (
-                <div>
-                  <p>
+            </button>
+            {groupChannelsList.length > 0 ? (
+              <div>
+                <p>
                     Групповые каналы
-                  </p>
-                    <ChannelList
-                      selectedChan={this.handleGetChannel}
-                      channels={groupChannelsList}
-                      groupsFetching={this.props.groupChannels.groupsFetching}
-                      inviteUsers={this.handleInviteUsers}
-                      leaveGroup={this.hanldeLeaveGroup}
-                      group
-                    />
-                </div>
+                </p>
+                <ChannelList
+                  selectedChan={this.handleGetChannel}
+                  channels={groupChannelsList}
+                  groupsFetching={this.props.groupChannels.groupsFetching}
+                  inviteUsers={this.handleInviteUsers}
+                  leaveGroup={this.hanldeLeaveGroup}
+                  group
+                />
+              </div>
             ) : null}
-            </div>
-            {channel || groupChannel ? (
-              <div className="channel-page-content">
-                {channel ? (
-                  <Channel
-                    onEnter={this.handleEnterChannel}
-                    onLeave={this.handleLeaveChannel}
-                    user={this.props.user}
-                    channel={channel}
-                    participants={this.props.openChannels.participants}
-                  />
+          </div>
+          {channel || groupChannel ? (
+            <div className="channel-page-content">
+              {channel ? (
+                <Channel
+                  onEnter={this.handleEnterChannel}
+                  onLeave={this.handleLeaveChannel}
+                  user={this.props.user}
+                  channel={channel}
+                  participants={this.props.openChannels.participants}
+                />
               ) : (
                 <GroupChannel
                   onLeave={this.handleLeaveChannel}
@@ -133,33 +133,33 @@ class OpenChannel extends React.Component {
                   channel={groupChannel}
                 />
               )}
-              </div>
+            </div>
           ) : null}
-          </div>
-            <Modal
-              className="modal"
-              isOpen={this.state.modalIsOpen}
-              onAfterOpen={this.afterOpenModal}
-              onRequestClose={this.closeModal}
-              contentLabel="Example Modal"
-              ariaHideApp={false}
-            >
-              <button className="x-btn" onClick={this.closeModal}>
+        </div>
+        <Modal
+          className="modal"
+          isOpen={this.state.modalIsOpen}
+          onAfterOpen={this.afterOpenModal}
+          onRequestClose={this.closeModal}
+          contentLabel="Example Modal"
+          ariaHideApp={false}
+        >
+          <button className="x-btn" onClick={this.closeModal}>
             x
-              </button>
+          </button>
 
-              {groupChModal ? (
-                <CreateGroupForm onSubmitForm={this.handleGroupChannel} />
+          {groupChModal ? (
+            <CreateGroupForm onSubmitForm={this.handleGroupChannel} />
           ) : (
             <CreateChannelForm onSubmitForm={this.handleOpenChannel} />
           )}
-            </Modal>
-              <NotificationWindow
-                notificationShow={this.props.notificationShow}
-                notification={this.props.notification}
-                nickname={this.props.user.userName}
-                onNotificationClose={this.handleNotificationClose}
-              />
+        </Modal>
+        <NotificationWindow
+          notificationShow={this.props.notificationShow}
+          notification={this.props.notification}
+          nickname={this.props.user.userName}
+          onNotificationClose={this.handleNotificationClose}
+        />
       </div>
     );
   }

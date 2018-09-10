@@ -31,25 +31,25 @@ export class LoginForm extends React.Component {
         <form onSubmit={this.handleSubmit}>
           <label htmlFor="userId">
             <span>UserId</span>
-              <input
-                id="userId"
-                name="userId"
-                value={userId}
-                onChange={this.handleTextInput}
-                type="text"
-              />
+            <input
+              id="userId"
+              name="userId"
+              value={userId}
+              onChange={this.handleTextInput}
+              type="text"
+            />
           </label>
-            <label htmlFor="userLogin">
-              <span>UserNick</span>
-                <input
-                  id="userNick"
-                  name="userNick"
-                  value={userNick}
-                  onChange={this.handleTextInput}
-                  type="text"
-                />
-            </label>
-              <button disabled={!userId}>Login</button>
+          <label htmlFor="userLogin">
+            <span>UserNick</span>
+            <input
+              id="userNick"
+              name="userNick"
+              value={userNick}
+              onChange={this.handleTextInput}
+              type="text"
+            />
+          </label>
+          <button disabled={!userId}>Login</button>
         </form>
       </div>
     );

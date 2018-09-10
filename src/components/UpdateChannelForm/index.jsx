@@ -29,25 +29,25 @@ export class UpdateChannelForm extends React.Component {
         <form onSubmit={this.handleSubmit}>
           <label htmlFor="channelName">
             <span>Name</span>
-              <input
-                id="channelName"
-                name="channelName"
-                value={channelName}
-                onChange={this.handleInput}
-                type="text"
-              />
+            <input
+              id="channelName"
+              name="channelName"
+              value={channelName}
+              onChange={this.handleInput}
+              type="text"
+            />
           </label>
-            <label htmlFor="coverUrl">
-              <span>Cover Url</span>
-                <input
-                  id="coverUrl"
-                  name="coverUrl"
-                  value={coverUrl}
-                  onChange={this.handleInput}
-                  type="text"
-                />
-            </label>
-              <button disabled={!coverUrl || !channelName}>Изменить</button>
+          <label htmlFor="coverUrl">
+            <span>Cover Url</span>
+            <input
+              id="coverUrl"
+              name="coverUrl"
+              value={coverUrl}
+              onChange={this.handleInput}
+              type="text"
+            />
+          </label>
+          <button disabled={!coverUrl || !channelName}>Изменить</button>
         </form>
       </div>
     );

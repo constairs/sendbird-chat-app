@@ -110,11 +110,11 @@ class MessageField extends React.Component {
             {userTyping && userTyping !== user.userName ? (
               <span className="typing-indicator">
                 {userTyping}
-                  <Text
-                    color="#000000"
-                    fontSize="1em"
-                    text="набирает сообщение"
-                  />
+                <Text
+                  color="#000000"
+                  fontSize="1em"
+                  text="набирает сообщение"
+                />
               </span>
             ) : null}
             {membersTyping.length ? (
@@ -128,72 +128,72 @@ class MessageField extends React.Component {
                   }
                   return <span key={member.userId}>{member.nickname}</span>;
                 })}
-                  <Text
-                    color="#000000"
-                    fontSize="1em"
-                    text="набирает сообщение"
-                  />
+                <Text
+                  color="#000000"
+                  fontSize="1em"
+                  text="набирает сообщение"
+                />
               </span>
             ) : null}
-              <button
-                onClick={this.fileUploadModal}
-                type="button"
-                title="Отправить файл"
-              >
-                <FontAwesomeIcon icon={faFile} />
-              </button>
-                <button
-                  className="send-message-btn"
-                  type="submit"
-                  disabled={!messageText}
-                >
+            <button
+              onClick={this.fileUploadModal}
+              type="button"
+              title="Отправить файл"
+            >
+              <FontAwesomeIcon icon={faFile} />
+            </button>
+            <button
+              className="send-message-btn"
+              type="submit"
+              disabled={!messageText}
+            >
               Отправить
-                  {this.props.sendingMessage ? (
-                    <Spinner color="#ffffff" secondaryColor="#40c9ff" size={10} />
+              {this.props.sendingMessage ? (
+                <Spinner color="#ffffff" secondaryColor="#40c9ff" size={10} />
               ) : null}
-                </button>
+            </button>
           </form>
         </div>
-          <Modal
-            className="modal file-upload-modal"
-            isOpen={fileUploadModal}
-            onAfterOpen={this.afterOpenModal}
-            onRequestClose={this.fileUploadModal}
-            contentLabel="Example Modal"
-            ariaHideApp={false}
-          >
-            <button className="x-btn" onClick={this.fileUploadModal}>
-              <FontAwesomeIcon icon={faTimes} />
-            </button>
-              <form onSubmit={this.handleFileForm}>
-                <Dropzone className="dropzone" onDrop={this.handleDropFile} />
-                {fileToUpload ? (
-                  <div>
-                    <p>Файл для отправки</p>
-                      <div className="files-to-upload">
-                        <div className="file-item">
-                          <div className="file-preview">
-                            {new RegExp('^image?', 'i').test(fileToUpload.type) ? (
-                              <img src={fileToUpload.preview} alt="preview" />
+        <Modal
+          className="modal file-upload-modal"
+          isOpen={fileUploadModal}
+          onAfterOpen={this.afterOpenModal}
+          onRequestClose={this.fileUploadModal}
+          contentLabel="Example Modal"
+          ariaHideApp={false}
+        >
+          <button className="x-btn" onClick={this.fileUploadModal}>
+            <FontAwesomeIcon icon={faTimes} />
+          </button>
+          <form onSubmit={this.handleFileForm}>
+            <Dropzone className="dropzone" onDrop={this.handleDropFile} />
+            {fileToUpload ? (
+              <div>
+                <p>Файл для отправки</p>
+                <div className="files-to-upload">
+                  <div className="file-item">
+                    <div className="file-preview">
+                      {new RegExp('^image?', 'i').test(fileToUpload.type) ? (
+                        <img src={fileToUpload.preview} alt="preview" />
                       ) : (
                         <FontAwesomeIcon icon={faFile} />
                       )}
-                          </div>
-                            <p>{fileToUpload.size} кб</p>
-                        </div>
-                      </div>
+                    </div>
+                    <p>{fileToUpload.size} кб</p>
                   </div>
+                </div>
+              </div>
             ) : null}
-              <input
-                type="text"
-                placeholder="Сообщение"
-                name="fileMessageText"
-                value={fileMessageText}
-                onChange={this.handleTextInput}
-              />
-                <button type="submit">Отправить</button>
-              </form>
-          </Modal>
+            <input
+              type="text"
+              placeholder="Сообщение"
+              name="fileMessageText"
+              value={fileMessageText}
+              onChange={this.handleTextInput}
+            />
+            <button type="submit">Отправить</button>
+          </form>
+        </Modal>
       </div>
     );
   }

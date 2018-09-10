@@ -18,7 +18,7 @@ const initState = {
 
 const sendMessageSuccessed = (state, sendRes) => ({
   ...state,
-  messages: [...state.messages, sendRes.messages],
+  messages: [...state.messages, sendRes.messages].slice(1),
   sendingMessage: false,
 });
 const sendMessageFailed = (state, error) => ({
@@ -37,13 +37,9 @@ const sendFileMessageFailed = (state, error) => ({
   error,
 });
 
-const deleteMessageSuccessed = (state, delRes) => ({
-  ...state,
-  messages: state.messages.filter(cur => cur.messageId !== delRes.messageId),
-});
 const deleteMessageFailed = (state, error) => ({
   ...state,
-  error,
+  error
 });
 
 const editMessageSuccessed = (state, editRes) => ({
@@ -88,7 +84,7 @@ const messageReceived = (state, messageData) => ({
   ...state,
   messages:
     state.currentChannel.url === messageData.channel.url
-      ? [...state.messages, messageData.message]
+      ? [...state.messages.slice(1), messageData.message]
       : state.messages,
 });
 
@@ -197,7 +193,6 @@ const handlers = {
   [TYPES.SEND_FILE_MESSAGE_SUCCESSED]: sendFileMessageSuccessed,
   [TYPES.SEND_FILE_MESSAGE_FAILED]: sendFileMessageFailed,
 
-  [TYPES.DELETE_MESSAGE_SUCCESSED]: deleteMessageSuccessed,
   [TYPES.DELETE_MESSAGE_FAILED]: deleteMessageFailed,
 
   [TYPES.EDIT_MESSAGE_SUCCESSED]: editMessageSuccessed,

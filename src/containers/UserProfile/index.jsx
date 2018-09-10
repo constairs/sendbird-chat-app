@@ -39,31 +39,31 @@ class Profile extends React.Component {
       <div className="user-profile">
         <div className="user-cover">
           <img src={userImg} alt="user-img" />
-            <button onClick={this.handleOpenModal} title="Change profile data">
+          <button onClick={this.handleOpenModal} title="Change profile data">
             Change
-            </button>
+          </button>
         </div>
-          <h2 className="user-nickname">{userName}</h2>
-            <button
-              className="user-logout-btn"
-              title="Logout"
-              onClick={this.handleLogout}
-            >
-              <FontAwesomeIcon icon={faSignOutAlt} size="xs" />
-            </button>
-              <Modal
-                className="modal"
-                isOpen={this.state.modalIsOpen}
-                onAfterOpen={this.afterOpenModal}
-                onRequestClose={this.closeModal}
-                contentLabel="Example Modal"
-                ariaHideApp={false}
-              >
-                <button className="x-btn" onClick={this.closeModal}>
+        <h2 className="user-nickname">{userName}</h2>
+        <button
+          className="user-logout-btn"
+          title="Logout"
+          onClick={this.handleLogout}
+        >
+          <FontAwesomeIcon icon={faSignOutAlt} size="xs" />
+        </button>
+        <Modal
+          className="modal"
+          isOpen={this.state.modalIsOpen}
+          onAfterOpen={this.afterOpenModal}
+          onRequestClose={this.closeModal}
+          contentLabel="Example Modal"
+          ariaHideApp={false}
+        >
+          <button className="x-btn" onClick={this.closeModal}>
             x
-                </button>
-                  <UserForm onChangeProfile={this.handleChangeProfile} />
-              </Modal>
+          </button>
+          <UserForm onChangeProfile={this.handleChangeProfile} />
+        </Modal>
       </div>
     );
   }

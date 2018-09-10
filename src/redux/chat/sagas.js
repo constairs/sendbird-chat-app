@@ -26,6 +26,7 @@ import {
 import {
   SEND_MESSAGE,
   DELETE_MESSAGE,
+  DELETE_MESSAGE_SUCCESSED,
   EDIT_MESSAGE,
   ON_MESSAGE_TYPING,
   SEND_FILE_MESSAGE,
@@ -133,8 +134,8 @@ function* sendFileMessageAsync(action) {
 
 function* deleteMessageAsync(action) {
   try {
-    const delRes = yield call(deleteMessage, ...action.messageData);
-    yield put(deleteMessageSuccessed(delRes));
+    const delChannel = yield call(deleteMessage, ...action.messageData);
+    yield put(deleteMessageSuccessed(delChannel));
   } catch (error) {
     yield put(deleteMessageFailed(error));
   }
@@ -225,6 +226,7 @@ export function* chatSagas() {
     yield takeLatest(SEND_MESSAGE, sendMessageAsync),
     yield takeLatest(SEND_FILE_MESSAGE, sendFileMessageAsync),
     yield takeLatest(DELETE_MESSAGE, deleteMessageAsync),
+    yield takeLatest(DELETE_MESSAGE_SUCCESSED, getMessagesAsync),
     yield takeLatest(EDIT_MESSAGE, editMessageAsync),
     yield takeLatest(EDIT_FILE_MESSAGE, editFileMessageSaga),
     yield takeEvery(ENTER_CHANNEL_SUCCESSED, getMessagesAsync),

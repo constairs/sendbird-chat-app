@@ -65,71 +65,71 @@ export class CreateGroupForm extends React.Component {
         <form onSubmit={this.handleSubmit}>
           <label htmlFor="channelName">
             <span>Name</span>
-              <input
-                id="channelName"
-                name="channelName"
-                value={channelName}
-                onChange={this.handleInput}
-                type="text"
-              />
+            <input
+              id="channelName"
+              name="channelName"
+              value={channelName}
+              onChange={this.handleInput}
+              type="text"
+            />
           </label>
-            <label htmlFor="coverUrl">
-              <span>Cover Url</span>
-                <input
-                  id="coverUrl"
-                  name="coverUrl"
-                  value={coverUrl}
-                  onChange={this.handleInput}
-                  type="text"
-                />
-            </label>
-              <label htmlFor="channelDistinct">
-                <input
-                  type="checkbox"
-                  id="channelDistinct"
-                  name="channelDistinct"
-                  value={channelDistinct}
-                  onChange={this.handleCheckbox}
-                />
+          <label htmlFor="coverUrl">
+            <span>Cover Url</span>
+            <input
+              id="coverUrl"
+              name="coverUrl"
+              value={coverUrl}
+              onChange={this.handleInput}
+              type="text"
+            />
+          </label>
+          <label htmlFor="channelDistinct">
+            <input
+              type="checkbox"
+              id="channelDistinct"
+              name="channelDistinct"
+              value={channelDistinct}
+              onChange={this.handleCheckbox}
+            />
             1-to-1 chat
-              </label>
-                <label
-                  htmlFor="groupUsersInput"
-                  className="groupUsers"
-                  disabled={channelDistinct && usersToInvite.length > 0}
-                >
-                  <span>Group Users</span>
-                    <input
-                      id="groupUsers"
-                      name="groupUsersInput"
-                      value={groupUsersInput}
-                      onChange={this.handleInput}
-                      type="text"
-                      disabled={channelDistinct && usersToInvite.length > 0}
-                    />
-                      <button
-                        className="invite-button"
-                        onClick={this.handleAddUser}
-                        type="button"
-                        disabled={channelDistinct && usersToInvite.length > 0}
-                      >
+          </label>
+          <label
+            htmlFor="groupUsersInput"
+            className="groupUsers"
+            disabled={channelDistinct && usersToInvite.length > 0}
+          >
+            <span>Group Users</span>
+            <input
+              id="groupUsers"
+              name="groupUsersInput"
+              value={groupUsersInput}
+              onChange={this.handleInput}
+              type="text"
+              disabled={channelDistinct && usersToInvite.length > 0}
+            />
+            <button
+              className="invite-button"
+              onClick={this.handleAddUser}
+              type="button"
+              disabled={channelDistinct && usersToInvite.length > 0}
+            >
                       ок
-                      </button>
-                  {usersToInvite.length !== 0 ? (
-                    <ul className="users-to-invite">
-                      {usersToInvite.map(item => (
-                        <li key={item}>
-                          {item}{' '}
-                            <button id={item} onClick={this.handleDelUser} type="button">
+            </button>
+            {usersToInvite.length !== 0 ? (
+              <ul className="users-to-invite">
+                {usersToInvite.map(item => (
+                  <li key={item}>
+                    {item}{' '}
+                    <button id={item} onClick={this.handleDelUser} type="button">
                             x
-                            </button>
-                        </li>
+                    </button>
+                  </li>
                     ))}
-                    </ul>
+              </ul>
               ) : null}
-                </label>
+          </label>
 
-                  <button disabled={!channelName}>Создать</button>
+          <button disabled={!channelName}>Создать</button>
         </form>
       </div>
     );

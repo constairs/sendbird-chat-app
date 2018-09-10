@@ -52,29 +52,29 @@ class UserProfile extends React.Component {
           <div className="user-profile">
             <div className="user-cover">
               <img src={userImg} alt="user-img" />
-                <button onClick={this.handleOpenModal}>Change</button>
+              <button onClick={this.handleOpenModal}>Change</button>
             </div>
-              <h2 className="user-nickname">{userName}</h2>
-                <button
-                  className="user-logout-btn"
-                  title="logout"
-                  onClick={this.handleLogout}
-                >
-                  <FontAwesomeIcon icon={faSignOutAlt} size="xs" />
-                </button>
-                  <Modal
-                    className="modal"
-                    isOpen={this.state.modalIsOpen}
-                    onAfterOpen={this.afterOpenModal}
-                    onRequestClose={this.closeModal}
-                    contentLabel="Example Modal"
-                    ariaHideApp={false}
-                  >
-                    <button className="x-btn" onClick={this.closeModal}>
-                      <FontAwesomeIcon icon={faTimes} />
-                    </button>
-                      <UserForm onChangeProfile={this.handleChangeProfile} />
-                  </Modal>
+            <h2 className="user-nickname">{userName}</h2>
+            <button
+              className="user-logout-btn"
+              title="logout"
+              onClick={this.handleLogout}
+            >
+              <FontAwesomeIcon icon={faSignOutAlt} size="xs" />
+            </button>
+            <Modal
+              className="modal"
+              isOpen={this.state.modalIsOpen}
+              onAfterOpen={this.afterOpenModal}
+              onRequestClose={this.closeModal}
+              contentLabel="Example Modal"
+              ariaHideApp={false}
+            >
+              <button className="x-btn" onClick={this.closeModal}>
+                <FontAwesomeIcon icon={faTimes} />
+              </button>
+              <UserForm onChangeProfile={this.handleChangeProfile} />
+            </Modal>
           </div>
         )}
       </div>
