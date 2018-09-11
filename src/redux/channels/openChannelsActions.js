@@ -39,19 +39,6 @@ export const getParticipantsFailed = error => ({
   payload: error,
 });
 
-export const leaveChannel = channelUrl => ({
-  type: TYPES.LEAVE_CHANNEL,
-  payload: channelUrl,
-});
-export const leaveChannelSuccessed = response => ({
-  type: TYPES.LEAVE_CHANNEL_SUCCESSED,
-  payload: response,
-});
-export const leaveChannelFailed = error => ({
-  type: TYPES.LEAVE_CHANNEL_FAILED,
-  payload: error,
-});
-
 export const channelUpdated = channel => ({
   type: TYPES.GHANNEL_UPDATED,
   payload: channel,
@@ -78,33 +65,5 @@ export const getRecentlyMessagesSuccessed = messages => ({
 });
 export const getRecentlyMessagesFailed = error => ({
   type: TYPES.GET_RECENTLY_MESSAGES_FAILED,
-  payload: error,
-});
-
-export const createGroupChannel = formData => ({
-  type: TYPES.CREATE_GROUP_CHANNEL,
-  payload: formData,
-});
-export const createGroupChannelSuccessed = channelData => ({
-  type: TYPES.CREATE_GROUP_CHANNEL_SUCCESSED,
-  payload: channelData,
-});
-export const createGroupChannelFailed = error => ({
-  type: TYPES.CREATE_GROUP_CHANNEL_FAILED,
-  payload: error,
-});
-
-export const updateChannel = updateData => ({
-  type: TYPES.UPDATE_CHANNEL,
-  payload: updateData,
-});
-
-export const updateChannelSuccessed = updRes => ({
-  type: TYPES.UPDATE_CHANNEL_SUCCESSED,
-  payload: updRes,
-});
-
-export const updateChannelFailed = error => ({
-  type: TYPES.UPDATE_CHANNEL_FAILED,
   payload: error,
 });

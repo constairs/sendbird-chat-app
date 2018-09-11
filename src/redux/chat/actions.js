@@ -108,8 +108,8 @@ export const messageTypingError = error => ({
   payload: error,
 });
 
-export const userTyping = channel => ({
-  type: TYPES.USER_TYPING,
+export const userTypingStart = channel => ({
+  type: TYPES.USER_TYPING_START,
   payload: channel,
 });
 

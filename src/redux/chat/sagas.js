@@ -8,11 +8,12 @@ import {
 } from 'redux-saga/effects';
 import { delay } from 'redux-saga';
 import { v4 } from 'uuid';
-import { ENTER_CHANNEL_SUCCESSED } from '../openChannels/types';
 import {
-  GET_GROUP_CHANNEL_SUCCESSED,
+  ENTER_CHANNEL_SUCCESSED,
+  GET_SELECTED_CHANNEL_SUCCESSED,
   LEAVE_GROUP_SUCCESSED,
-} from '../groupChannels/types';
+  USER_TYPING_START
+} from '../channels/types';
 import {
   sendMessage,
   sendFileMessage,
@@ -160,20 +161,6 @@ function* getMessagesAsync(action) {
       action.payload.channelType
     );
     yield put(getMessagesSuccessed(messages));
-  } catch (error) {
-    yield put(getMessagesFailed(error));
-  }
-}
-
-function* getGroupMessges(action) {
-  yield put(getMessagesRequest(action.payload.groupChannel));
-  try {
-    const messages = yield call(
-      getMessages,
-      action.payload.groupChannel.url,
-      action.payload.groupChannel.channelType
-    );
-    yield put(getMessagesSuccessed(messages));
     if (action.payload.groupChannel.channelType === 'group') {
       yield call(markAsReadSb, action.payload.groupChannel);
       yield put(markAsRead());
@@ -200,7 +187,7 @@ function* onMessageTypingSaga(action) {
   }
 }
 
-function* userTyping(action) {
+function* userTypingSaga(action) {
   yield call(action.payload.startTyping);
   yield call(delay, 2000);
   yield call(action.payload.endTyping);
@@ -233,13 +220,15 @@ export function* chatSagas() {
     yield takeLatest(SEND_MESSAGE, sendMessageAsync),
     yield takeLatest(SEND_FILE_MESSAGE, sendFileMessageAsync),
     yield takeLatest(DELETE_MESSAGE, deleteMessageAsync),
-    yield takeLatest(DELETE_MESSAGE_SUCCESSED, getMessagesAsync),
     yield takeLatest(EDIT_MESSAGE, editMessageAsync),
     yield takeLatest(EDIT_FILE_MESSAGE, editFileMessageSaga),
-    yield takeEvery(ENTER_CHANNEL_SUCCESSED, getMessagesAsync),
-    yield takeEvery(GET_GROUP_CHANNEL_SUCCESSED, getGroupMessges),
+    yield takeEvery(
+      [ENTER_CHANNEL_SUCCESSED,
+        GET_SELECTED_CHANNEL_SUCCESSED,
+        DELETE_MESSAGE_SUCCESSED],
+      getMessagesAsync),
     yield take(LEAVE_GROUP_SUCCESSED, cleanChatSaga),
     yield takeLatest(ON_MESSAGE_TYPING, onMessageTypingSaga),
-    yield takeLatest(USER_TYPING, userTyping),
+    yield takeLatest(USER_TYPING_START, userTypingSaga),
   ]);
 }

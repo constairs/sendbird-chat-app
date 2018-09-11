@@ -28,8 +28,8 @@ class MessageField extends React.Component {
           this.props.user.userName,
           this.state.message,
         ]);
-      } else {
-        this.props.onMessageTyping();
+      } else if (this.props.channelType === 'group' && name === 'messageText') {
+        this.props.chatActions.userTypingStart(this.props.channel);
       }
     });
   };
@@ -201,6 +201,7 @@ class MessageField extends React.Component {
 
 MessageField.propTypes = {
   user: PropTypes.objectOf(PropTypes.any).isRequired,
+  channel: PropTypes.objectOf(PropTypes.any).isRequired,
   channelUrl: PropTypes.string.isRequired,
   channelType: PropTypes.string.isRequired,
   userTyping: PropTypes.string.isRequired,

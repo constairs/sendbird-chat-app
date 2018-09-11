@@ -4,7 +4,7 @@ import { bindActionCreators } from 'redux';
 import { Spinner } from 'react-preloading-component';
 import PropTypes from 'prop-types';
 import * as chatActions from '../../redux/chat/actions';
-import { MessageItem } from '../MessageItem';
+import { MessageItem } from '../../components/MessageItem';
 import { ChatMessageField } from '../ChatMessageField';
 
 import './index.scss';
@@ -67,7 +67,6 @@ export class Chat extends React.Component {
 
   handleTyping = () => {
     if (this.props.currentChannel.channelType === 'group') {
-      // this.props.currentChannel.startTyping();
       this.props.chatActions.userTyping(this.props.currentChannel);
     }
   };
@@ -120,14 +119,11 @@ export class Chat extends React.Component {
 function mapStateToProps(state) {
   return {
     user: state.persistedUserReducer,
-    chatParticipants:
-      state.openChannelsReducer.participants ||
-      state.groupChannelsReducer.participants,
     messages: state.chatReducer.messages,
     messFetching: state.chatReducer.messFetching,
     readReceipt: state.chatReducer.receipt,
     uploadProgress: state.chatReducer.uploadProgress,
-    channel: state.groupChannelsReducer.groupChannel,
+    channel: state.channelsReducer.groupChannel,
   };
 }
 

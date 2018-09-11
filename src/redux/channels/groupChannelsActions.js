@@ -13,19 +13,6 @@ export const createGroupChannelFailed = error => ({
   payload: error,
 });
 
-export const getGroupChannel = channelUrl => ({
-  type: TYPES.GET_GROUP_CHANNEL,
-  payload: channelUrl,
-});
-export const getGroupChannelSuccessed = (groupChannel, receipt) => ({
-  type: TYPES.GET_GROUP_CHANNEL_SUCCESSED,
-  payload: { groupChannel, receipt },
-});
-export const getGroupChannelFailed = error => ({
-  type: TYPES.GET_GROUP_CHANNEL_FAILED,
-  payload: error,
-});
-
 export const inviteUsers = formData => ({
   type: TYPES.INVITE_USERS,
   payload: formData,
@@ -36,19 +23,6 @@ export const inviteUsersSuccessed = inviteRes => ({
 });
 export const inviteUsersFailed = error => ({
   type: TYPES.INVITE_USERS_FAILED,
-  payload: error,
-});
-
-export const leaveGroup = channelUrl => ({
-  type: TYPES.LEAVE_GROUP,
-  payload: channelUrl,
-});
-export const leaveGroupSuccessed = leaveRes => ({
-  type: TYPES.LEAVE_GROUP_SUCCESSED,
-  payload: leaveRes,
-});
-export const leaveGroupFailed = error => ({
-  type: TYPES.LEAVE_GROUP_FAILED,
   payload: error,
 });
 

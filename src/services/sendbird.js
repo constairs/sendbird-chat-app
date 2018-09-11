@@ -15,14 +15,13 @@ import {
   userExited,
   getParticipantsSuccessed,
   getParticipantsFailed,
-} from '../redux/openChannels/actions';
-
+} from '../redux/channels/openChannelsActions';
 import {
   groupUpdated,
   onUserJoined,
   onUserLeft,
   onUserTyping,
-} from '../redux/groupChannels/actions';
+} from '../redux/channels/groupChannelsActions';
 
 export const sb = new SendBird({ appId: APP_ID });
 
@@ -142,15 +141,15 @@ export function createOpenChannel(channelName, coverUrl, coverFile) {
       channelName,
       coverUrl,
       coverFile,
-      (channel, error) => {
+      (createdChannel, error) => {
         if (error) {
           reject(error);
         }
-        channel.createMetaData({ userTyping: '' }, (response, err) => {
+        createdChannel.createMetaData({ userTyping: '' }, (response, err) => {
           if (err) {
             reject(err);
           }
-          resolve(channel);
+          resolve(createdChannel);
         });
       }
     );
@@ -195,7 +194,7 @@ export function updateChannel(channelUrl, channelType, channelName, coverUrl) {
   });
 }
 
-export function getChannelsList() {
+export function getChannelList() {
   return new Promise((resolve, reject) => {
     const openChannelListQuery = sb.OpenChannel.createOpenChannelListQuery();
     const groupChannelListQuery = sb.GroupChannel.createMyGroupChannelListQuery();
@@ -206,6 +205,16 @@ export function getChannelsList() {
       if (error) {
         reject(error);
       }
+      openChannels = openChannels.map(channel => {
+        const messageListQuery = channel.createPreviousMessageListQuery();
+        messageListQuery.load(1, true, (message, err) => {
+          if (err) {
+            reject(err);
+          }
+          channel.lastMessage = message[0];
+        });
+        return channel;
+      });
 
       if (groupChannelListQuery.hasNext) {
         groupChannelListQuery.next(function (groupChannels, error) {
@@ -215,7 +224,6 @@ export function getChannelsList() {
           resolve([...openChannels, ...groupChannels]);
         });
       }
-
     });
   });
 }
@@ -249,23 +257,64 @@ export function groupChannelList() {
   });
 }
 
+export function selectChannel(channelInfo) {
+  return new Promise((resolve, reject) => {
+    if (channelInfo.channelType === 'group') {
+      sb.GroupChannel.getChannel(channelInfo.channelUrl, (groupChannel, error) => {
+        if (error) {
+          reject(error);
+        }
+        resolve(groupChannel);
+      });
+    } else {
+      sb.OpenChannel.getChannel(channelInfo.channelUrl, (openChannel, error) => {
+        if (error) {
+          reject(error);
+        }
+        openChannel.enter((response, err) => {
+          if (err) {
+            reject(err);
+          }
+          resolve(openChannel);
+        });
+      });
+    }
+  });
+}
+
 export function getChannel(channelUrl, channelType) {
   return new Promise((resolve, reject) => {
     if (channelType === 'group') {
-      sb.GroupChannel.getChannel(channelUrl, (channel, error) => {
+      sb.GroupChannel.getChannel(channelUrl, (groupChannel, error) => {
         if (error) {
           reject(error);
         }
-        resolve(channel);
+        resolve(groupChannel);
       });
     } else {
-      sb.OpenChannel.getChannel(channelUrl, (channel, error) => {
+      sb.OpenChannel.getChannel(channelUrl, (openChannel, error) => {
         if (error) {
           reject(error);
         }
-        resolve(channel);
+        resolve(openChannel);
       });
     }
+  });
+}
+
+export function enterChannel(channelUrl) {
+  return new Promise((resolve, reject) => {
+    sb.OpenChannel.getChannel(channelUrl, (channel, error) => {
+      if (error) {
+        reject(error);
+      }
+      channel.enter((response, err) => {
+        if (err) {
+          reject(err);
+        }
+        resolve(channel);
+      });
+    });
   });
 }
 
@@ -295,22 +344,6 @@ export function leaveGroup(channelUrl) {
   });
 }
 
-export function enterChannel(channelUrl) {
-  return new Promise((resolve, reject) => {
-    sb.OpenChannel.getChannel(channelUrl, (channel, error) => {
-      if (error) {
-        reject(error);
-      }
-      channel.enter((response, err) => {
-        if (err) {
-          reject(err);
-        }
-        resolve(channel);
-      });
-    });
-  });
-}
-
 export function getParticipantsReq(channelUrl) {
   return new Promise((resolve, reject) => {
     sb.OpenChannel.getChannel(channelUrl, (channel, error) => {
@@ -327,24 +360,6 @@ export function getParticipantsReq(channelUrl) {
     });
   });
 }
-
-
-// export function getParticipantsReq(channelUrl) {
-//   return new Promise((resolve, reject) => {
-//     sb.OpenChannel.getChannel(channelUrl, (channel, error) => {
-//       if (error) {
-//         reject(error);
-//       }
-//       const participantListQuery = channel.createParticipantListQuery();
-//       participantListQuery.next((participantList, err) => {
-//         if (err) {
-//           reject(err);
-//         }
-//         resolve(participantList);
-//       });
-//     });
-//   });
-// }
 
 export function refreshGroupMembers(channel) {
   return new Promise((resolve, reject) => {
@@ -387,7 +402,7 @@ export function getMessages(channelUrl, channelType) {
   });
 }
 
-export function getRecentlyMessages(channelUrl, quantity) {
+export function getRecentMessages(channelUrl, quantity) {
   return new Promise((resolve, reject) => {
     sb.OpenChannel.getChannel(channelUrl, (channel, error) => {
       if (error) {

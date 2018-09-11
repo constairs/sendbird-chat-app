@@ -1,8 +1,7 @@
 import React from 'react';
-import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
 
-class ListItem extends React.Component {
+export class ChannelListItem extends React.Component {
   state = {
     inviteForm: false,
     usersIdsInput: '',
@@ -34,7 +33,10 @@ class ListItem extends React.Component {
   };
 
   handleLeaveClick = () => {
-    this.props.onLeaveGroup(this.props.channelItem.url);
+    this.props.onLeaveGroup({
+      channelUrl: this.props.channelItem.url,
+      channelType: this.props.channelItem.channelType
+    });
   };
 
   handleInput = (e) => {
@@ -85,7 +87,7 @@ class ListItem extends React.Component {
             </div>
           ) : null}
         </button>
-        {!channelItem.isDistinct ? (
+        {channelItem.channelType === 'group' && !channelItem.isDistinct ? (
           <div className="btns">
             <button onClick={this.handleInviteClick}>Пригласить</button>
             <button onClick={this.handleLeaveClick}>Покинуть</button>
@@ -121,17 +123,9 @@ class ListItem extends React.Component {
   }
 }
 
-ListItem.propTypes = {
+ChannelListItem.propTypes = {
   selectedChan: PropTypes.func.isRequired,
-  channelItem: PropTypes.objectOf(PropTypes.any).isRequired,
-  onInviteUsers: PropTypes.func.isRequired,
   onLeaveGroup: PropTypes.func.isRequired,
+  onInviteUsers: PropTypes.func.isRequired,
+  channelItem: PropTypes.objectOf(PropTypes.any).isRequired
 };
-
-function mapStateToProps(state) {
-  return {
-    groupChannels: state.groupChannelsReducer,
-  };
-}
-
-export const GroupListItem = connect(mapStateToProps)(ListItem);

@@ -1,10 +1,7 @@
 import { createReducer } from '../../utils/reducerUtils';
 import * as TYPES from './types';
-import {
-  ON_USER_TYPING,
-  GET_GROUP_CHANNEL_SUCCESSED,
-} from '../groupChannels/types';
-import { ENTER_CHANNEL_SUCCESSED } from '../openChannels/types';
+import { ENTER_CHANNEL_SUCCESSED, GET_SELECTED_CHANNEL_SUCCESSED, ON_USER_TYPING } from '../channels/types';
+import { getLeastReceiptStatusTime } from '../../utils/helpers';
 
 const initState = {
   messFetching: false,
@@ -124,7 +121,7 @@ const messageTypingEnd = state => ({
   userTyping: '',
 });
 
-const userTyping = (state, user) => ({
+const userTypingStart = (state, user) => ({
   ...state,
   ...user,
 });
@@ -142,10 +139,10 @@ const onUserTyping = (state, typingData) => ({
       : [],
 });
 
-const changeChannelGroup = (state, groupChannelData) => ({
+const changeChannelGroup = (state, channel) => ({
   ...state,
-  currentChannel: groupChannelData.groupChannel,
-  receipt: groupChannelData.receipt,
+  currentChannel: channel,
+  receipt: getLeastReceiptStatusTime(channel),
 });
 
 const changeOpenChannel = (state, openChannel) => ({
@@ -210,14 +207,15 @@ const handlers = {
   [TYPES.MESSAGE_TYPING_SET]: messageTypingSet,
   [TYPES.MESSAGE_TYPING_ERROR]: messageTypingError,
 
-  [TYPES.USER_TYPING]: userTyping,
+  [TYPES.USER_TYPING_START]: userTypingStart,
   [TYPES.MESSAGE_TYPING_END]: messageTypingEnd,
 
   [TYPES.CLEAN_CHAT]: cleanChat,
 
   [ON_USER_TYPING]: onUserTyping,
 
-  [GET_GROUP_CHANNEL_SUCCESSED]: changeChannelGroup,
+  [GET_SELECTED_CHANNEL_SUCCESSED]: changeChannelGroup,
+
   [ENTER_CHANNEL_SUCCESSED]: changeOpenChannel,
 
   [TYPES.EDIT_FILE_MESSAGE_SUCCESSED]: editFileMessageSuccessed,

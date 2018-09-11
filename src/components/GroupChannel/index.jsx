@@ -11,7 +11,10 @@ export class GroupChannel extends React.Component {
     modalIsOpen: false,
   };
   handleLeaveBtn = () => {
-    this.props.onLeave(this.props.channel.url);
+    this.props.onLeave({
+      channelUrl: this.props.channel.url,
+      channelType: this.props.channel.channelType
+    });
   };
 
   handleOpenEditor = () => {

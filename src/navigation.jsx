@@ -3,7 +3,6 @@ import PropTypes from 'prop-types';
 import { Switch, Route, Redirect } from 'react-router-dom';
 import { connect } from 'react-redux';
 import { LoginContainer } from './containers/LoginContainer/';
-import { OpenChannelsContainer } from './containers/OpenChannelsContainer';
 import { ChannelsConstainer } from './containers/ChannelsContainer';
 import { Banner } from './components/Banner';
 import { UserProfileContainer } from './containers/UserProfileContainer';
