@@ -6,6 +6,7 @@ import PropTypes from 'prop-types';
 import * as chatActions from '../../redux/chat/actions';
 import { MessageItem } from '../../components/MessageItem';
 import { ChatMessageField } from '../ChatMessageField';
+import { addHandler, removeHandler } from '../../services/sendbird';
 
 import './index.scss';
 
@@ -15,8 +16,16 @@ export class Chat extends React.Component {
     this.ref = React.createRef();
   }
 
+  componentWillMount() {
+    addHandler();
+  }
+
   componentDidUpdate() {
     this.ref.current.scrollTop = this.ref.current.scrollHeight;
+  }
+
+  componentWillUnmount() {
+    removeHandler();
   }
 
   handleMessageDelete = (message) => {
@@ -41,40 +50,6 @@ export class Chat extends React.Component {
       this.props.currentChannel.channelType,
       ...messageData,
     ]);
-  };
-
-  handleGreateFileMessage = (fileMessageData) => {
-    const creationTime = new Date();
-    const fakeMessage = {
-      isFake: true,
-      data: fileMessageData.message,
-      messageType: 'file',
-      name: fileMessageData.name,
-      type: fileMessageData.type,
-      size: fileMessageData.size,
-      createdAt: creationTime.getTime(),
-      sender: {
-        profileUrl: this.props.user.userImg,
-        userId: this.props.user.userId,
-        nickname: this.props.user.userName,
-      },
-    };
-    this.props.messages.push(fakeMessage);
-    if (this.props.uploadProgress === 100) {
-      this.props.messages.pop();
-    }
-  };
-
-  handleTyping = () => {
-    if (this.props.currentChannel.channelType === 'group') {
-      this.props.chatActions.userTyping(this.props.currentChannel);
-    }
-  };
-
-  handleTypingEnd = () => {
-    if (this.props.currentChannel.channelType === 'group') {
-      this.props.currentChannel.endTyping();
-    }
   };
 
   render() {
@@ -105,8 +80,6 @@ export class Chat extends React.Component {
           ))}
         </div>
         <ChatMessageField
-          onMessageTyping={this.handleTyping}
-          onMessageTypingEnd={this.handleTypingEnd}
           channelUrl={url}
           channelType={channelType}
           channel={this.props.currentChannel}

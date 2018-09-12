@@ -5,23 +5,22 @@ import {
   messageReceived,
   messageDeleted,
   messageUpdated,
-  userTyping,
+  messageTypingSet,
   readReceipt,
   preloadFileMessage,
 } from '../redux/chat/actions';
 import {
-  channelUpdated,
   userEntered,
   userExited,
   getParticipantsSuccessed,
   getParticipantsFailed,
 } from '../redux/channels/openChannelsActions';
 import {
-  groupUpdated,
   onUserJoined,
   onUserLeft,
-  onUserTyping,
+  onUsersTyping,
 } from '../redux/channels/groupChannelsActions';
+import { channelUpdated } from '../redux/channels/actions';
 
 export const sb = new SendBird({ appId: APP_ID });
 
@@ -41,11 +40,7 @@ function getPatticipants(channel) {
 /* eslint-disable */
 
 ChannelHandler.onChannelChanged = function (channel) {
-  if (channel.channelType === 'open') {
-    store.store.dispatch(channelUpdated(channel));
-  } else {
-    store.store.dispatch(groupUpdated(channel));
-  }
+  store.store.dispatch(channelUpdated(channel));
 };
 ChannelHandler.onUserEntered = function (channel, user) {
   store.store.dispatch(userEntered({ channel, user }));
@@ -56,7 +51,7 @@ ChannelHandler.onUserExited = function (channel, user) {
   getPatticipants(channel);
 };
 ChannelHandler.onMetaDataUpdated = function (channel, metaData) {
-  store.store.dispatch(userTyping(metaData));
+  store.store.dispatch(messageTypingSet(metaData));
 };
 
 ChatHandler.onMessageReceived = function (channel, message) {
@@ -70,7 +65,7 @@ ChatHandler.onMessageDeleted = function (channel, messageId) {
 };
 ChatHandler.onTypingStatusUpdated = function (groupChannel) {
   const typingMembers = groupChannel.getTypingMembers();
-  store.store.dispatch(onUserTyping(groupChannel, typingMembers));
+  store.store.dispatch(onUsersTyping(groupChannel, typingMembers));
 };
 ChatHandler.onReadReceiptUpdated = function (channel) {
   const receipt = Object.values(channel.cachedReadReceiptStatus).sort(
@@ -80,7 +75,7 @@ ChatHandler.onReadReceiptUpdated = function (channel) {
 };
 
 GroupChannelHandler.onChannelChanged = function (channel) {
-  store.store.dispatch(groupUpdated(channel));
+  store.store.dispatch(channelUpdated(channel));
 };
 GroupChannelHandler.onUserJoined = function (groupChannel, user) {
   store.store.dispatch(onUserJoined({ groupChannel, user }));
@@ -93,7 +88,15 @@ GroupChannelHandler.onUserLeft = function (groupChannel, user) {
 
 sb.addChannelHandler('HANDLER', ChannelHandler);
 sb.addChannelHandler('GROUP_HANDLER', GroupChannelHandler);
-sb.addChannelHandler('CHAT_HANDLER', ChatHandler);
+// sb.addChannelHandler('CHAT_HANDLER', ChatHandler);
+
+export function addHandler() {
+  sb.addChannelHandler('CHAT_HANDLER', ChatHandler);
+}
+
+export function removeHandler() {
+  sb.removeChannelHandler('CHAT_HANDLER', ChatHandler);
+}
 
 export function connectToSB(userId) {
   return new Promise((resolve, reject) => {
@@ -556,7 +559,7 @@ export function editMessage(
   });
 }
 
-export function onMessageTyping(channelUrl, channelType, userNickname) {
+export function onMessageTyping(channelUrl, channelType, userNickname, messageText) {
   return new Promise((resolve, reject) => {
     getChannel(channelUrl, channelType).then(channel => {
       channel.updateMetaData({ userTyping: userNickname }, (response, err) => {
@@ -565,6 +568,24 @@ export function onMessageTyping(channelUrl, channelType, userNickname) {
         }
         resolve(response);
       });
+    });
+  });
+}
+
+export function typingStart(channelUrl, channelType) {
+  return new Promise((resolve, reject) => {
+    getChannel(channelUrl, channelType).then(channel => {
+      channel.startTyping();
+      resolve(channel);
+    });
+  });
+}
+
+export function typingEnd(channelUrl, channelType) {
+  return new Promise((resolve, reject) => {
+    getChannel(channelUrl, channelType).then(channel => {
+      channel.endTyping();
+      resolve(channel);
     });
   });
 }

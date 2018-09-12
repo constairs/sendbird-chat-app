@@ -33,7 +33,7 @@ export class ChannelListItem extends React.Component {
   };
 
   handleLeaveClick = () => {
-    this.props.onLeaveGroup({
+    this.props.onLeave({
       channelUrl: this.props.channelItem.url,
       channelType: this.props.channelItem.channelType
     });
@@ -125,7 +125,7 @@ export class ChannelListItem extends React.Component {
 
 ChannelListItem.propTypes = {
   selectedChan: PropTypes.func.isRequired,
-  onLeaveGroup: PropTypes.func.isRequired,
+  onLeave: PropTypes.func.isRequired,
   onInviteUsers: PropTypes.func.isRequired,
   channelItem: PropTypes.objectOf(PropTypes.any).isRequired
 };

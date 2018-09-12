@@ -23,9 +23,9 @@ export const getSelectedChannelFailed = error => ({
   payload: error,
 });
 
-export const leaveChannel = channelUrl => ({
+export const leaveChannel = channelInfo => ({
   type: TYPES.LEAVE_CHANNEL,
-  payload: channelUrl,
+  payload: channelInfo,
 });
 export const leaveChannelSuccessed = response => ({
   type: TYPES.LEAVE_CHANNEL_SUCCESSED,
@@ -47,4 +47,9 @@ export const updateChannelSuccessed = updRes => ({
 export const updateChannelFailed = error => ({
   type: TYPES.UPDATE_CHANNEL_FAILED,
   payload: error,
+});
+
+export const channelUpdated = channel => ({
+  type: TYPES.CHANNEL_UPDATED,
+  payload: channel,
 });

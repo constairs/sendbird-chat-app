@@ -26,11 +26,6 @@ export const inviteUsersFailed = error => ({
   payload: error,
 });
 
-export const groupUpdated = channel => ({
-  type: TYPES.GROUP_UPDATED,
-  payload: channel,
-});
-
 export const onUserJoined = userData => ({
   type: TYPES.ON_USER_JOINED,
   payload: userData,
@@ -55,8 +50,8 @@ export const refreshFailed = error => ({
   payload: error,
 });
 
-export const onUserTyping = (channel, typingMembers) => ({
-  type: TYPES.ON_USER_TYPING,
+export const onUsersTyping = (channel, typingMembers) => ({
+  type: TYPES.ON_USERS_TYPING,
   payload: { channel, typingMembers },
 });
 

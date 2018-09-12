@@ -22,14 +22,14 @@ class MessageField extends React.Component {
     const { name, value } = target;
     this.setState({ [name]: value }, () => {
       if (this.props.channelType === 'open' && name === 'messageText') {
-        this.props.chatActions.onMessageTyping([
+        this.props.chatActions.messageTyping([
           this.props.channelUrl,
           this.props.channelType,
           this.props.user.userName,
-          this.state.message,
+          this.state.messageText,
         ]);
       } else if (this.props.channelType === 'group' && name === 'messageText') {
-        this.props.chatActions.userTypingStart(this.props.channel);
+        this.props.chatActions.userTypingStart([this.props.channelUrl, this.props.channelType]);
       }
     });
   };
@@ -45,7 +45,7 @@ class MessageField extends React.Component {
     ];
     this.setState({ messageText: '' });
     this.props.chatActions.sendMessage(messageData);
-    this.props.onMessageTypingEnd();
+    this.props.chatActions.userTypingEnd([this.props.channelUrl, this.props.channelType]);
   };
 
   handleFileForm = (e) => {
@@ -64,7 +64,6 @@ class MessageField extends React.Component {
       fileToUpload: '',
       fileMessageText: '',
     });
-    this.props.onMessageTypingEnd();
     this.props.chatActions.sendFileMessage(fileMessageData);
   };
 
@@ -201,15 +200,12 @@ class MessageField extends React.Component {
 
 MessageField.propTypes = {
   user: PropTypes.objectOf(PropTypes.any).isRequired,
-  channel: PropTypes.objectOf(PropTypes.any).isRequired,
   channelUrl: PropTypes.string.isRequired,
   channelType: PropTypes.string.isRequired,
   userTyping: PropTypes.string.isRequired,
   membersTyping: PropTypes.arrayOf(PropTypes.any),
   sendingMessage: PropTypes.bool.isRequired,
   chatActions: PropTypes.objectOf(PropTypes.func).isRequired,
-  onMessageTyping: PropTypes.func.isRequired,
-  onMessageTypingEnd: PropTypes.func.isRequired,
 };
 
 MessageField.defaultProps = {

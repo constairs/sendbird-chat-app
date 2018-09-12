@@ -29,7 +29,9 @@ import {
   updateChannelSuccessed,
   updateChannelFailed,
   getChannelListSuccessed,
-  getChannelListFailed
+  getChannelListFailed,
+  leaveChannelSuccessed,
+  leaveChannelFailed,
 } from './actions';
 
 import { USER_LOGIN_SUCCESSED, USER_RECONNECT_SUCCESSED } from '../user/types';
@@ -39,8 +41,6 @@ import {
   enterChannel,
   enterChannelSuccessed,
   enterChannelFailed,
-  leaveChannelSuccessed,
-  leaveChannelFailed,
 } from './openChannelsActions';
 import {
   createGroupChannelSuccessed,
@@ -102,11 +102,11 @@ function* getSelectedChannelSaga(action) {
 function* leaveChannelSaga(action) {
   try {
     if (action.payload.channelType === 'open') {
-      const res = yield call(exitChannel, action.payload.channelUrl);
-      yield put(leaveChannelSuccessed(res));
+      yield call(exitChannel, action.payload.channelUrl);
+      // yield put(leaveChannelSuccessed(res));
     } else {
-      const res = yield call(leaveGroup, action.payload.channelUrl);
-      yield put(leaveChannelSuccessed(res));
+      yield call(leaveGroup, action.payload.channelUrl);
+      yield put(leaveChannelSuccessed(action.payload));
     }
   } catch (error) {
     yield put(leaveChannelFailed(error));

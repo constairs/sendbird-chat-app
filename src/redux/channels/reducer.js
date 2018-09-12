@@ -1,6 +1,6 @@
 import { createReducer } from '../../utils/reducerUtils';
 import * as TYPES from './types';
-import { channelListFunc, getChannelFunc } from '../../utils/helpers';
+import { channelListFunc, getChannelFunc, updateChannelListItem } from './helpers';
 
 const initState = {
   channelsFetching: false,
@@ -48,22 +48,6 @@ const createGroupChannelFailed = (state, error) => ({
   fetching: false,
 });
 
-const getGroup = state => ({
-  ...state,
-  fetching: true,
-});
-const getGroupSuccessed = (state, groupData) => ({
-  ...state,
-  groupChannel: groupData.groupChannel,
-  receipt: groupData.receipt,
-  fetching: false,
-});
-const getGroupFailed = (state, error) => ({
-  ...state,
-  error,
-  fetching: false,
-});
-
 const inviteUsers = state => ({
   ...state,
   fetching: true,
@@ -77,23 +61,6 @@ const inviteUsersFailed = (state, error) => ({
   ...state,
   error,
   fetching: false,
-});
-
-const leaveGroup = state => ({
-  ...state,
-});
-const leaveGroupSuccessed = state => ({
-  ...state,
-  groupChannel: null,
-});
-const leaveGroupFailed = (state, error) => ({
-  ...state,
-  error,
-});
-
-const groupUpdated = (state, channel) => ({
-  ...state,
-  groupChannel: state.groupChannel ? channel : null,
 });
 
 const onUserJoined = (state, userData) => ({
@@ -136,13 +103,6 @@ const changedToAnotherChannel = state => ({
   channel: '',
   receipt: '',
 });
-
-// const changedToAnotherChannel = state => ({
-//   ...state,
-//   channel: '',
-// });
-
-// open
 
 const createOpenChannel = (state, formData) => ({
   ...state,
@@ -195,9 +155,11 @@ const leaveChannel = state => ({
   ...state,
   fetching: true,
 });
-const leaveChannelSuccessed = state => ({
+const leaveChannelSuccessed = (state, channelInfo) => ({
   ...state,
   channel: '',
+  openChannelList: channelInfo.channelType === 'open' ? state.openChannelList.filter(channel => channel.url !== channelInfo.channelUrl) : state.openChannelList,
+  groupChannelList: channelInfo.channelType === 'group' ? state.groupChannelList.filter(channel => channel.url !== channelInfo.channelUrl) : state.groupChannelList,
   fetching: false,
 });
 const leaveChannelFailed = state => ({
@@ -207,19 +169,19 @@ const leaveChannelFailed = state => ({
 
 const channelUpdated = (state, channel) => ({
   ...state,
-  channel,
+  channel: state.channel ? getChannelFunc(channel) : null,
+  openChannelList: channel.channelType === 'open' ? updateChannelListItem(state.openChannelList, channel, 'open') : state.openChannelList,
+  groupChannelList: channel.channelType === 'group' ? updateChannelListItem(state.groupChannelList, channel, 'group') : state.groupChannelList,
 });
 
 const userEntered = (state, action) => ({
   ...state,
-  userEntered: action.user,
-  channel: action.channel,
+  channel: getChannelFunc(action.channel),
 });
 
 const userExited = (state, action) => ({
   ...state,
-  channel: action.channel,
-  exitedUser: state.participants.indexOf(action.user.userId),
+  channel: getChannelFunc(action.channel),
   participants: [
     ...state.participants.filter(cur => cur.userId !== action.user.userId),
   ],
@@ -265,19 +227,13 @@ const handlers = {
   [TYPES.CREATE_GROUP_CHANNEL_SUCCESSED]: createGroupChannelSuccessed,
   [TYPES.CREATE_GROUP_CHANNEL_FAILED]: createGroupChannelFailed,
 
-  [TYPES.GET_GROUP_CHANNEL]: getGroup,
-  [TYPES.GET_GROUP_CHANNEL_SUCCESSED]: getGroupSuccessed,
-  [TYPES.GET_GROUP_CHANNEL_FAILED]: getGroupFailed,
+  [TYPES.CREATE_OPEN_CHANNEL]: createOpenChannel,
+  [TYPES.CREATE_OPEN_CHANNEL_SUCCESSED]: createOpenChannelSuccessed,
+  [TYPES.CREATE_OPEN_CHANNEL_FAILED]: createOpenChannelFailed,
 
   [TYPES.INVITE_USERS]: inviteUsers,
   [TYPES.INVITE_USERS_SUCCESSED]: inviteUsersSuccessed,
   [TYPES.INVITE_USERS_FAILED]: inviteUsersFailed,
-
-  [TYPES.LEAVE_GROUP]: leaveGroup,
-  [TYPES.LEAVE_GROUP_SUCCESSED]: leaveGroupSuccessed,
-  [TYPES.LEAVE_GROUP_FAILED]: leaveGroupFailed,
-
-  [TYPES.GROUP_UPDATED]: groupUpdated,
 
   [TYPES.ON_USER_JOINED]: onUserJoined,
   [TYPES.ON_USER_LEFT]: onUserLeft,
@@ -288,11 +244,6 @@ const handlers = {
   [TYPES.REFRESH_FAILED]: refreshFailed,
 
   [TYPES.ENTER_CHANNEL_SUCCESSED]: changedToAnotherChannel,
-
-  // open
-  [TYPES.CREATE_OPEN_CHANNEL]: createOpenChannel,
-  [TYPES.CREATE_OPEN_CHANNEL_SUCCESSED]: createOpenChannelSuccessed,
-  [TYPES.CREATE_OPEN_CHANNEL_FAILED]: createOpenChannelFailed,
 
   [TYPES.ENTER_CHANNEL]: enterChannel,
   [TYPES.ENTER_CHANNEL_SUCCESSED]: enterChannelSuccessed,
@@ -306,7 +257,7 @@ const handlers = {
   [TYPES.GET_PARTICIPANTS_SUCCESSED]: getParticipantsSuccessed,
   [TYPES.GET_PARTICIPANTS_FAILED]: getParticipantsFailed,
 
-  [TYPES.GHANNEL_UPDATED]: channelUpdated,
+  [TYPES.CHANNEL_UPDATED]: channelUpdated,
 
   [TYPES.NEW_USER_ENTERED]: userEntered,
 

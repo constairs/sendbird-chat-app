@@ -1,15 +1,15 @@
 import { createReducer } from '../../utils/reducerUtils';
 import * as TYPES from './types';
-import { ENTER_CHANNEL_SUCCESSED, GET_SELECTED_CHANNEL_SUCCESSED, ON_USER_TYPING } from '../channels/types';
-import { getLeastReceiptStatusTime } from '../../utils/helpers';
+import { ENTER_CHANNEL_SUCCESSED, GET_SELECTED_CHANNEL_SUCCESSED, ON_USERS_TYPING } from '../channels/types';
+import { getLeastReceiptStatusTime } from './helpers';
 
 const initState = {
   messFetching: false,
   sendingMessage: false,
   error: '',
   messages: [],
+  currentChannel: null,
   userTyping: '',
-  typedMessage: '',
   uploadProgress: { reqId: '', progress: 0 },
 };
 
@@ -80,7 +80,7 @@ const getMessagesFailed = (state, error) => ({
 const messageReceived = (state, messageData) => ({
   ...state,
   messages:
-    state.currentChannel.url === messageData.channel.url
+    state.currentChannel && state.currentChannel.url === messageData.channel.url
       ? [...state.messages.slice(1), messageData.message]
       : state.messages,
 });
@@ -101,14 +101,14 @@ const messageDeleted = (state, messageId) => ({
   messages: [...state.messages.filter(cur => `${cur.messageId}` !== messageId)],
 });
 
-const onMessageTyping = (state, messageData) => ({
-  ...state,
-  typedMessage: messageData[2],
-});
-
 const messageTypingSet = (state, userTyping) => ({
   ...state,
   userTyping: userTyping.userTyping,
+});
+
+const messageTypingEnd = state => ({
+  ...state,
+  userTyping: ''
 });
 
 const messageTypingError = (state, error) => ({
@@ -116,22 +116,12 @@ const messageTypingError = (state, error) => ({
   error,
 });
 
-const messageTypingEnd = state => ({
-  ...state,
-  userTyping: '',
-});
-
-const userTypingStart = (state, user) => ({
-  ...state,
-  ...user,
-});
-
 const cleanChat = state => ({
   ...state,
   messages: [],
 });
 
-const onUserTyping = (state, typingData) => ({
+const onUsersTyping = (state, typingData) => ({
   ...state,
   membersTyping:
     state.currentChannel && typingData.channel.url === state.currentChannel.url
@@ -203,16 +193,13 @@ const handlers = {
   [TYPES.MESSAGE_UPDATED]: messageUpdated,
   [TYPES.MESSAGE_DELETED]: messageDeleted,
 
-  [TYPES.ON_MESSAGE_TYPING]: onMessageTyping,
   [TYPES.MESSAGE_TYPING_SET]: messageTypingSet,
-  [TYPES.MESSAGE_TYPING_ERROR]: messageTypingError,
-
-  [TYPES.USER_TYPING_START]: userTypingStart,
   [TYPES.MESSAGE_TYPING_END]: messageTypingEnd,
+  [TYPES.MESSAGE_TYPING_ERROR]: messageTypingError,
 
   [TYPES.CLEAN_CHAT]: cleanChat,
 
-  [ON_USER_TYPING]: onUserTyping,
+  [ON_USERS_TYPING]: onUsersTyping,
 
   [GET_SELECTED_CHANNEL_SUCCESSED]: changeChannelGroup,
 

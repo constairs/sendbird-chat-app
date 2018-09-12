@@ -83,6 +83,7 @@ class Channels extends React.Component {
               <div>
                 <p>Открытые каналы</p>
                 <ChannelList
+                  onLeave={this.handleLeaveChannel}
                   selectedChan={this.handleGetChannel}
                   channels={openChannelList}
                   fetching={channelsFetching}
@@ -98,11 +99,11 @@ class Channels extends React.Component {
                     Групповые каналы
                 </p>
                 <ChannelList
+                  onLeave={this.handleLeaveChannel}
                   selectedChan={this.handleGetChannel}
                   channels={groupChannelList}
                   fetching={channelsFetching}
                   inviteUsers={this.handleInviteUsers}
-                  leaveGroup={this.handleLeaveChannel}
                 />
               </div>
             ) : null}

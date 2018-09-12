@@ -39,11 +39,6 @@ export const getParticipantsFailed = error => ({
   payload: error,
 });
 
-export const channelUpdated = channel => ({
-  type: TYPES.GHANNEL_UPDATED,
-  payload: channel,
-});
-
 export const userEntered = data => ({
   type: TYPES.NEW_USER_ENTERED,
   payload: data,

@@ -11,8 +11,8 @@ export class ChannelList extends React.Component {
   handleInviteUsers = (formData) => {
     this.props.inviteUsers(formData);
   };
-  handleLeaveGroup = (channelUrl) => {
-    this.props.leaveGroup(channelUrl);
+  handleLeaveGroup = (channelInfo) => {
+    this.props.onLeave(channelInfo);
   };
   render() {
     return (
@@ -29,7 +29,7 @@ export class ChannelList extends React.Component {
               key={channelItem.createdAt}
               selectedChan={this.handleChanSelect}
               onInviteUsers={this.handleInviteUsers}
-              onLeaveGroup={this.handleLeaveGroup}
+              onLeave={this.handleLeaveGroup}
             />
           ))
         }
@@ -39,9 +39,8 @@ export class ChannelList extends React.Component {
 }
 
 ChannelList.defaultProps = {
-  inviteUsers: PropTypes.func,
-  leaveGroup: PropTypes.func,
   fetching: false,
+  inviteUsers: PropTypes.func
 };
 
 ChannelList.propTypes = {
@@ -49,5 +48,5 @@ ChannelList.propTypes = {
   channels: PropTypes.arrayOf(PropTypes.any).isRequired,
   fetching: PropTypes.bool,
   inviteUsers: PropTypes.func,
-  leaveGroup: PropTypes.func,
+  onLeave: PropTypes.func.isRequired,
 };
