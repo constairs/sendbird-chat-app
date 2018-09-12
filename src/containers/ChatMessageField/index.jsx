@@ -45,7 +45,12 @@ class MessageField extends React.Component {
     ];
     this.setState({ messageText: '' });
     this.props.chatActions.sendMessage(messageData);
-    this.props.chatActions.userTypingEnd([this.props.channelUrl, this.props.channelType]);
+
+    if (this.props.channelType === 'open') {
+      this.props.chatActions.messageTypingEnd();
+    } else if (this.props.channelType === 'group') {
+      this.props.chatActions.userTypingEnd([this.props.channelUrl, this.props.channelType]);
+    }
   };
 
   handleFileForm = (e) => {

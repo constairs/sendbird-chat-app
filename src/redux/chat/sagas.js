@@ -4,6 +4,7 @@ import {
   takeLatest,
   takeEvery,
   all,
+  throttle,
 } from 'redux-saga/effects';
 import { delay } from 'redux-saga';
 import { v4 } from 'uuid';
@@ -35,7 +36,7 @@ import {
   MESSAGE_RECEIVED,
   CANCEL_UPLOADING,
   USER_TYPING_START,
-  USER_TYPING_END
+  USER_TYPING_END,
 } from './types';
 import {
   sendMessageSuccessed,
@@ -175,7 +176,7 @@ function* messageTypingSaga(action) {
   try {
     const startRes = yield call(onMessageTyping, ...action.payload);
     yield put(messageTypingSet(startRes));
-    yield call(delay, 2000);
+    yield call(delay, 1000);
     const endRes = yield call(
       onMessageTyping,
       action.payload[0],
@@ -189,14 +190,17 @@ function* messageTypingSaga(action) {
   }
 }
 
+function* userTypingEndSaga(action) {
+  console.log(action);
+  yield call(typingEnd, ...action.payload);
+}
+
 function* userTypingSaga(action) {
   if (action.type === 'USER_TYPING_START') {
     yield call(typingStart, ...action.payload);
     yield call(delay, 2000);
     yield call(typingEnd, ...action.payload);
     yield put(userTypingEnd());
-  } else {
-    yield call(typingEnd, ...action.payload);
   }
 }
 
@@ -230,7 +234,8 @@ export function* chatSagas() {
         GET_SELECTED_CHANNEL_SUCCESSED,
         DELETE_MESSAGE_SUCCESSED],
       getMessagesAsync),
-    yield takeLatest(MESSAGE_TYPING, messageTypingSaga),
-    yield takeLatest([USER_TYPING_START, USER_TYPING_END], userTypingSaga),
+    yield throttle(1000, MESSAGE_TYPING, messageTypingSaga),
+    yield takeLatest(USER_TYPING_START, userTypingSaga),
+    yield takeLatest(USER_TYPING_END, userTypingEndSaga),
   ]);
 }

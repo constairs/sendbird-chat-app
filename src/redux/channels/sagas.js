@@ -3,7 +3,7 @@ import { delay } from 'redux-saga';
 import {
   createOpenChannel,
   createGroupChannel,
-  getChannelList,
+  getChannelListFromSB,
   selectChannel,
   exitChannel,
   leaveGroup,
@@ -30,6 +30,7 @@ import {
   updateChannelFailed,
   getChannelListSuccessed,
   getChannelListFailed,
+  getChannelList,
   leaveChannelSuccessed,
   leaveChannelFailed,
 } from './actions';
@@ -72,8 +73,9 @@ function* createChannelSaga(action) {
 }
 
 function* getChannelsListSaga() {
+  yield put(getChannelList());
   try {
-    const channelList = yield call(getChannelList);
+    const channelList = yield call(getChannelListFromSB);
     yield put(getChannelListSuccessed(channelList));
   } catch (error) {
     yield put(getChannelListFailed(error));
@@ -103,7 +105,6 @@ function* leaveChannelSaga(action) {
   try {
     if (action.payload.channelType === 'open') {
       yield call(exitChannel, action.payload.channelUrl);
-      // yield put(leaveChannelSuccessed(res));
     } else {
       yield call(leaveGroup, action.payload.channelUrl);
       yield put(leaveChannelSuccessed(action.payload));
@@ -177,6 +178,7 @@ export function* channelsSagas() {
       refreshMembersSaga
     ),
     yield takeLatest([ON_USER_JOINED, ON_USER_LEFT], membersUpdatedSaga),
+    yield takeLatest(ON_USER_JOINED, getChannelsListSaga),
     yield takeLatest(INVITE_USERS, inviteUserSaga),
   ]);
 }

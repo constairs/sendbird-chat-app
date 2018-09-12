@@ -1,7 +1,8 @@
 import { createReducer } from '../../utils/reducerUtils';
 import * as TYPES from './types';
-import { ENTER_CHANNEL_SUCCESSED, GET_SELECTED_CHANNEL_SUCCESSED, ON_USERS_TYPING } from '../channels/types';
+import { ENTER_CHANNEL_SUCCESSED, GET_SELECTED_CHANNEL_SUCCESSED, ON_USERS_TYPING, CHANNEL_UPDATED } from '../channels/types';
 import { getLeastReceiptStatusTime } from './helpers';
+import { getChannelFunc } from '../channels/helpers';
 
 const initState = {
   messFetching: false,
@@ -11,6 +12,7 @@ const initState = {
   currentChannel: null,
   userTyping: '',
   uploadProgress: { reqId: '', progress: 0 },
+  membersTyping: []
 };
 
 const sendMessageSuccessed = (state, sendRes) => ({
@@ -126,7 +128,7 @@ const onUsersTyping = (state, typingData) => ({
   membersTyping:
     state.currentChannel && typingData.channel.url === state.currentChannel.url
       ? typingData.typingMembers
-      : [],
+      : state.membersTyping,
 });
 
 const changeChannelGroup = (state, channel) => ({
@@ -147,6 +149,12 @@ const readReceipt = (state, receiptData) => ({
     state.currentChannel && receiptData.channelUrl === state.currentChannel.url
       ? receiptData.receipt
       : state.receipt,
+});
+
+const channelUpdated = (state, channel) => ({
+  ...state,
+  currentChannel: state.currentChannel && state.currentChannel.url === channel.url ?
+    getChannelFunc(channel) : state.currentChannel
 });
 
 const preloadFileMessage = (state, progress) => ({
@@ -200,6 +208,8 @@ const handlers = {
   [TYPES.CLEAN_CHAT]: cleanChat,
 
   [ON_USERS_TYPING]: onUsersTyping,
+
+  [CHANNEL_UPDATED]: channelUpdated,
 
   [GET_SELECTED_CHANNEL_SUCCESSED]: changeChannelGroup,
 

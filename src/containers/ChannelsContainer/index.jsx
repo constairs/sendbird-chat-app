@@ -69,7 +69,7 @@ class Channels extends React.Component {
     const { userFetching } = this.props.user;
     return (
       <div className="page channel-page">
-        {channelsFetching || userFetching ? (
+        {userFetching ? (
           <div className="preloader">
             <Spinner color="#ffffff" secondaryColor="#40c9ff" size={100} />
           </div>
@@ -79,21 +79,21 @@ class Channels extends React.Component {
             <button name="createOpen" onClick={this.handleOpenModal}>
               Создать открытый канал
             </button>
-            {openChannelList.length > 0 ? (
+            {openChannelList ? (
               <div>
                 <p>Открытые каналы</p>
                 <ChannelList
                   onLeave={this.handleLeaveChannel}
                   selectedChan={this.handleGetChannel}
                   channels={openChannelList}
-                  fetching={channelsFetching}
+                  channelsFetching={channelsFetching}
                 />
               </div>
             ) : null}
             <button name="createGroup" onClick={this.handleOpenModal}>
               Создать групповой канал
             </button>
-            {groupChannelList.length > 0 ? (
+            {groupChannelList ? (
               <div>
                 <p>
                     Групповые каналы
@@ -102,7 +102,7 @@ class Channels extends React.Component {
                   onLeave={this.handleLeaveChannel}
                   selectedChan={this.handleGetChannel}
                   channels={groupChannelList}
-                  fetching={channelsFetching}
+                  channelsFetching={channelsFetching}
                   inviteUsers={this.handleInviteUsers}
                 />
               </div>

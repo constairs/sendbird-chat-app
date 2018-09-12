@@ -17,7 +17,7 @@ const initState = {
 
 const getChannelList = state => ({
   ...state,
-  channelFetching: true
+  channelsFetching: true
 });
 const getChannelListSuccessed = (state, channelsList) => ({
   ...state,
@@ -28,7 +28,7 @@ const getChannelListSuccessed = (state, channelsList) => ({
 const getChannelListFailed = (state, error) => ({
   ...state,
   error,
-  channelFetching: false,
+  channelsFetching: false,
 });
 
 const createGroupChannel = state => ({
@@ -68,7 +68,7 @@ const onUserJoined = (state, userData) => ({
   notificationShow: true,
   notification: {
     type: 'onUserJoined',
-    channel: userData.groupChannel,
+    channel: getChannelFunc(userData.groupChannel),
     user: userData.user,
   },
 });
@@ -169,7 +169,8 @@ const leaveChannelFailed = state => ({
 
 const channelUpdated = (state, channel) => ({
   ...state,
-  channel: state.channel ? getChannelFunc(channel) : null,
+  channel: state.channel && state.channel.url === channel.url ?
+    getChannelFunc(channel) : state.channel,
   openChannelList: channel.channelType === 'open' ? updateChannelListItem(state.openChannelList, channel, 'open') : state.openChannelList,
   groupChannelList: channel.channelType === 'group' ? updateChannelListItem(state.groupChannelList, channel, 'group') : state.groupChannelList,
 });

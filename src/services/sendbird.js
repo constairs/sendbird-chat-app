@@ -197,7 +197,7 @@ export function updateChannel(channelUrl, channelType, channelName, coverUrl) {
   });
 }
 
-export function getChannelList() {
+export function getChannelListFromSB() {
   return new Promise((resolve, reject) => {
     const openChannelListQuery = sb.OpenChannel.createOpenChannelListQuery();
     const groupChannelListQuery = sb.GroupChannel.createMyGroupChannelListQuery();

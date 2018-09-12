@@ -17,7 +17,7 @@ export class ChannelList extends React.Component {
   render() {
     return (
       <ul className="list channels-list">
-        {this.props.fetching ? (
+        {this.props.channelsFetching ? (
           <div className="preloader">
             <Spinner color="#ffffff" secondaryColor="#40c9ff" size={50} />
           </div>
@@ -39,14 +39,14 @@ export class ChannelList extends React.Component {
 }
 
 ChannelList.defaultProps = {
-  fetching: false,
+  channelsFetching: false,
   inviteUsers: PropTypes.func
 };
 
 ChannelList.propTypes = {
   selectedChan: PropTypes.func.isRequired,
   channels: PropTypes.arrayOf(PropTypes.any).isRequired,
-  fetching: PropTypes.bool,
+  channelsFetching: PropTypes.bool,
   inviteUsers: PropTypes.func,
   onLeave: PropTypes.func.isRequired,
 };
