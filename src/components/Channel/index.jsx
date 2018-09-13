@@ -1,37 +1,16 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import Modal from 'react-modal';
-// import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-// import { faPen } from '@fortawesome/free-solid-svg-icons';
 import { ChatBox } from '../../containers/ChatBox';
-import { UpdateChannelForm } from '../UpdateChannelForm';
 
 
 import './index.scss';
 
 export class Channel extends React.Component {
-  state = {
-    modalIsOpen: false,
-  };
   handleLeaveBtn = () => {
     this.props.onLeave({
       channelUrl: this.props.channel.url,
       channelType: this.props.channel.channelType
     });
-  };
-
-  handleOpenEditor = () => {
-    this.setState({
-      modalIsOpen: !this.state.modalIsOpen,
-    });
-  };
-
-  handleChannelEdit = (updateData) => {
-    this.props.onUpdateChannel([
-      this.props.channel.url,
-      this.props.channel.channelType,
-      ...updateData,
-    ]);
   };
 
   render() {
@@ -50,9 +29,6 @@ export class Channel extends React.Component {
                 alt={name}
               />
             </div>
-            {/* <button onClick={this.handleOpenEditor}>
-              <FontAwesomeIcon icon={faPen} />
-            </button> */}
             <div>
               <h1 className="channel-name">{name}</h1>
               <p className="channel-users">Online: {memberCount}</p>
@@ -85,19 +61,6 @@ export class Channel extends React.Component {
         <ChatBox
           currentChannel={channel}
         />
-        <Modal
-          className="modal"
-          isOpen={this.state.modalIsOpen}
-          onAfterOpen={this.afterOpenModal}
-          onRequestClose={this.closeModal}
-          contentLabel="Example Modal"
-          ariaHideApp={false}
-        >
-          <button className="x-btn" onClick={this.closeModal}>
-            x
-          </button>
-          <UpdateChannelForm onSubmitForm={this.handleChannelEdit} />
-        </Modal>
       </div>
     );
   }
@@ -106,5 +69,4 @@ export class Channel extends React.Component {
 Channel.propTypes = {
   channel: PropTypes.objectOf(PropTypes.any).isRequired,
   onLeave: PropTypes.func.isRequired,
-  onUpdateChannel: PropTypes.func.isRequired,
 };

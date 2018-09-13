@@ -4,7 +4,6 @@ import {
   takeLatest,
   takeEvery,
   all,
-  throttle,
 } from 'redux-saga/effects';
 import { delay } from 'redux-saga';
 import { v4 } from 'uuid';
@@ -232,7 +231,7 @@ export function* chatSagas() {
         GET_SELECTED_CHANNEL_SUCCESSED,
         DELETE_MESSAGE_SUCCESSED],
       getMessagesSaga),
-    yield throttle(1000, MESSAGE_TYPING, messageTypingSaga),
+    yield takeLatest(MESSAGE_TYPING, messageTypingSaga),
     yield takeLatest(USER_TYPING_START, userTypingSaga),
     yield takeLatest(USER_TYPING_END, userTypingEndSaga),
   ]);

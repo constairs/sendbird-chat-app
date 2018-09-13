@@ -542,7 +542,7 @@ export function editMessage(
   });
 }
 
-export function onMessageTyping(channelUrl, channelType, userNickname, messageText) {
+export function onMessageTyping(channelUrl, channelType, userNickname) {
   return new Promise((resolve, reject) => {
     getChannel(channelUrl, channelType).then(channel => {
       channel.updateMetaData({ userTyping: userNickname }, (response, err) => {

@@ -17,6 +17,7 @@ class MessageField extends React.Component {
     fileUploadModal: false,
     fileToUpload: '',
     customMessageType: '',
+    errorUpload: ''
   };
 
   handleTextInput = ({ target }) => {
@@ -27,7 +28,6 @@ class MessageField extends React.Component {
           this.props.channelUrl,
           this.props.channelType,
           this.props.user.userName,
-          this.state.messageText,
         ]);
       } else if (this.props.channelType === 'group' && name === 'messageText') {
         this.props.chatActions.userTypingStart([this.props.channelUrl, this.props.channelType]);
@@ -100,13 +100,28 @@ class MessageField extends React.Component {
           this.setState({
             customMessageType: 'VIDEO'
           });
+        } else {
+          this.setState({
+            customMessageType: ''
+          });
         }
       };
-      // reader.onabort = () => console.log('file reading was aborted');
-      // reader.onerror = () => console.log('file reading has failed');
+      reader.onerror = () => {
+        this.setState({
+          errorUpload: 'Ошибка загрузки файла'
+        });
+      };
       reader.readAsBinaryString(file);
     });
   };
+
+  handleClearFile = () => {
+    this.setState({
+      uploadedFile: [],
+      fileToUpload: '',
+      fileMessageText: '',
+    });
+  }
 
   render() {
     const {
@@ -114,7 +129,8 @@ class MessageField extends React.Component {
       messageText,
       fileUploadModal,
       fileMessageText,
-      customMessageType
+      customMessageType,
+      errorUpload
     } = this.state;
     const { userTyping, user, membersTyping } = this.props;
     return (
@@ -192,6 +208,9 @@ class MessageField extends React.Component {
                 <p>Файл для отправки</p>
                 <div className="files-to-upload">
                   <div className="file-item">
+                    <button onClick={this.handleClearFile}>
+                      <FontAwesomeIcon icon={faTimes} />
+                    </button>
                     <div className="file-preview">
                       {customMessageType === '' ? (
                         <FontAwesomeIcon icon={faFile} />
@@ -220,12 +239,14 @@ class MessageField extends React.Component {
                 </div>
               </div>
             ) : null}
+            {errorUpload || null}
             <input
               type="text"
               placeholder="Сообщение"
               name="fileMessageText"
               value={fileMessageText}
               onChange={this.handleTextInput}
+              disabled={!fileToUpload}
             />
             <button type="submit">Отправить</button>
           </form>

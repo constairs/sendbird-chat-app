@@ -32,12 +32,13 @@ body {
 }
 
 .channel-page {
-  .channels-list {
-    margin-right: 40px;
-  }
   .channel-sidebar {
     width: 35%;
     transition: .2s;
+    height: 800px;
+    overflow-y: scroll;
+    margin-right: 20px;
+    padding-right: 10px;
     &.min {
       width: 35%;
     }

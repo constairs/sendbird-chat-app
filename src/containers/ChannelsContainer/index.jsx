@@ -41,10 +41,6 @@ class Channels extends React.Component {
     this.props.groupChannelsActions.inviteUsers(formData);
   };
 
-  handleUpdateChannel = (updateData) => {
-    this.props.channelsActions.updateChannel(updateData);
-  };
-
   handleOpenModal = (e) => {
     if (e.target.name === 'createOpen') {
       this.setState({ groupChModal: false, modalIsOpen: true });
@@ -113,7 +109,6 @@ class Channels extends React.Component {
               <div className="channel-page-content">
                 <Channel
                   onLeave={this.handleLeaveChannel}
-                  onUpdateChannel={this.handleUpdateChannel}
                   user={this.props.user}
                   channel={channel}
                 />

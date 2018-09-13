@@ -36,9 +36,8 @@ const createGroupChannel = state => ({
   fetching: true,
 });
 
-const createGroupChannelSuccessed = (state, channelData) => ({
+const createGroupChannelSuccessed = state => ({
   ...state,
-  channelData,
   fetching: false,
 });
 
@@ -48,19 +47,9 @@ const createGroupChannelFailed = (state, error) => ({
   fetching: false,
 });
 
-const inviteUsers = state => ({
-  ...state,
-  fetching: true,
-});
-const inviteUsersSuccessed = (state, inviteRes) => ({
-  ...state,
-  inviteRes,
-  fetching: false,
-});
 const inviteUsersFailed = (state, error) => ({
   ...state,
   error,
-  fetching: false,
 });
 
 const onUserJoined = (state, userData) => ({
@@ -238,8 +227,6 @@ const handlers = {
   [TYPES.CREATE_OPEN_CHANNEL_SUCCESSED]: createOpenChannelSuccessed,
   [TYPES.CREATE_OPEN_CHANNEL_FAILED]: createOpenChannelFailed,
 
-  [TYPES.INVITE_USERS]: inviteUsers,
-  [TYPES.INVITE_USERS_SUCCESSED]: inviteUsersSuccessed,
   [TYPES.INVITE_USERS_FAILED]: inviteUsersFailed,
 
   [TYPES.ON_USER_JOINED]: onUserJoined,

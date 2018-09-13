@@ -46,6 +46,7 @@
       color: #000000;
       &.custom-type {
         background-color: $brand-color;
+        color: #ffffff;
       }
       .channel-info {
         display: flex;
@@ -54,6 +55,7 @@
       }
       &:hover {
         background-color: #d6d4d4;
+        color: #000000;
       }
     }
     .btns {
