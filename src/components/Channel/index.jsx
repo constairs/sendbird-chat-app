@@ -51,8 +51,8 @@ export class Channel extends React.Component {
               />
             </div>
             {/* <button onClick={this.handleOpenEditor}>
-                <FontAwesomeIcon icon={faPen} />
-              </button> */}
+              <FontAwesomeIcon icon={faPen} />
+            </button> */}
             <div>
               <h1 className="channel-name">{name}</h1>
               <p className="channel-users">Online: {memberCount}</p>

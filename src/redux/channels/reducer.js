@@ -219,6 +219,16 @@ const getSelectedChannelFailed = (state, error) => ({
   error
 });
 
+const updateChannelSuccessed = (state, coverUrl) => ({
+  ...state,
+  channel: { ...getChannelFunc(state.channel), coverUrl },
+});
+
+const updateChannelFailed = (state, error) => ({
+  ...state,
+  error
+});
+
 const handlers = {
   [TYPES.CREATE_GROUP_CHANNEL]: createGroupChannel,
   [TYPES.CREATE_GROUP_CHANNEL_SUCCESSED]: createGroupChannelSuccessed,
@@ -271,6 +281,9 @@ const handlers = {
   [TYPES.GET_SELECTED_CHANNEL]: getSelectedChannel,
   [TYPES.GET_SELECTED_CHANNEL_SUCCESSED]: getSelectedChannelSuccessed,
   [TYPES.GET_SELECTED_CHANNEL_FAILED]: getSelectedChannelFailed,
+
+  [TYPES.UPDATE_CHANNEL_SUCCESSED]: updateChannelSuccessed,
+  [TYPES.UPDATE_CHANNEL_FAILED]: updateChannelFailed,
 };
 
 export const channelsReducer = createReducer(initState, handlers);

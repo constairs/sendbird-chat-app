@@ -14,7 +14,7 @@ export class UpdateChannelForm extends React.Component {
 
   handleSubmit = (e) => {
     e.preventDefault();
-    const formData = [this.state.channelName, this.state.coverUrl];
+    const formData = [this.state.coverUrl];
     this.setState({
       channelName: '',
       coverUrl: '',
@@ -47,7 +47,7 @@ export class UpdateChannelForm extends React.Component {
               type="text"
             />
           </label>
-          <button disabled={!coverUrl || !channelName}>Изменить</button>
+          <button disabled={!coverUrl}>Изменить</button>
         </form>
       </div>
     );

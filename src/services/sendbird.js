@@ -27,17 +27,6 @@ const ChannelHandler = new sb.ChannelHandler();
 const GroupChannelHandler = new sb.ChannelHandler();
 const ChatHandler = new sb.ChannelHandler();
 
-export function getParticipantsSb(channel) {
-  return new Promise((resolve, reject) => {
-    const participantListQuery = channel.createParticipantListQuery();
-    participantListQuery.next((participantList, err) => {
-      if (err) {
-        reject(err);
-      }
-      resolve(participantList);
-    });
-  });
-}
 /* eslint-disable */
 
 ChannelHandler.onChannelChanged = function (channel) {
@@ -137,12 +126,19 @@ export function changeProfile(nickname, profileUrl) {
   });
 }
 
-export function createOpenChannel(channelName, coverUrl, coverFile) {
+export function createOpenChannel(
+  channelName,
+  coverUrl,
+  coverFile,
+  channelData,
+  customType) {
   return new Promise((resolve, reject) => {
     sb.OpenChannel.createChannel(
       channelName,
       coverUrl,
       coverFile,
+      channelData,
+      customType,
       (createdChannel, error) => {
         if (error) {
           reject(error);
@@ -163,7 +159,9 @@ export function createGroupChannel(
   channelDistinct,
   channelName,
   coverUrl,
-  coverFile
+  coverFile,
+  channelData,
+  customType
 ) {
   return new Promise((resolve, reject) => {
     sb.GroupChannel.createChannelWithUserIds(
@@ -171,7 +169,8 @@ export function createGroupChannel(
       channelDistinct,
       channelName,
       coverUrl,
-      coverFile,
+      channelData,
+      customType,
       function (createdChannel, error) {
         if (error) {
           reject(error);
@@ -187,11 +186,13 @@ export function createGroupChannel(
   });
 }
 
-export function updateChannel(channelUrl, channelType, channelName, coverUrl) {
+export function updateChannel(channelUrl, channelType, coverUrl) {
   return new Promise((resolve, reject) => {
+    console.log(channelUrl, channelType, coverUrl);
     getChannel(channelUrl, channelType).then(channel => {
-      const res = channel.update(coverUrl);
-      resolve(res);
+      // channel.update(coverUrl);
+      // console.log(channel.update(coverUrl));
+      resolve(coverUrl);
     });
   });
 }
@@ -574,4 +575,16 @@ export function typingEnd(channelUrl, channelType) {
 
 export function markAsReadSb(channel) {
   channel.markAsRead();
+}
+
+export function getParticipantsSb(channel) {
+  return new Promise((resolve, reject) => {
+    const participantListQuery = channel.createParticipantListQuery();
+    participantListQuery.next((participantList, err) => {
+      if (err) {
+        reject(err);
+      }
+      resolve(participantList);
+    });
+  });
 }

@@ -44,6 +44,9 @@
       height: 100%;
       width: 100%;
       color: #000000;
+      &.custom-type {
+        background-color: $brand-color;
+      }
       .channel-info {
         display: flex;
         align-items: center;

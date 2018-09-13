@@ -54,7 +54,7 @@ export class ChannelListItem extends React.Component {
     const { usersToInvite, usersIdsInput, inviteForm } = this.state;
     return (
       <li>
-        <button className="channel-list-item" onClick={this.handleItemClick}>
+        <button className={channelItem.customType ? 'channel-list-item custom-type' : 'channel-list-item'} onClick={this.handleItemClick}>
           <div className="channel-info">
             <span className="img">
               <img

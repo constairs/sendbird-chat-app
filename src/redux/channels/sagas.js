@@ -125,7 +125,6 @@ function* updateChannelSaga(action) {
   try {
     const updRes = yield call(updateChannel, ...action.payload);
     yield put(updateChannelSuccessed(updRes));
-    console(updRes);
   } catch (error) {
     yield put(updateChannelFailed(error));
   }
