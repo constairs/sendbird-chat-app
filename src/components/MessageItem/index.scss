@@ -59,6 +59,9 @@
   &.unread {
     background-color: #b4b3b3;
   }
+  &.custom-message {
+    background-color: $brand-color;
+  }
 }
 
 .sender-img {

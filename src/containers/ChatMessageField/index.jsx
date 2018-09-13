@@ -6,7 +6,7 @@ import { Spinner, Text } from 'react-preloading-component';
 import Modal from 'react-modal';
 import Dropzone from 'react-dropzone';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faFile, faTimes } from '@fortawesome/free-solid-svg-icons';
+import { faFile, faTimes, faFileAudio, faFileVideo } from '@fortawesome/free-solid-svg-icons';
 import * as chatActions from '../../redux/chat/actions';
 
 class MessageField extends React.Component {
@@ -16,6 +16,7 @@ class MessageField extends React.Component {
     uploadedFile: [],
     fileUploadModal: false,
     fileToUpload: '',
+    customMessageType: '',
   };
 
   handleTextInput = ({ target }) => {
@@ -62,6 +63,7 @@ class MessageField extends React.Component {
       this.props.user,
       ...this.state.uploadedFile,
       this.state.fileMessageText,
+      this.state.customMessageType
     ];
     this.setState({
       uploadedFile: [],
@@ -86,6 +88,19 @@ class MessageField extends React.Component {
         this.setState({
           uploadedFile: [file, file.name, file.type, file.size],
         });
+        if (new RegExp('^image?', 'i').test(file.type)) {
+          this.setState({
+            customMessageType: 'IMAGE'
+          });
+        } else if (new RegExp('^audio?', 'i').test(file.type)) {
+          this.setState({
+            customMessageType: 'AUDIO'
+          });
+        } else if (new RegExp('^video?', 'i').test(file.type)) {
+          this.setState({
+            customMessageType: 'VIDEO'
+          });
+        }
       };
       // reader.onabort = () => console.log('file reading was aborted');
       // reader.onerror = () => console.log('file reading has failed');
@@ -99,6 +114,7 @@ class MessageField extends React.Component {
       messageText,
       fileUploadModal,
       fileMessageText,
+      customMessageType
     } = this.state;
     const { userTyping, user, membersTyping } = this.props;
     return (
@@ -177,10 +193,26 @@ class MessageField extends React.Component {
                 <div className="files-to-upload">
                   <div className="file-item">
                     <div className="file-preview">
-                      {new RegExp('^image?', 'i').test(fileToUpload.type) ? (
-                        <img src={fileToUpload.preview} alt="preview" />
-                      ) : (
+                      {customMessageType === '' ? (
                         <FontAwesomeIcon icon={faFile} />
+                      ) : (
+                        <div>
+                          {
+                            customMessageType === 'IMAGE' ?
+                              <img src={fileToUpload.preview} alt="preview" />
+                            :
+                              (
+                                <div>
+                                  {
+                                    customMessageType === 'AUDIO' ?
+                                      <FontAwesomeIcon icon={faFileAudio} />
+                                    :
+                                      <FontAwesomeIcon icon={faFileVideo} />
+                                  }
+                                </div>
+                              )
+                          }
+                        </div>
                       )}
                     </div>
                     <p>{fileToUpload.size} кб</p>
