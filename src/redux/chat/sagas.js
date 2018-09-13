@@ -57,10 +57,9 @@ import {
   replaceMessage,
   cancelUploadingSuccessed,
   cancelUploadingFailed,
-  userTypingEnd
 } from './actions';
 
-function* sendMessageAsync(action) {
+function* sendMessageSaga(action) {
   try {
     const sendRes = yield call(sendMessage, ...action.messageData);
     yield put(sendMessageSuccessed(sendRes.channel, sendRes.messages));
@@ -86,7 +85,7 @@ function* cancelUploadingSaga(action) {
   }
 }
 
-function* sendFileMessageAsync(action) {
+function* sendFileMessageSaga(action) {
   try {
     const fakeId = v4();
     const creationTime = new Date();
@@ -136,7 +135,7 @@ function* sendFileMessageAsync(action) {
   }
 }
 
-function* deleteMessageAsync(action) {
+function* deleteMessageSaga(action) {
   try {
     const delChannel = yield call(deleteMessage, ...action.messageData);
     yield put(deleteMessageSuccessed(delChannel));
@@ -145,7 +144,7 @@ function* deleteMessageAsync(action) {
   }
 }
 
-function* editMessageAsync(action) {
+function* editMessageSaga(action) {
   try {
     const editRes = yield call(editMessage, ...action.messageData);
     yield put(editMessageSuccessed(editRes));
@@ -154,7 +153,7 @@ function* editMessageAsync(action) {
   }
 }
 
-function* getMessagesAsync(action) {
+function* getMessagesSaga(action) {
   yield put(getMessagesRequest(action.payload));
   try {
     const messages = yield call(
@@ -191,7 +190,6 @@ function* messageTypingSaga(action) {
 }
 
 function* userTypingEndSaga(action) {
-  console.log(action);
   yield call(typingEnd, ...action.payload);
 }
 
@@ -200,7 +198,6 @@ function* userTypingSaga(action) {
     yield call(typingStart, ...action.payload);
     yield call(delay, 2000);
     yield call(typingEnd, ...action.payload);
-    yield put(userTypingEnd());
   }
 }
 
@@ -215,6 +212,7 @@ function* editFileMessageSaga(action) {
 
 function* markAsReadSaga(action) {
   if (action.payload.channel.channelType === 'group') {
+    yield call(delay, 1000);
     yield call(markAsReadSb, action.payload.channel);
     yield put(markAsRead());
   }
@@ -224,16 +222,16 @@ export function* chatSagas() {
   yield all([
     yield takeLatest(MESSAGE_RECEIVED, markAsReadSaga),
     yield takeLatest(CANCEL_UPLOADING, cancelUploadingSaga),
-    yield takeLatest(SEND_MESSAGE, sendMessageAsync),
-    yield takeLatest(SEND_FILE_MESSAGE, sendFileMessageAsync),
-    yield takeLatest(DELETE_MESSAGE, deleteMessageAsync),
-    yield takeLatest(EDIT_MESSAGE, editMessageAsync),
+    yield takeLatest(SEND_MESSAGE, sendMessageSaga),
+    yield takeLatest(SEND_FILE_MESSAGE, sendFileMessageSaga),
+    yield takeLatest(DELETE_MESSAGE, deleteMessageSaga),
+    yield takeLatest(EDIT_MESSAGE, editMessageSaga),
     yield takeLatest(EDIT_FILE_MESSAGE, editFileMessageSaga),
     yield takeEvery(
       [ENTER_CHANNEL_SUCCESSED,
         GET_SELECTED_CHANNEL_SUCCESSED,
         DELETE_MESSAGE_SUCCESSED],
-      getMessagesAsync),
+      getMessagesSaga),
     yield throttle(1000, MESSAGE_TYPING, messageTypingSaga),
     yield takeLatest(USER_TYPING_START, userTypingSaga),
     yield takeLatest(USER_TYPING_END, userTypingEndSaga),

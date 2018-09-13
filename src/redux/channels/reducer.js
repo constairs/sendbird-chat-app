@@ -88,9 +88,9 @@ const notificationOff = state => ({
   notificationShow: false,
 });
 
-const refreshedMembers = (state, response) => ({
+const refreshedMembers = (state, channel) => ({
   ...state,
-  response,
+  channel: getChannelFunc(channel)
 });
 
 const refreshFailed = (state, error) => ({
@@ -133,10 +133,6 @@ const enterChannelFailed = (state, error) => ({
   ...state,
   error,
   fetching: false,
-});
-
-const getParticipants = state => ({
-  ...state,
 });
 
 const getParticipantsSuccessed = (state, participantList) => ({
@@ -241,6 +237,7 @@ const handlers = {
 
   [TYPES.NOTIFICATION_OFF]: notificationOff,
 
+  [TYPES.ON_READ_RECEIPT_UPDATED]: refreshedMembers,
   [TYPES.REFRESHED_MEMBERS]: refreshedMembers,
   [TYPES.REFRESH_FAILED]: refreshFailed,
 
@@ -254,7 +251,6 @@ const handlers = {
   [TYPES.LEAVE_CHANNEL_SUCCESSED]: leaveChannelSuccessed,
   [TYPES.LEAVE_CHANNEL_FAILED]: leaveChannelFailed,
 
-  [TYPES.GET_PARTICIPANTS]: getParticipants,
   [TYPES.GET_PARTICIPANTS_SUCCESSED]: getParticipantsSuccessed,
   [TYPES.GET_PARTICIPANTS_FAILED]: getParticipantsFailed,
 

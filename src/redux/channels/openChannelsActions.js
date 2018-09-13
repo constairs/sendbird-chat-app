@@ -44,7 +44,10 @@ export const userEntered = data => ({
   payload: data,
 });
 
-export const userExited = data => ({ type: TYPES.USER_EXITED, payload: data });
+export const userExited = data => ({
+  type: TYPES.USER_EXITED,
+  payload: data
+});
 
 export const updateParticipantsStatus = () => ({
   type: TYPES.UPDATE_PARTICIPANTS_STATUS,

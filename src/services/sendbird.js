@@ -12,13 +12,12 @@ import {
 import {
   userEntered,
   userExited,
-  getParticipantsSuccessed,
-  getParticipantsFailed,
 } from '../redux/channels/openChannelsActions';
 import {
   onUserJoined,
   onUserLeft,
   onUsersTyping,
+  onReadReceiptUpdated
 } from '../redux/channels/groupChannelsActions';
 import { channelUpdated } from '../redux/channels/actions';
 
@@ -28,13 +27,15 @@ const ChannelHandler = new sb.ChannelHandler();
 const GroupChannelHandler = new sb.ChannelHandler();
 const ChatHandler = new sb.ChannelHandler();
 
-function getPatticipants(channel) {
-  const participantListQuery = channel.createParticipantListQuery();
-  participantListQuery.next((participantList, err) => {
-    if (err) {
-      store.store.dispatch(getParticipantsFailed(err));
-    }
-    store.store.dispatch(getParticipantsSuccessed(participantList));
+export function getParticipantsSb(channel) {
+  return new Promise((resolve, reject) => {
+    const participantListQuery = channel.createParticipantListQuery();
+    participantListQuery.next((participantList, err) => {
+      if (err) {
+        reject(err);
+      }
+      resolve(participantList);
+    });
   });
 }
 /* eslint-disable */
@@ -44,11 +45,9 @@ ChannelHandler.onChannelChanged = function (channel) {
 };
 ChannelHandler.onUserEntered = function (channel, user) {
   store.store.dispatch(userEntered({ channel, user }));
-  getPatticipants(channel);
 };
 ChannelHandler.onUserExited = function (channel, user) {
   store.store.dispatch(userExited({ channel, user }));
-  getPatticipants(channel);
 };
 ChannelHandler.onMetaDataUpdated = function (channel, metaData) {
   store.store.dispatch(messageTypingSet(metaData));
@@ -72,6 +71,7 @@ ChatHandler.onReadReceiptUpdated = function (channel) {
     (a, b) => a > b
   )[0];
   store.store.dispatch(readReceipt(receipt, channel.url));
+  store.store.dispatch(onReadReceiptUpdated(channel));
 };
 
 GroupChannelHandler.onChannelChanged = function (channel) {
@@ -88,7 +88,6 @@ GroupChannelHandler.onUserLeft = function (groupChannel, user) {
 
 sb.addChannelHandler('HANDLER', ChannelHandler);
 sb.addChannelHandler('GROUP_HANDLER', GroupChannelHandler);
-// sb.addChannelHandler('CHAT_HANDLER', ChatHandler);
 
 export function addHandler() {
   sb.addChannelHandler('CHAT_HANDLER', ChatHandler);
@@ -342,23 +341,6 @@ export function leaveGroup(channelUrl) {
           reject(error);
         }
         resolve(response);
-      });
-    });
-  });
-}
-
-export function getParticipantsReq(channelUrl) {
-  return new Promise((resolve, reject) => {
-    sb.OpenChannel.getChannel(channelUrl, (channel, error) => {
-      if (error) {
-        reject(error);
-      }
-      const participantListQuery = channel.createParticipantListQuery();
-      participantListQuery.next((participantList, err) => {
-        if (err) {
-          reject(err);
-        }
-        resolve(participantList);
       });
     });
   });

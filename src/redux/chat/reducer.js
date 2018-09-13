@@ -17,7 +17,8 @@ const initState = {
 
 const sendMessageSuccessed = (state, sendRes) => ({
   ...state,
-  messages: [...state.messages, sendRes.messages].slice(1),
+  messages: state.messages.length > 10 ?
+    [...state.messages, sendRes.messages].slice(1) : [...state.messages, sendRes.messages],
   sendingMessage: false,
 });
 const sendMessageFailed = (state, error) => ({

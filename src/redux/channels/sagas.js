@@ -10,11 +10,13 @@ import {
   updateChannel,
   inviteToGroup,
   refreshGroupMembers,
+  getParticipantsSb,
 } from '../../services/sendbird';
 import {
   CREATE_OPEN_CHANNEL,
   CREATE_GROUP_CHANNEL,
   GET_SELECTED_CHANNEL,
+  GET_SELECTED_CHANNEL_SUCCESSED,
   CREATE_OPEN_CHANNEL_SUCCESSED,
   CREATE_GROUP_CHANNEL_SUCCESSED,
   LEAVE_CHANNEL,
@@ -22,6 +24,8 @@ import {
   INVITE_USERS,
   ON_USER_JOINED,
   ON_USER_LEFT,
+  NEW_USER_ENTERED,
+  USER_EXITED
 } from './types';
 import {
   getSelectedChannelSuccessed,
@@ -42,6 +46,9 @@ import {
   enterChannel,
   enterChannelSuccessed,
   enterChannelFailed,
+  getParticipants,
+  getParticipantsSuccessed,
+  getParticipantsFailed
 } from './openChannelsActions';
 import {
   createGroupChannelSuccessed,
@@ -148,12 +155,22 @@ function* refreshMembersSaga(action) {
     } else {
       const response = yield call(
         refreshGroupMembers,
-        action.payload.groupChannel
+        action.payload
       );
       yield put(refreshedMembers(response));
     }
   } catch (error) {
     yield put(refreshFailed(error));
+  }
+}
+
+function* getParticipantsSaga(action) {
+  yield put(getParticipants());
+  try {
+    const participantsList = yield call(getParticipantsSb, action.payload.channel);
+    yield put(getParticipantsSuccessed(participantsList));
+  } catch (error) {
+    yield put(getParticipantsFailed(error));
   }
 }
 
@@ -174,10 +191,11 @@ export function* channelsSagas() {
     yield takeLatest(LEAVE_CHANNEL, leaveChannelSaga),
     yield takeLatest(UPDATE_CHANNEL, updateChannelSaga),
     yield takeLatest(
-      [ON_USER_JOINED, ON_USER_LEFT],
+      [ON_USER_JOINED, ON_USER_LEFT, GET_SELECTED_CHANNEL_SUCCESSED],
       refreshMembersSaga
     ),
     yield takeLatest([ON_USER_JOINED, ON_USER_LEFT], membersUpdatedSaga),
+    yield takeLatest([NEW_USER_ENTERED, USER_EXITED], getParticipantsSaga),
     yield takeLatest(ON_USER_JOINED, getChannelsListSaga),
     yield takeLatest(INVITE_USERS, inviteUserSaga),
   ]);
