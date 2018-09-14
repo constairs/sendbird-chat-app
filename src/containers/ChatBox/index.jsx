@@ -3,9 +3,10 @@ import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import { Spinner } from 'react-preloading-component';
 import PropTypes from 'prop-types';
-import * as chatActions from '../../redux/chat/actions';
-import { MessageItem } from '../MessageItem';
+import { deleteMessage, editMessage, cancelUploadingMessage } from '../../redux/chat/actions';
+import { MessageItem } from '../../components/MessageItem';
 import { ChatMessageField } from '../ChatMessageField';
+import { addHandler, removeHandler } from '../../services/sendbird';
 
 import './index.scss';
 
@@ -15,79 +16,53 @@ export class Chat extends React.Component {
     this.ref = React.createRef();
   }
 
+  componentWillMount() {
+    addHandler();
+  }
+
   componentDidUpdate() {
     this.ref.current.scrollTop = this.ref.current.scrollHeight;
   }
 
+  componentWillUnmount() {
+    removeHandler();
+  }
+
   handleMessageDelete = (message) => {
     this.props.chatActions.deleteMessage([
-      this.props.currentChannel.url,
-      this.props.currentChannel.channelType,
+      this.props.channelUrl,
+      this.props.channelType,
       message,
     ]);
   };
 
   handleMessageEdit = (newMessage) => {
     this.props.chatActions.editMessage([
-      this.props.currentChannel.url,
-      this.props.currentChannel.channelType,
+      this.props.channelUrl,
+      this.props.channelType,
       ...newMessage,
     ]);
   };
 
   handleCancelUploading = (messageData) => {
     this.props.chatActions.cancelUploadingMessage([
-      this.props.currentChannel.url,
-      this.props.currentChannel.channelType,
+      this.props.channelUrl,
+      this.props.channelType,
       ...messageData,
     ]);
   };
 
-  handleGreateFileMessage = (fileMessageData) => {
-    const creationTime = new Date();
-    const fakeMessage = {
-      isFake: true,
-      data: fileMessageData.message,
-      messageType: 'file',
-      name: fileMessageData.name,
-      type: fileMessageData.type,
-      size: fileMessageData.size,
-      createdAt: creationTime.getTime(),
-      sender: {
-        profileUrl: this.props.user.userImg,
-        userId: this.props.user.userId,
-        nickname: this.props.user.userName,
-      },
-    };
-    this.props.messages.push(fakeMessage);
-    if (this.props.uploadProgress === 100) {
-      this.props.messages.pop();
-    }
-  };
-
-  handleTyping = () => {
-    if (this.props.currentChannel.channelType === 'group') {
-      this.props.currentChannel.startTyping();
-    }
-  };
-
-  handleTypingEnd = () => {
-    if (this.props.currentChannel.channelType === 'group') {
-      this.props.currentChannel.endTyping();
-    }
-  };
-
   render() {
     const { messFetching, messages, user } = this.props;
-    const { url, channelType } = this.props.currentChannel;
+    const { channelUrl, channelType } = this.props;
     return (
-      <div>
-        <div className="chat-box" ref={this.ref}>
-          {messFetching ? (
-            <div className="preloader">
-              <Spinner color="#ffffff" secondaryColor="#40c9ff" size={50} />
-            </div>
+      <div className="chat">
+        {messFetching ? (
+          <div className="preloader">
+            <Spinner color="#ffffff" secondaryColor="#40c9ff" size={50} />
+          </div>
           ) : null}
+        <div className="chat-box" ref={this.ref}>
           {messages.map(message => (
             <MessageItem
               message={message}
@@ -105,48 +80,38 @@ export class Chat extends React.Component {
           ))}
         </div>
         <ChatMessageField
-          onMessageTyping={this.handleTyping}
-          onMessageTypingEnd={this.handleTypingEnd}
-          channelUrl={url}
+          channelUrl={channelUrl}
           channelType={channelType}
-          channel={this.props.currentChannel}
         />
       </div>
     );
   }
 }
 
-function mapStateToProps(state) {
-  return {
-    user: state.persistedUserReducer,
-    chatParticipants:
-      state.openChannelsReducer.participants ||
-      state.groupChannelsReducer.participants,
-    messages: state.chatReducer.messages,
-    messFetching: state.chatReducer.messFetching,
-    readReceipt: state.chatReducer.receipt,
-    uploadProgress: state.chatReducer.uploadProgress,
-    channel: state.groupChannelsReducer.groupChannel,
-  };
-}
-
-function mapDispatchToProps(dispatch) {
-  return {
-    chatActions: bindActionCreators(chatActions, dispatch),
-  };
-}
-
 export const ChatBox = connect(
-  mapStateToProps,
-  mapDispatchToProps
+  state => ({
+    user: state.persistedUser,
+    messages: state.chat.messages,
+    messFetching: state.chat.messFetching,
+    readReceipt: state.chat.receipt,
+    uploadProgress: state.chat.uploadProgress,
+  }),
+  dispatch => ({
+    chatActions: bindActionCreators({
+      deleteMessage,
+      editMessage,
+      cancelUploadingMessage
+    }, dispatch),
+  })
 )(Chat);
 
 Chat.propTypes = {
+  channelUrl: PropTypes.string.isRequired,
+  channelType: PropTypes.string.isRequired,
   messages: PropTypes.arrayOf(PropTypes.any),
   chatActions: PropTypes.objectOf(PropTypes.any).isRequired,
   messFetching: PropTypes.bool.isRequired,
   user: PropTypes.objectOf(PropTypes.any).isRequired,
-  currentChannel: PropTypes.objectOf(PropTypes.any).isRequired,
   readReceipt: PropTypes.number,
   uploadProgress: PropTypes.objectOf(PropTypes.any).isRequired,
 };

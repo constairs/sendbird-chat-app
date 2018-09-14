@@ -6,6 +6,8 @@ export class CreateGroupForm extends React.Component {
     channelName: '',
     coverUrl: '',
     coverFile: '',
+    channelData: '',
+    customType: '',
     groupUsersInput: '',
     channelDistinct: false,
     usersToInvite: [],
@@ -45,11 +47,15 @@ export class CreateGroupForm extends React.Component {
       this.state.channelName,
       this.state.coverUrl,
       this.state.coverFile,
+      this.state.channelData,
+      this.state.customType,
     ];
     this.setState({
       channelName: '',
       coverUrl: '',
       coverFile: '',
+      channelData: '',
+      customType: '',
       channelDistinct: false,
       usersToInvite: [],
     });
@@ -58,7 +64,12 @@ export class CreateGroupForm extends React.Component {
 
   render() {
     const {
-      channelName, coverUrl, groupUsersInput, usersToInvite, channelDistinct
+      channelName,
+      coverUrl,
+      groupUsersInput,
+      usersToInvite,
+      channelDistinct,
+      customType
     } = this.state;
     return (
       <div className="form create-channel-form">
@@ -128,7 +139,16 @@ export class CreateGroupForm extends React.Component {
               </ul>
               ) : null}
           </label>
-
+          <label htmlFor="customType">
+            <span>Custom Type</span>
+            <input
+              id="customType"
+              name="customType"
+              value={customType}
+              onChange={this.handleInput}
+              type="text"
+            />
+          </label>
           <button disabled={!channelName}>Создать</button>
         </form>
       </div>

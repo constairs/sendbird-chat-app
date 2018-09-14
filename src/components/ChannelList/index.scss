@@ -2,7 +2,9 @@
 
 .channels-list {
   margin-top: 20px;
+  margin-bottom: 30px;
   position: relative;
+  min-height: 200px;
   .preloader {
     position: absolute;
     height: 100%;
@@ -39,10 +41,14 @@
     .channel-list-item {
       background-color: inherit;
       transition: .2s;
-      padding: 15px 10px;
+      padding: 10px;
       height: 100%;
       width: 100%;
       color: #000000;
+      &.custom-type {
+        background-color: $brand-color;
+        color: #ffffff;
+      }
       .channel-info {
         display: flex;
         align-items: center;
@@ -50,6 +56,7 @@
       }
       &:hover {
         background-color: #d6d4d4;
+        color: #000000;
       }
     }
     .btns {
@@ -66,7 +73,8 @@
       padding-left: 0;
       margin: 0;
       border-top: 1px solid #ccc;
-      line-height: 22px;
+      line-height: 20px;
+      font-size: 12px;
     }
   }
   .channel-item-name {

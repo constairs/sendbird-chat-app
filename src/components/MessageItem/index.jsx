@@ -2,7 +2,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import moment from 'moment';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faPen, faPaperPlane, faTimes, faFile, faCircle } from '@fortawesome/free-solid-svg-icons';
+import { faPen, faPaperPlane, faTimes, faFile, faCircle, faFileAudio, faFileVideo } from '@fortawesome/free-solid-svg-icons';
 import LazyLoad from 'react-lazyload';
 import { Spinner } from 'react-preloading-component';
 import './index.scss';
@@ -42,7 +42,11 @@ export class MessageItem extends React.Component {
   render() {
     const { message, userId, uploadProgress } = this.props;
     return (
-      <div className="message-item">
+      <div
+        // className={message.messageType !== 'file' && message.customType ?
+        // 'message-item custom-message' : 'message-item'}
+        className="message-item"
+      >
         <div className="sender-img">
           <img
             src={
@@ -81,13 +85,29 @@ export class MessageItem extends React.Component {
                   </div>
                   ) : (
                     <div className="message-file-preview">
-                      {new RegExp('^image?', 'i').test(message.type) ? (
-                        <LazyLoad height="100%" placeholder={<Spinner color="#ffffff" secondaryColor="#40c9ff" size={30} />} offset={100} overflow>
-                          <img src={message.url} alt={message.name} />
-                        </LazyLoad>
-                      ) : (
+                      {message.customType === '' ? (
                         <FontAwesomeIcon icon={faFile} />
-                        )}
+                      ) : (
+                        <div>
+                          {
+                            message.customType === 'IMAGE' ?
+                              <LazyLoad height="100%" placeholder={<Spinner color="#ffffff" secondaryColor="#40c9ff" size={30} />} offset={100}>
+                                <img src={message.url} alt={message.name} />
+                              </LazyLoad>
+                            :
+                              (
+                                <div>
+                                  {
+                                    message.customType === 'AUDIO' ?
+                                      <FontAwesomeIcon icon={faFileAudio} />
+                                    :
+                                      <FontAwesomeIcon icon={faFileVideo} />
+                                  }
+                                </div>
+                              )
+                          }
+                        </div>
+                      )}
                     </div>
                     )}
                 <p>

@@ -6,7 +6,7 @@ import Modal from 'react-modal';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faSignOutAlt } from '@fortawesome/free-solid-svg-icons';
 import { UserForm } from '../../components/UserForm';
-import * as userActions from '../../redux/user/actions';
+import { changeUserRequest, logoutUserRequest } from '../../redux/user/actions';
 
 import './index.scss';
 
@@ -29,7 +29,14 @@ class Profile extends React.Component {
   };
 
   handleLogout = () => {
-    this.props.userActions.logoutUserRequest();
+    if (this.props.channelUrl && this.props.channelType) {
+      this.props.userActions.logoutUserRequest({
+        channelUrl: this.props.channelUrl,
+        channelType: this.props.channelType
+      });
+    } else {
+      this.props.userActions.logoutUserRequest();
+    }
   };
 
   render() {
@@ -72,21 +79,20 @@ class Profile extends React.Component {
 Profile.propTypes = {
   user: PropTypes.objectOf(PropTypes.any).isRequired,
   userActions: PropTypes.objectOf(PropTypes.any).isRequired,
+  channelUrl: PropTypes.string.isRequired,
+  channelType: PropTypes.string.isRequired,
 };
 
-function mapStateToProps(state) {
-  return {
-    user: state.persistedUserReducer,
-  };
-}
-
-function mapDispatchToProps(dispatch) {
-  return {
-    userActions: bindActionCreators(userActions, dispatch),
-  };
-}
-
 export const UserProfile = connect(
-  mapStateToProps,
-  mapDispatchToProps
+  state => ({
+    user: state.persistedUser,
+    channelUrl: state.channels.channel ? state.channels.channel.url : '',
+    channelType: state.channels.channel ? state.channels.channel.channelType : '',
+  }),
+  dispatch => ({
+    userActions: bindActionCreators({
+      changeUserRequest,
+      logoutUserRequest
+    }, dispatch),
+  })
 )(Profile);

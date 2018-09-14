@@ -7,7 +7,7 @@ import { Redirect } from 'react-router';
 import Modal from 'react-modal';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faTimes } from '@fortawesome/free-solid-svg-icons';
-import * as userActions from '../../redux/user/actions';
+import { loginUserRequest, clearLoginError } from '../../redux/user/actions';
 import { LoginForm } from '../../components/LoginForm';
 
 import './index.scss';
@@ -15,14 +15,6 @@ import './index.scss';
 class LoginConnected extends React.Component {
   handleLogin = (data) => {
     this.props.userActions.loginUserRequest(data);
-  };
-
-  handleLogout = () => {
-    this.props.userActions.logoutUserRequest();
-  };
-
-  handleChangeProfile = (formData) => {
-    this.props.userActions.changeUserRequest(formData);
   };
 
   render() {
@@ -65,19 +57,12 @@ LoginConnected.propTypes = {
   user: PropTypes.objectOf(PropTypes.any).isRequired,
 };
 
-function mapStateToProps(state) {
-  return {
-    user: state.persistedUserReducer,
-  };
-}
-
-function mapDispatchToProps(dispatch) {
-  return {
-    userActions: bindActionCreators(userActions, dispatch),
-  };
-}
-
 export const LoginContainer = connect(
-  mapStateToProps,
-  mapDispatchToProps
+  state => ({ user: state.persistedUser, }),
+  dispatch => ({
+    userActions: bindActionCreators({
+      loginUserRequest,
+      clearLoginError
+    }, dispatch)
+  })
 )(LoginConnected);

@@ -48,7 +48,8 @@ const userReconnectFailed = (state, err) => ({
   err,
 });
 
-const userLogoutRequest = () => ({
+const userLogoutRequest = state => ({
+  ...state,
   userFetching: false,
 });
 const userLogoutSuccessed = () => ({
@@ -94,4 +95,4 @@ const handlers = {
   [TYPES.USER_RECONNECT_FAILED]: userReconnectFailed,
 };
 
-export const userReducer = createReducer(initState, handlers);
+export const user = createReducer(initState, handlers);

@@ -4,23 +4,23 @@ import { connect } from 'react-redux';
 import { Spinner } from 'react-preloading-component';
 import PropTypes from 'prop-types';
 import Modal from 'react-modal';
-import * as openChannelsActions from '../../redux/openChannels/actions';
-import * as groupChannelsActions from '../../redux/groupChannels/actions';
+import { getSelectedChannel, leaveChannel } from '../../redux/channels/actions';
+import { createGroupChannel, inviteUsers, notificationOff } from '../../redux/channels/groupChannelsActions';
+import { createOpenChannel } from '../../redux/channels/openChannelsActions';
 import { CreateChannelForm } from '../../components/CreateChannelForm';
 import { CreateGroupForm } from '../../components/CreateGroupForm';
 import { ChannelList } from '../../components/ChannelList';
 import { Channel } from '../../components/Channel';
-import { GroupChannel } from '../../components/GroupChannel';
 import { NotificationWindow } from '../NotificationWindow';
 
-class OpenChannel extends React.Component {
+class Channels extends React.Component {
   state = {
     modalIsOpen: false,
     groupChModal: false,
   };
 
   handleOpenChannel = (formData) => {
-    this.props.openChannelsActions.createOpenChannel(formData);
+    this.props.createOpenChannel(formData);
     this.setState({ modalIsOpen: false });
   };
 
@@ -29,28 +29,26 @@ class OpenChannel extends React.Component {
     this.setState({ modalIsOpen: false });
   };
 
-  handleUpdateChannel = (updateData) => {
-    this.props.openChannelsActions.updateChannel(updateData);
-  };
-
-  handleGetChannel = (selectedChan) => {
-    if (selectedChan.channelType === 'open') {
-      this.props.openChannelsActions.enterChannel(selectedChan.channelUrl);
-    } else {
-      this.props.groupChannelsActions.getGroupChannel(selectedChan);
-    }
-  };
-
   handleInviteUsers = (formData) => {
     this.props.groupChannelsActions.inviteUsers(formData);
   };
 
-  hanldeLeaveGroup = (channelUrl) => {
-    this.props.groupChannelsActions.leaveGroup(channelUrl);
+  handleNotificationClose = () => {
+    this.props.groupChannelsActions.notificationOff();
   };
 
-  handleLeaveChannel = (channelUrl) => {
-    this.props.openChannelsActions.leaveChannel(channelUrl);
+  handleGetChannel = (selectedChannel) => {
+    if (this.props.channels.channel && this.props.channels.channelType === 'open') {
+      this.props.channelsActions.leaveChannel({
+        channelUrl: this.props.channels.channel.url,
+        channelType: this.props.channels.channel.channelType
+      });
+    }
+    this.props.channelsActions.getSelectedChannel(selectedChannel);
+  };
+
+  handleLeaveChannel = (channelInfo) => {
+    this.props.channelsActions.leaveChannel(channelInfo);
   };
 
   handleOpenModal = (e) => {
@@ -61,21 +59,25 @@ class OpenChannel extends React.Component {
     }
   };
 
-  handleNotificationClose = () => {
-    this.props.groupChannelsActions.notificationOff();
-  };
-
   closeModal = () => {
     this.setState({ modalIsOpen: false });
   };
 
   render() {
-    const { channelsList, channel } = this.props.openChannels;
-    const { groupChannelsList, groupChannel } = this.props.groupChannels;
     const { groupChModal } = this.state;
+    const {
+      openChannelList,
+      groupChannelList,
+      channel,
+      channelsFetching,
+      channelFetching,
+      notificationShow,
+      notification,
+    } = this.props.channels;
+    const { userName, userFetching } = this.props.user;
     return (
       <div className="page channel-page">
-        {this.props.openChannels.fetching || this.props.user.userFetching ? (
+        {userFetching || channelFetching ? (
           <div className="preloader">
             <Spinner color="#ffffff" secondaryColor="#40c9ff" size={100} />
           </div>
@@ -85,56 +87,45 @@ class OpenChannel extends React.Component {
             <button name="createOpen" onClick={this.handleOpenModal}>
               Создать открытый канал
             </button>
-            {channelsList ? (
+            {openChannelList ? (
               <div>
                 <p>Открытые каналы</p>
                 <ChannelList
+                  onLeave={this.handleLeaveChannel}
                   selectedChan={this.handleGetChannel}
-                  channels={channelsList}
-                  fetching={this.props.openChannels.fetching}
-                  group={false}
+                  channels={openChannelList}
+                  channelsFetching={channelsFetching}
                 />
               </div>
             ) : null}
             <button name="createGroup" onClick={this.handleOpenModal}>
               Создать групповой канал
             </button>
-            {groupChannelsList.length > 0 ? (
+            {groupChannelList ? (
               <div>
                 <p>
                     Групповые каналы
                 </p>
                 <ChannelList
+                  onLeave={this.handleLeaveChannel}
                   selectedChan={this.handleGetChannel}
-                  channels={groupChannelsList}
-                  groupsFetching={this.props.groupChannels.groupsFetching}
+                  channels={groupChannelList}
+                  channelsFetching={channelsFetching}
                   inviteUsers={this.handleInviteUsers}
-                  leaveGroup={this.hanldeLeaveGroup}
-                  group
                 />
               </div>
             ) : null}
           </div>
-          {channel || groupChannel ? (
-            <div className="channel-page-content">
-              {channel ? (
+          {
+            channel ? (
+              <div className="channel-page-content">
                 <Channel
-                  onEnter={this.handleEnterChannel}
-                  onLeave={this.handleLeaveChannel}
                   user={this.props.user}
                   channel={channel}
-                  participants={this.props.openChannels.participants}
                 />
-              ) : (
-                <GroupChannel
-                  onLeave={this.handleLeaveChannel}
-                  onUpdateChannel={this.handleUpdateChannel}
-                  user={this.props.user}
-                  channel={groupChannel}
-                />
-              )}
-            </div>
-          ) : null}
+              </div>
+            ) : null
+          }
         </div>
         <Modal
           className="modal"
@@ -147,7 +138,6 @@ class OpenChannel extends React.Component {
           <button className="x-btn" onClick={this.closeModal}>
             x
           </button>
-
           {groupChModal ? (
             <CreateGroupForm onSubmitForm={this.handleGroupChannel} />
           ) : (
@@ -155,9 +145,9 @@ class OpenChannel extends React.Component {
           )}
         </Modal>
         <NotificationWindow
-          notificationShow={this.props.notificationShow}
-          notification={this.props.notification}
-          nickname={this.props.user.userName}
+          notificationShow={notificationShow}
+          notification={notification}
+          nickname={userName}
           onNotificationClose={this.handleNotificationClose}
         />
       </div>
@@ -165,38 +155,30 @@ class OpenChannel extends React.Component {
   }
 }
 
-OpenChannel.defaultProps = {
-  notificationShow: false,
-};
 
-OpenChannel.propTypes = {
-  openChannelsActions: PropTypes.objectOf(PropTypes.func).isRequired,
+Channels.propTypes = {
+  channelsActions: PropTypes.objectOf(PropTypes.func).isRequired,
   groupChannelsActions: PropTypes.objectOf(PropTypes.func).isRequired,
+  createOpenChannel: PropTypes.func.isRequired,
   user: PropTypes.objectOf(PropTypes.any).isRequired,
-  openChannels: PropTypes.objectOf(PropTypes.any).isRequired,
-  groupChannels: PropTypes.objectOf(PropTypes.any).isRequired,
-  notificationShow: PropTypes.bool,
-  notification: PropTypes.objectOf(PropTypes.any).isRequired,
+  channels: PropTypes.objectOf(PropTypes.any).isRequired,
 };
 
-function mapStateToProps(state) {
-  return {
-    user: state.persistedUserReducer,
-    openChannels: state.openChannelsReducer,
-    groupChannels: state.groupChannelsReducer,
-    notification: state.groupChannelsReducer.notification,
-    notificationShow: state.groupChannelsReducer.notificationShow,
-  };
-}
-
-function mapDispatchToProps(dispatch) {
-  return {
-    openChannelsActions: bindActionCreators(openChannelsActions, dispatch),
-    groupChannelsActions: bindActionCreators(groupChannelsActions, dispatch),
-  };
-}
-
-export const OpenChannelsContainer = connect(
-  mapStateToProps,
-  mapDispatchToProps
-)(OpenChannel);
+export const ChannelsConstainer = connect(
+  state => ({
+    user: state.persistedUser,
+    channels: state.channels,
+  }),
+  dispatch => ({
+    channelsActions: bindActionCreators({
+      getSelectedChannel,
+      leaveChannel
+    }, dispatch),
+    groupChannelsActions: bindActionCreators({
+      createGroupChannel,
+      inviteUsers,
+      notificationOff
+    }, dispatch),
+    createOpenChannel: bindActionCreators(createOpenChannel, dispatch),
+  })
+)(Channels);

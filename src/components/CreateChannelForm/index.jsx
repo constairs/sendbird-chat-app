@@ -6,6 +6,8 @@ export class CreateChannelForm extends React.Component {
     channelName: '',
     coverUrl: '',
     coverFile: '',
+    channelData: '',
+    customType: '',
   };
 
   handleInput = ({ target }) => {
@@ -23,17 +25,21 @@ export class CreateChannelForm extends React.Component {
       this.state.channelName,
       this.state.coverUrl,
       this.state.coverFile,
+      this.state.channelData,
+      this.state.customType,
     ];
     this.setState({
       channelName: '',
       coverUrl: '',
       coverFile: '',
+      channelData: '',
+      customType: '',
     });
     this.props.onSubmitForm(formData);
   };
 
   render() {
-    const { channelName, coverUrl } = this.state;
+    const { channelName, coverUrl, customType } = this.state;
     return (
       <div className="form create-channel-form">
         <form onSubmit={this.handleSubmit}>
@@ -57,7 +63,16 @@ export class CreateChannelForm extends React.Component {
               type="text"
             />
           </label>
-
+          <label htmlFor="customType">
+            <span>Custom Type</span>
+            <input
+              id="customType"
+              name="customType"
+              value={customType}
+              onChange={this.handleInput}
+              type="text"
+            />
+          </label>
           <button disabled={!channelName}>Создать</button>
         </form>
       </div>

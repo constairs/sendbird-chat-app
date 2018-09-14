@@ -1,19 +1,17 @@
 import { combineReducers } from 'redux';
 import { persistReducer } from 'redux-persist';
 import storage from 'redux-persist/lib/storage';
-import { chatReducer } from './chat/reducer';
-import { userReducer } from './user/reducer';
-import { openChannelsReducer } from './openChannels/reducer';
-import { groupChannelsReducer } from './groupChannels/reducer';
+import { chat } from './chat/reducer';
+import { user } from './user/reducer';
+import { channels } from './channels/reducer';
 
-const persistedUserReducer = persistReducer(
+const persistedUser = persistReducer(
   { key: 'user', storage },
-  userReducer
+  user
 );
 
 export const rootReducer = combineReducers({
-  chatReducer,
-  persistedUserReducer,
-  openChannelsReducer,
-  groupChannelsReducer,
+  chat,
+  persistedUser,
+  channels,
 });

@@ -21,9 +21,9 @@ export function configureStore() {
   const persistor = persistStore(store);
 
   if (module.hot) {
-    module.hot.accept('./reducers', () => {
+    module.hot.accept('./reducers.js', () => {
       // eslint-disable-next-line
-      const nextRootReducer = require('./reducers');
+      const nextRootReducer = require('./reducers.js');
       store.replaceReducer(connectRouter(history)(nextRootReducer));
     });
   }

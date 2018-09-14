@@ -13,29 +13,6 @@ export const createGroupChannelFailed = error => ({
   payload: error,
 });
 
-export const groupChannelsList = () => ({ type: TYPES.GROUP_CHANNEL_LIST });
-export const groupChannelsListSuccessed = groupList => ({
-  type: TYPES.GROUP_CHANNELS_LIST_SUCCESSED,
-  payload: groupList,
-});
-export const groupChannelsListFailed = error => ({
-  type: TYPES.GROUP_CHANNELS_LIST_FAILED,
-  payload: error,
-});
-
-export const getGroupChannel = channelUrl => ({
-  type: TYPES.GET_GROUP_CHANNEL,
-  payload: channelUrl,
-});
-export const getGroupChannelSuccessed = (groupChannel, receipt) => ({
-  type: TYPES.GET_GROUP_CHANNEL_SUCCESSED,
-  payload: { groupChannel, receipt },
-});
-export const getGroupChannelFailed = error => ({
-  type: TYPES.GET_GROUP_CHANNEL_FAILED,
-  payload: error,
-});
-
 export const inviteUsers = formData => ({
   type: TYPES.INVITE_USERS,
   payload: formData,
@@ -47,24 +24,6 @@ export const inviteUsersSuccessed = inviteRes => ({
 export const inviteUsersFailed = error => ({
   type: TYPES.INVITE_USERS_FAILED,
   payload: error,
-});
-
-export const leaveGroup = channelUrl => ({
-  type: TYPES.LEAVE_GROUP,
-  payload: channelUrl,
-});
-export const leaveGroupSuccessed = leaveRes => ({
-  type: TYPES.LEAVE_GROUP_SUCCESSED,
-  payload: leaveRes,
-});
-export const leaveGroupFailed = error => ({
-  type: TYPES.LEAVE_GROUP_FAILED,
-  payload: error,
-});
-
-export const groupUpdated = channel => ({
-  type: TYPES.GROUP_UPDATED,
-  payload: channel,
 });
 
 export const onUserJoined = userData => ({
@@ -81,9 +40,9 @@ export const notificationOff = () => ({
   type: TYPES.NOTIFICATION_OFF,
 });
 
-export const refreshedMembers = response => ({
+export const refreshedMembers = members => ({
   type: TYPES.REFRESHED_MEMBERS,
-  payload: response,
+  payload: members,
 });
 
 export const refreshFailed = error => ({
@@ -91,8 +50,8 @@ export const refreshFailed = error => ({
   payload: error,
 });
 
-export const onUserTyping = (channel, typingMembers) => ({
-  type: TYPES.ON_USER_TYPING,
+export const onUsersTyping = (channel, typingMembers) => ({
+  type: TYPES.ON_USERS_TYPING,
   payload: { channel, typingMembers },
 });
 

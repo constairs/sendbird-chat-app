@@ -1,9 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { Link } from 'react-router-dom';
-import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
-import * as userActions from '../../redux/user/actions';
 import { UserProfile } from '../UserProfile';
 
 import './index.scss';
@@ -11,7 +9,7 @@ import './index.scss';
 class Head extends React.Component {
   state = {};
   render() {
-    const { logged } = this.props.user;
+    const { logged } = this.props;
     return (
       <header>
         <nav>
@@ -50,22 +48,10 @@ class Head extends React.Component {
 }
 
 Head.propTypes = {
-  user: PropTypes.objectOf(PropTypes.any).isRequired,
+  logged: PropTypes.bool.isRequired,
 };
 
-function mapStateToProps(state) {
-  return {
-    user: state.persistedUserReducer,
-  };
-}
-
-function mapDispatchToProps(dispatch) {
-  return {
-    userActions: bindActionCreators(userActions, dispatch),
-  };
-}
 
 export const Header = connect(
-  mapStateToProps,
-  mapDispatchToProps
+  state => ({ logged: state.persistedUser.logged, }),
 )(Head);

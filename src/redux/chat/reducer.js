@@ -1,24 +1,30 @@
 import { createReducer } from '../../utils/reducerUtils';
 import * as TYPES from './types';
-import {
-  ON_USER_TYPING,
-  GET_GROUP_CHANNEL_SUCCESSED,
-} from '../groupChannels/types';
-import { ENTER_CHANNEL_SUCCESSED } from '../openChannels/types';
+import { ENTER_CHANNEL_SUCCESSED, GET_SELECTED_CHANNEL_SUCCESSED, ON_USERS_TYPING, CHANNEL_UPDATED } from '../channels/types';
+import { getLeastReceiptStatusTime } from './helpers';
+import { getChannelFunc } from '../channels/helpers';
 
 const initState = {
   messFetching: false,
   sendingMessage: false,
   error: '',
   messages: [],
+  currentChannel: null,
   userTyping: '',
-  typedMessage: '',
   uploadProgress: { reqId: '', progress: 0 },
+  membersTyping: [],
+  receipt: 0
 };
+
+const sendMessage = state => ({
+  ...state,
+  sendingMessage: true,
+});
 
 const sendMessageSuccessed = (state, sendRes) => ({
   ...state,
-  messages: [...state.messages, sendRes.messages].slice(1),
+  messages: state.messages.length > 10 ?
+    [...state.messages, sendRes.messages].slice(1) : [...state.messages, sendRes.messages],
   sendingMessage: false,
 });
 const sendMessageFailed = (state, error) => ({
@@ -31,7 +37,6 @@ const sendFileMessageSuccessed = (state, sendRes) => ({
   ...state,
   messages: [...state.messages, sendRes.fileMessage],
 });
-
 const sendFileMessageFailed = (state, error) => ({
   ...state,
   error,
@@ -83,7 +88,7 @@ const getMessagesFailed = (state, error) => ({
 const messageReceived = (state, messageData) => ({
   ...state,
   messages:
-    state.currentChannel.url === messageData.channel.url
+    state.currentChannel && state.currentChannel.url === messageData.channel.url
       ? [...state.messages.slice(1), messageData.message]
       : state.messages,
 });
@@ -100,13 +105,7 @@ const messageUpdated = (state, updatedData) => ({
 
 const messageDeleted = (state, messageId) => ({
   ...state,
-  messageDeleted: messageId,
   messages: [...state.messages.filter(cur => `${cur.messageId}` !== messageId)],
-});
-
-const onMessageTyping = (state, messageData) => ({
-  ...state,
-  typedMessage: messageData[2],
 });
 
 const messageTypingSet = (state, userTyping) => ({
@@ -114,19 +113,14 @@ const messageTypingSet = (state, userTyping) => ({
   userTyping: userTyping.userTyping,
 });
 
+const messageTypingEnd = state => ({
+  ...state,
+  userTyping: ''
+});
+
 const messageTypingError = (state, error) => ({
   ...state,
   error,
-});
-
-const messageTypingEnd = state => ({
-  ...state,
-  userTyping: '',
-});
-
-const userTyping = (state, user) => ({
-  ...state,
-  ...user,
 });
 
 const cleanChat = state => ({
@@ -134,18 +128,18 @@ const cleanChat = state => ({
   messages: [],
 });
 
-const onUserTyping = (state, typingData) => ({
+const onUsersTyping = (state, typingData) => ({
   ...state,
   membersTyping:
     state.currentChannel && typingData.channel.url === state.currentChannel.url
       ? typingData.typingMembers
-      : [],
+      : state.membersTyping,
 });
 
-const changeChannelGroup = (state, groupChannelData) => ({
+const changeChannelGroup = (state, channel) => ({
   ...state,
-  currentChannel: groupChannelData.groupChannel,
-  receipt: groupChannelData.receipt,
+  currentChannel: channel,
+  receipt: getLeastReceiptStatusTime(channel),
 });
 
 const changeOpenChannel = (state, openChannel) => ({
@@ -160,6 +154,12 @@ const readReceipt = (state, receiptData) => ({
     state.currentChannel && receiptData.channelUrl === state.currentChannel.url
       ? receiptData.receipt
       : state.receipt,
+});
+
+const channelUpdated = (state, channel) => ({
+  ...state,
+  currentChannel: state.currentChannel && state.currentChannel.url === channel.url ?
+    getChannelFunc(channel) : state.currentChannel
 });
 
 const preloadFileMessage = (state, progress) => ({
@@ -187,6 +187,7 @@ const cancelUploadingFailed = (state, error) => ({
 });
 
 const handlers = {
+  [TYPES.SEND_MESSAGE]: sendMessage,
   [TYPES.SEND_MESSAGE_SUCCESSED]: sendMessageSuccessed,
   [TYPES.SEND_MESSAGE_FAILED]: sendMessageFailed,
 
@@ -206,18 +207,18 @@ const handlers = {
   [TYPES.MESSAGE_UPDATED]: messageUpdated,
   [TYPES.MESSAGE_DELETED]: messageDeleted,
 
-  [TYPES.ON_MESSAGE_TYPING]: onMessageTyping,
   [TYPES.MESSAGE_TYPING_SET]: messageTypingSet,
-  [TYPES.MESSAGE_TYPING_ERROR]: messageTypingError,
-
-  [TYPES.USER_TYPING]: userTyping,
   [TYPES.MESSAGE_TYPING_END]: messageTypingEnd,
+  [TYPES.MESSAGE_TYPING_ERROR]: messageTypingError,
 
   [TYPES.CLEAN_CHAT]: cleanChat,
 
-  [ON_USER_TYPING]: onUserTyping,
+  [ON_USERS_TYPING]: onUsersTyping,
 
-  [GET_GROUP_CHANNEL_SUCCESSED]: changeChannelGroup,
+  [CHANNEL_UPDATED]: channelUpdated,
+
+  [GET_SELECTED_CHANNEL_SUCCESSED]: changeChannelGroup,
+
   [ENTER_CHANNEL_SUCCESSED]: changeOpenChannel,
 
   [TYPES.EDIT_FILE_MESSAGE_SUCCESSED]: editFileMessageSuccessed,
@@ -230,4 +231,4 @@ const handlers = {
   [TYPES.CANCEL_UPLOADING_FAILED]: cancelUploadingFailed,
 };
 
-export const chatReducer = createReducer(initState, handlers);
+export const chat = createReducer(initState, handlers);

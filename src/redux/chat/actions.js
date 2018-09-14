@@ -93,8 +93,8 @@ export const messageUpdated = (channel, message) => ({
   payload: { channel, message },
 });
 
-export const onMessageTyping = messageData => ({
-  type: TYPES.ON_MESSAGE_TYPING,
+export const messageTyping = messageData => ({
+  type: TYPES.MESSAGE_TYPING,
   payload: messageData,
 });
 
@@ -103,18 +103,23 @@ export const messageTypingSet = userTyping => ({
   payload: userTyping,
 });
 
+export const messageTypingEnd = () => ({
+  type: TYPES.MESSAGE_TYPING_END,
+});
+
 export const messageTypingError = error => ({
   type: TYPES.MESSAGE_TYPING_ERROR,
   payload: error,
 });
 
-export const userTyping = user => ({
-  type: TYPES.USER_TYPING,
-  payload: user,
+export const userTypingStart = channel => ({
+  type: TYPES.USER_TYPING_START,
+  payload: channel
 });
 
-export const messageTypingEnd = () => ({
-  type: TYPES.MESSAGE_TYPING_END,
+export const userTypingEnd = channel => ({
+  type: TYPES.USER_TYPING_END,
+  payload: channel
 });
 
 export const cleanChat = () => ({

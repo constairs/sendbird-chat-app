@@ -6,7 +6,7 @@ import Modal from 'react-modal';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faSignOutAlt, faTimes } from '@fortawesome/free-solid-svg-icons';
 import PropTypes from 'prop-types';
-import * as userActions from '../../redux/user/actions';
+import { logoutUserRequest, changeUserRequest } from '../../redux/user/actions';
 import { UserForm } from '../../components/UserForm';
 
 import './index.scss';
@@ -17,11 +17,14 @@ class UserProfile extends React.Component {
   };
 
   handleLogout = () => {
-    this.props.userActions.logoutUserRequest();
-  };
-
-  handleChangeProfile = (formData) => {
-    this.props.userActions.changeUserRequest(formData);
+    if (this.props.channelUrl && this.props.channelType) {
+      this.props.userActions.logoutUserRequest({
+        channelUrl: this.props.channelUrl,
+        channelType: this.props.channelType
+      });
+    } else {
+      this.props.userActions.logoutUserRequest();
+    }
   };
 
   handleOpenModal = () => {
@@ -40,10 +43,10 @@ class UserProfile extends React.Component {
   };
 
   render() {
-    const { userName, userImg, userFetching } = this.props.user;
+    const { userName, userImg, userFetching } = this.props;
 
     return (
-      <div>
+      <div className="page">
         {userFetching ? (
           <div className="preloader">
             <Spinner color="#ffffff" secondaryColor="#40c9ff" size={100} />
@@ -84,22 +87,25 @@ class UserProfile extends React.Component {
 
 UserProfile.propTypes = {
   userActions: PropTypes.objectOf(PropTypes.func).isRequired,
-  user: PropTypes.objectOf(PropTypes.any).isRequired,
+  userFetching: PropTypes.bool.isRequired,
+  userName: PropTypes.string.isRequired,
+  userImg: PropTypes.string.isRequired,
+  channelUrl: PropTypes.string.isRequired,
+  channelType: PropTypes.string.isRequired,
 };
 
-function mapStateToProps(state) {
-  return {
-    user: state.persistedUserReducer,
-  };
-}
-
-function mapDispatchToProps(dispatch) {
-  return {
-    userActions: bindActionCreators(userActions, dispatch),
-  };
-}
-
 export const UserProfileContainer = connect(
-  mapStateToProps,
-  mapDispatchToProps
+  state => ({
+    userName: state.persistedUser.userName,
+    userImg: state.persistedUser.userImg,
+    userFetching: state.persistedUser.userFetching,
+    channelUrl: state.channels.channel ? state.channels.channel.url : '',
+    channelType: state.channels.channel ? state.channels.channel.channelType : '',
+  }),
+  dispatch => ({
+    userActions: bindActionCreators({
+      logoutUserRequest,
+      changeUserRequest
+    }, dispatch),
+  })
 )(UserProfile);

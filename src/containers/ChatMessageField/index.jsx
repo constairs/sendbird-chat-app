@@ -6,8 +6,8 @@ import { Spinner, Text } from 'react-preloading-component';
 import Modal from 'react-modal';
 import Dropzone from 'react-dropzone';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faFile, faTimes } from '@fortawesome/free-solid-svg-icons';
-import * as chatActions from '../../redux/chat/actions';
+import { faFile, faTimes, faFileAudio, faFileVideo } from '@fortawesome/free-solid-svg-icons';
+import { messageTyping, messageTypingEnd, userTypingStart, userTypingEnd, sendMessage, sendFileMessage } from '../../redux/chat/actions';
 
 class MessageField extends React.Component {
   state = {
@@ -16,20 +16,21 @@ class MessageField extends React.Component {
     uploadedFile: [],
     fileUploadModal: false,
     fileToUpload: '',
+    customMessageType: '',
+    errorUpload: ''
   };
 
   handleTextInput = ({ target }) => {
     const { name, value } = target;
     this.setState({ [name]: value }, () => {
       if (this.props.channelType === 'open' && name === 'messageText') {
-        this.props.chatActions.onMessageTyping([
+        this.props.chatActions.messageTyping([
           this.props.channelUrl,
           this.props.channelType,
           this.props.user.userName,
-          this.state.message,
         ]);
-      } else {
-        this.props.onMessageTyping();
+      } else if (this.props.channelType === 'group' && name === 'messageText') {
+        this.props.chatActions.userTypingStart([this.props.channelUrl, this.props.channelType]);
       }
     });
   };
@@ -45,7 +46,12 @@ class MessageField extends React.Component {
     ];
     this.setState({ messageText: '' });
     this.props.chatActions.sendMessage(messageData);
-    this.props.onMessageTypingEnd();
+
+    if (this.props.channelType === 'open') {
+      this.props.chatActions.messageTypingEnd();
+    } else if (this.props.channelType === 'group') {
+      this.props.chatActions.userTypingEnd([this.props.channelUrl, this.props.channelType]);
+    }
   };
 
   handleFileForm = (e) => {
@@ -57,6 +63,7 @@ class MessageField extends React.Component {
       this.props.user,
       ...this.state.uploadedFile,
       this.state.fileMessageText,
+      this.state.customMessageType
     ];
     this.setState({
       uploadedFile: [],
@@ -64,7 +71,6 @@ class MessageField extends React.Component {
       fileToUpload: '',
       fileMessageText: '',
     });
-    this.props.onMessageTypingEnd();
     this.props.chatActions.sendFileMessage(fileMessageData);
   };
 
@@ -82,12 +88,41 @@ class MessageField extends React.Component {
         this.setState({
           uploadedFile: [file, file.name, file.type, file.size],
         });
+        if (new RegExp('^image?', 'i').test(file.type)) {
+          this.setState({
+            customMessageType: 'IMAGE'
+          });
+        } else if (new RegExp('^audio?', 'i').test(file.type)) {
+          this.setState({
+            customMessageType: 'AUDIO'
+          });
+        } else if (new RegExp('^video?', 'i').test(file.type)) {
+          this.setState({
+            customMessageType: 'VIDEO'
+          });
+        } else {
+          this.setState({
+            customMessageType: ''
+          });
+        }
       };
-      // reader.onabort = () => console.log('file reading was aborted');
-      // reader.onerror = () => console.log('file reading has failed');
+      reader.onerror = () => {
+        this.setState({
+          errorUpload: 'Ошибка загрузки файла'
+        });
+      };
       reader.readAsBinaryString(file);
     });
   };
+
+  handleClearFile = () => {
+    this.setState({
+      customMessageType: '',
+      uploadedFile: [],
+      fileToUpload: '',
+      fileMessageText: '',
+    });
+  }
 
   render() {
     const {
@@ -95,6 +130,8 @@ class MessageField extends React.Component {
       messageText,
       fileUploadModal,
       fileMessageText,
+      customMessageType,
+      errorUpload
     } = this.state;
     const { userTyping, user, membersTyping } = this.props;
     return (
@@ -172,11 +209,30 @@ class MessageField extends React.Component {
                 <p>Файл для отправки</p>
                 <div className="files-to-upload">
                   <div className="file-item">
+                    <button onClick={this.handleClearFile}>
+                      <FontAwesomeIcon icon={faTimes} />
+                    </button>
                     <div className="file-preview">
-                      {new RegExp('^image?', 'i').test(fileToUpload.type) ? (
-                        <img src={fileToUpload.preview} alt="preview" />
-                      ) : (
+                      {customMessageType === '' ? (
                         <FontAwesomeIcon icon={faFile} />
+                      ) : (
+                        <div>
+                          {
+                            customMessageType === 'IMAGE' ?
+                              <img src={fileToUpload.preview} alt="preview" />
+                            :
+                              (
+                                <div>
+                                  {
+                                    customMessageType === 'AUDIO' ?
+                                      <FontAwesomeIcon icon={faFileAudio} />
+                                    :
+                                      <FontAwesomeIcon icon={faFileVideo} />
+                                  }
+                                </div>
+                              )
+                          }
+                        </div>
                       )}
                     </div>
                     <p>{fileToUpload.size} кб</p>
@@ -184,12 +240,14 @@ class MessageField extends React.Component {
                 </div>
               </div>
             ) : null}
+            {errorUpload || null}
             <input
               type="text"
               placeholder="Сообщение"
               name="fileMessageText"
               value={fileMessageText}
               onChange={this.handleTextInput}
+              disabled={!fileToUpload}
             />
             <button type="submit">Отправить</button>
           </form>
@@ -207,29 +265,27 @@ MessageField.propTypes = {
   membersTyping: PropTypes.arrayOf(PropTypes.any),
   sendingMessage: PropTypes.bool.isRequired,
   chatActions: PropTypes.objectOf(PropTypes.func).isRequired,
-  onMessageTyping: PropTypes.func.isRequired,
-  onMessageTypingEnd: PropTypes.func.isRequired,
 };
 
 MessageField.defaultProps = {
   membersTyping: [],
 };
 
-function mapStateToProps(state) {
-  return {
-    user: state.persistedUserReducer,
-    userTyping: state.chatReducer.userTyping,
-    membersTyping: state.chatReducer.membersTyping,
-    sendingMessage: state.chatReducer.sendingMessage,
-  };
-}
-
-function mapDispatchToProps(dispatch) {
-  return {
-    chatActions: bindActionCreators(chatActions, dispatch),
-  };
-}
 export const ChatMessageField = connect(
-  mapStateToProps,
-  mapDispatchToProps
+  state => ({
+    user: state.persistedUser,
+    userTyping: state.chat.userTyping,
+    membersTyping: state.chat.membersTyping,
+    sendingMessage: state.chat.sendingMessage,
+  }),
+  dispatch => ({
+    chatActions: bindActionCreators({
+      messageTyping,
+      messageTypingEnd,
+      userTypingStart,
+      userTypingEnd,
+      sendMessage,
+      sendFileMessage
+    }, dispatch),
+  })
 )(MessageField);

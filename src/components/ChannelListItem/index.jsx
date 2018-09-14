@@ -1,8 +1,7 @@
 import React from 'react';
-import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
 
-class ListItem extends React.Component {
+export class ChannelListItem extends React.Component {
   state = {
     inviteForm: false,
     usersIdsInput: '',
@@ -34,7 +33,10 @@ class ListItem extends React.Component {
   };
 
   handleLeaveClick = () => {
-    this.props.onLeaveGroup(this.props.channelItem.url);
+    this.props.onLeave({
+      channelUrl: this.props.channelItem.url,
+      channelType: this.props.channelItem.channelType
+    });
   };
 
   handleInput = (e) => {
@@ -52,7 +54,7 @@ class ListItem extends React.Component {
     const { usersToInvite, usersIdsInput, inviteForm } = this.state;
     return (
       <li>
-        <button className="channel-list-item" onClick={this.handleItemClick}>
+        <button className={channelItem.customType ? 'channel-list-item custom-type' : 'channel-list-item'} onClick={this.handleItemClick}>
           <div className="channel-info">
             <span className="img">
               <img
@@ -70,8 +72,6 @@ class ListItem extends React.Component {
           {channelItem.lastMessage ? (
             <div>
               <div className="recently-messages">
-                Последнее сообщение:
-                <br />
                 {channelItem.lastMessage.messageType === 'file' ? (
                   <span>
                     [Файл] ({channelItem.lastMessage.size} кб)
@@ -85,7 +85,7 @@ class ListItem extends React.Component {
             </div>
           ) : null}
         </button>
-        {!channelItem.isDistinct ? (
+        {channelItem.channelType === 'group' && !channelItem.isDistinct ? (
           <div className="btns">
             <button onClick={this.handleInviteClick}>Пригласить</button>
             <button onClick={this.handleLeaveClick}>Покинуть</button>
@@ -121,17 +121,9 @@ class ListItem extends React.Component {
   }
 }
 
-ListItem.propTypes = {
+ChannelListItem.propTypes = {
   selectedChan: PropTypes.func.isRequired,
-  channelItem: PropTypes.objectOf(PropTypes.any).isRequired,
+  onLeave: PropTypes.func.isRequired,
   onInviteUsers: PropTypes.func.isRequired,
-  onLeaveGroup: PropTypes.func.isRequired,
+  channelItem: PropTypes.objectOf(PropTypes.any).isRequired
 };
-
-function mapStateToProps(state) {
-  return {
-    groupChannels: state.groupChannelsReducer,
-  };
-}
-
-export const GroupListItem = connect(mapStateToProps)(ListItem);

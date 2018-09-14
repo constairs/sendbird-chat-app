@@ -36,7 +36,10 @@ export const userReconnectFailed = err => ({
   payload: err,
 });
 
-export const logoutUserRequest = () => ({ type: TYPES.USER_LOGOUT_REQUEST });
+export const logoutUserRequest = curChannel => ({
+  type: TYPES.USER_LOGOUT_REQUEST,
+  payload: curChannel || null
+});
 
 export const logoutUserSuccessed = res => ({
   type: TYPES.USER_LOGOUT_SUCCESSED,

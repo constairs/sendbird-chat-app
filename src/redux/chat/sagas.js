@@ -3,15 +3,14 @@ import {
   put,
   takeLatest,
   takeEvery,
-  take,
   all,
 } from 'redux-saga/effects';
+import { delay } from 'redux-saga';
 import { v4 } from 'uuid';
-import { ENTER_CHANNEL_SUCCESSED } from '../openChannels/types';
 import {
-  GET_GROUP_CHANNEL_SUCCESSED,
-  LEAVE_GROUP_SUCCESSED,
-} from '../groupChannels/types';
+  ENTER_CHANNEL_SUCCESSED,
+  GET_SELECTED_CHANNEL_SUCCESSED,
+} from '../channels/types';
 import {
   sendMessage,
   sendFileMessage,
@@ -22,17 +21,21 @@ import {
   markAsReadSb,
   editFileMessage,
   cancelUploadingMessage,
+  typingStart,
+  typingEnd
 } from '../../services/sendbird';
 import {
   SEND_MESSAGE,
   DELETE_MESSAGE,
   DELETE_MESSAGE_SUCCESSED,
   EDIT_MESSAGE,
-  ON_MESSAGE_TYPING,
+  MESSAGE_TYPING,
   SEND_FILE_MESSAGE,
   EDIT_FILE_MESSAGE,
   MESSAGE_RECEIVED,
   CANCEL_UPLOADING,
+  USER_TYPING_START,
+  USER_TYPING_END,
 } from './types';
 import {
   sendMessageSuccessed,
@@ -47,7 +50,6 @@ import {
   messageTypingSet,
   messageTypingError,
   messageTypingEnd,
-  cleanChat,
   editFileMessageSuccessed,
   editFileMessageFailed,
   markAsRead,
@@ -56,7 +58,7 @@ import {
   cancelUploadingFailed,
 } from './actions';
 
-function* sendMessageAsync(action) {
+function* sendMessageSaga(action) {
   try {
     const sendRes = yield call(sendMessage, ...action.messageData);
     yield put(sendMessageSuccessed(sendRes.channel, sendRes.messages));
@@ -82,7 +84,7 @@ function* cancelUploadingSaga(action) {
   }
 }
 
-function* sendFileMessageAsync(action) {
+function* sendFileMessageSaga(action) {
   try {
     const fakeId = v4();
     const creationTime = new Date();
@@ -132,7 +134,7 @@ function* sendFileMessageAsync(action) {
   }
 }
 
-function* deleteMessageAsync(action) {
+function* deleteMessageSaga(action) {
   try {
     const delChannel = yield call(deleteMessage, ...action.messageData);
     yield put(deleteMessageSuccessed(delChannel));
@@ -141,7 +143,7 @@ function* deleteMessageAsync(action) {
   }
 }
 
-function* editMessageAsync(action) {
+function* editMessageSaga(action) {
   try {
     const editRes = yield call(editMessage, ...action.messageData);
     yield put(editMessageSuccessed(editRes));
@@ -150,7 +152,7 @@ function* editMessageAsync(action) {
   }
 }
 
-function* getMessagesAsync(action) {
+function* getMessagesSaga(action) {
   yield put(getMessagesRequest(action.payload));
   try {
     const messages = yield call(
@@ -159,22 +161,8 @@ function* getMessagesAsync(action) {
       action.payload.channelType
     );
     yield put(getMessagesSuccessed(messages));
-  } catch (error) {
-    yield put(getMessagesFailed(error));
-  }
-}
-
-function* getGroupMessges(action) {
-  yield put(getMessagesRequest(action.payload.groupChannel));
-  try {
-    const messages = yield call(
-      getMessages,
-      action.payload.groupChannel.url,
-      action.payload.groupChannel.channelType
-    );
-    yield put(getMessagesSuccessed(messages));
-    if (action.payload.groupChannel.channelType === 'group') {
-      yield call(markAsReadSb, action.payload.groupChannel);
+    if (action.payload.channelType === 'group') {
+      yield call(markAsReadSb, action.payload);
       yield put(markAsRead());
     }
   } catch (error) {
@@ -182,10 +170,11 @@ function* getGroupMessges(action) {
   }
 }
 
-function* onMessageTypingSaga(action) {
+function* messageTypingSaga(action) {
   try {
-    const response = yield call(onMessageTyping, ...action.payload);
-    yield put(messageTypingSet(response));
+    const startRes = yield call(onMessageTyping, ...action.payload);
+    yield put(messageTypingSet(startRes));
+    yield call(delay, 1000);
     const endRes = yield call(
       onMessageTyping,
       action.payload[0],
@@ -199,8 +188,16 @@ function* onMessageTypingSaga(action) {
   }
 }
 
-function* cleanChatSaga() {
-  yield put(cleanChat());
+function* userTypingEndSaga(action) {
+  yield call(typingEnd, ...action.payload);
+}
+
+function* userTypingSaga(action) {
+  if (action.type === 'USER_TYPING_START') {
+    yield call(typingStart, ...action.payload);
+    yield call(delay, 2000);
+    yield call(typingEnd, ...action.payload);
+  }
 }
 
 function* editFileMessageSaga(action) {
@@ -214,6 +211,7 @@ function* editFileMessageSaga(action) {
 
 function* markAsReadSaga(action) {
   if (action.payload.channel.channelType === 'group') {
+    yield call(delay, 1000);
     yield call(markAsReadSb, action.payload.channel);
     yield put(markAsRead());
   }
@@ -223,15 +221,18 @@ export function* chatSagas() {
   yield all([
     yield takeLatest(MESSAGE_RECEIVED, markAsReadSaga),
     yield takeLatest(CANCEL_UPLOADING, cancelUploadingSaga),
-    yield takeLatest(SEND_MESSAGE, sendMessageAsync),
-    yield takeLatest(SEND_FILE_MESSAGE, sendFileMessageAsync),
-    yield takeLatest(DELETE_MESSAGE, deleteMessageAsync),
-    yield takeLatest(DELETE_MESSAGE_SUCCESSED, getMessagesAsync),
-    yield takeLatest(EDIT_MESSAGE, editMessageAsync),
+    yield takeLatest(SEND_MESSAGE, sendMessageSaga),
+    yield takeLatest(SEND_FILE_MESSAGE, sendFileMessageSaga),
+    yield takeLatest(DELETE_MESSAGE, deleteMessageSaga),
+    yield takeLatest(EDIT_MESSAGE, editMessageSaga),
     yield takeLatest(EDIT_FILE_MESSAGE, editFileMessageSaga),
-    yield takeEvery(ENTER_CHANNEL_SUCCESSED, getMessagesAsync),
-    yield takeEvery(GET_GROUP_CHANNEL_SUCCESSED, getGroupMessges),
-    yield take(LEAVE_GROUP_SUCCESSED, cleanChatSaga),
-    yield takeLatest(ON_MESSAGE_TYPING, onMessageTypingSaga),
+    yield takeEvery(
+      [ENTER_CHANNEL_SUCCESSED,
+        GET_SELECTED_CHANNEL_SUCCESSED,
+        DELETE_MESSAGE_SUCCESSED],
+      getMessagesSaga),
+    yield takeLatest(MESSAGE_TYPING, messageTypingSaga),
+    yield takeLatest(USER_TYPING_START, userTypingSaga),
+    yield takeLatest(USER_TYPING_END, userTypingEndSaga),
   ]);
 }
