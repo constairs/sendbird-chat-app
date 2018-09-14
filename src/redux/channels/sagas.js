@@ -7,7 +7,6 @@ import {
   selectChannel,
   exitChannel,
   leaveGroup,
-  updateChannel,
   inviteToGroup,
   refreshGroupMembers,
   getParticipantsSb,
@@ -20,18 +19,15 @@ import {
   CREATE_OPEN_CHANNEL_SUCCESSED,
   CREATE_GROUP_CHANNEL_SUCCESSED,
   LEAVE_CHANNEL,
-  UPDATE_CHANNEL,
   INVITE_USERS,
   ON_USER_JOINED,
   ON_USER_LEFT,
   NEW_USER_ENTERED,
-  USER_EXITED
+  USER_EXITED,
 } from './types';
 import {
   getSelectedChannelSuccessed,
   getSelectedChannelFailed,
-  updateChannelSuccessed,
-  updateChannelFailed,
   getChannelListSuccessed,
   getChannelListFailed,
   getChannelList,
@@ -112,21 +108,13 @@ function* leaveChannelSaga(action) {
   try {
     if (action.payload.channelType === 'open') {
       yield call(exitChannel, action.payload.channelUrl);
+      yield put(leaveChannelSuccessed(action.payload));
     } else {
       yield call(leaveGroup, action.payload.channelUrl);
       yield put(leaveChannelSuccessed(action.payload));
     }
   } catch (error) {
     yield put(leaveChannelFailed(error));
-  }
-}
-
-function* updateChannelSaga(action) {
-  try {
-    const updRes = yield call(updateChannel, ...action.payload);
-    yield put(updateChannelSuccessed(updRes));
-  } catch (error) {
-    yield put(updateChannelFailed(error));
   }
 }
 
@@ -173,7 +161,6 @@ function* getParticipantsSaga(action) {
   }
 }
 
-
 export function* channelsSagas() {
   yield all([
     yield takeLatest([CREATE_OPEN_CHANNEL, CREATE_GROUP_CHANNEL], createChannelSaga),
@@ -188,7 +175,6 @@ export function* channelsSagas() {
     ),
     yield takeLatest(GET_SELECTED_CHANNEL, getSelectedChannelSaga),
     yield takeLatest(LEAVE_CHANNEL, leaveChannelSaga),
-    yield takeLatest(UPDATE_CHANNEL, updateChannelSaga),
     yield takeLatest(
       [ON_USER_JOINED, ON_USER_LEFT, GET_SELECTED_CHANNEL_SUCCESSED],
       refreshMembersSaga

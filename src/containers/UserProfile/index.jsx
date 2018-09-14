@@ -6,7 +6,7 @@ import Modal from 'react-modal';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faSignOutAlt } from '@fortawesome/free-solid-svg-icons';
 import { UserForm } from '../../components/UserForm';
-import * as userActions from '../../redux/user/actions';
+import { changeUserRequest, logoutUserRequest } from '../../redux/user/actions';
 
 import './index.scss';
 
@@ -74,19 +74,12 @@ Profile.propTypes = {
   userActions: PropTypes.objectOf(PropTypes.any).isRequired,
 };
 
-function mapStateToProps(state) {
-  return {
-    user: state.persistedUserReducer,
-  };
-}
-
-function mapDispatchToProps(dispatch) {
-  return {
-    userActions: bindActionCreators(userActions, dispatch),
-  };
-}
-
 export const UserProfile = connect(
-  mapStateToProps,
-  mapDispatchToProps
+  state => ({ user: state.persistedUser, }),
+  dispatch => ({
+    userActions: bindActionCreators({
+      changeUserRequest,
+      logoutUserRequest
+    }, dispatch),
+  })
 )(Profile);

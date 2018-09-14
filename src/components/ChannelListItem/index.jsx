@@ -72,8 +72,6 @@ export class ChannelListItem extends React.Component {
           {channelItem.lastMessage ? (
             <div>
               <div className="recently-messages">
-                Последнее сообщение:
-                <br />
                 {channelItem.lastMessage.messageType === 'file' ? (
                   <span>
                     [Файл] ({channelItem.lastMessage.size} кб)

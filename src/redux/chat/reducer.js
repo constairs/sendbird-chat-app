@@ -12,8 +12,14 @@ const initState = {
   currentChannel: null,
   userTyping: '',
   uploadProgress: { reqId: '', progress: 0 },
-  membersTyping: []
+  membersTyping: [],
+  receipt: 0
 };
+
+const sendMessage = state => ({
+  ...state,
+  sendingMessage: true,
+});
 
 const sendMessageSuccessed = (state, sendRes) => ({
   ...state,
@@ -31,7 +37,6 @@ const sendFileMessageSuccessed = (state, sendRes) => ({
   ...state,
   messages: [...state.messages, sendRes.fileMessage],
 });
-
 const sendFileMessageFailed = (state, error) => ({
   ...state,
   error,
@@ -100,7 +105,6 @@ const messageUpdated = (state, updatedData) => ({
 
 const messageDeleted = (state, messageId) => ({
   ...state,
-  messageDeleted: messageId,
   messages: [...state.messages.filter(cur => `${cur.messageId}` !== messageId)],
 });
 
@@ -183,6 +187,7 @@ const cancelUploadingFailed = (state, error) => ({
 });
 
 const handlers = {
+  [TYPES.SEND_MESSAGE]: sendMessage,
   [TYPES.SEND_MESSAGE_SUCCESSED]: sendMessageSuccessed,
   [TYPES.SEND_MESSAGE_FAILED]: sendMessageFailed,
 
@@ -226,4 +231,4 @@ const handlers = {
   [TYPES.CANCEL_UPLOADING_FAILED]: cancelUploadingFailed,
 };
 
-export const chatReducer = createReducer(initState, handlers);
+export const chat = createReducer(initState, handlers);

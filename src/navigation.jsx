@@ -2,16 +2,15 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { Switch, Route, Redirect } from 'react-router-dom';
 import { connect } from 'react-redux';
+import { ConnectedRouter } from 'connected-react-router';
 import { LoginContainer } from './containers/LoginContainer/';
 import { ChannelsConstainer } from './containers/ChannelsContainer';
 import { Banner } from './components/Banner';
 import { UserProfileContainer } from './containers/UserProfileContainer';
+import { history } from './redux/store';
+import { Header } from './containers/Header';
 
-function mapStateToPropsRoute(state) {
-  return {
-    logged: state.persistedUserReducer.logged,
-  };
-}
+import './containers/UserProfile/index.scss';
 
 const Private = ({ component: Component, logged, ...rest }) => (
   <Route
@@ -41,13 +40,18 @@ Private.propTypes = {
   location: PropTypes.objectOf(PropTypes.any).isRequired,
 };
 
-const PrivateRoute = connect(mapStateToPropsRoute)(Private);
+const PrivateRoute = connect(state => ({ logged: state.persistedUser.logged, }))(Private);
 
 export const Navigation = () => (
-  <Switch>
-    <Route exact path="/" component={Banner} />
-    <Route exact path="/login/" component={LoginContainer} />
-    <PrivateRoute component={ChannelsConstainer} path="/channels/" />
-    <PrivateRoute component={UserProfileContainer} path="/profile/" />
-  </Switch>
+  <ConnectedRouter history={history}>
+    <React.Fragment>
+      <Header />
+      <Switch>
+        <Route exact path="/" component={Banner} />
+        <Route exact path="/login/" component={LoginContainer} />
+        <PrivateRoute component={ChannelsConstainer} path="/channels/" />
+        <PrivateRoute component={UserProfileContainer} path="/profile/" />
+      </Switch>
+    </React.Fragment>
+  </ConnectedRouter>
 );

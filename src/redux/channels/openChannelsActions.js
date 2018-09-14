@@ -49,19 +49,3 @@ export const userExited = data => ({
   payload: data
 });
 
-export const updateParticipantsStatus = () => ({
-  type: TYPES.UPDATE_PARTICIPANTS_STATUS,
-});
-
-export const getRecentlyMessages = reqParams => ({
-  type: TYPES.GET_RECENTLY_MESSAGES,
-  payload: reqParams,
-});
-export const getRecentlyMessagesSuccessed = messages => ({
-  type: TYPES.GET_RECENTLY_MESSAGES_SUCCESSED,
-  payload: messages,
-});
-export const getRecentlyMessagesFailed = error => ({
-  type: TYPES.GET_RECENTLY_MESSAGES_FAILED,
-  payload: error,
-});

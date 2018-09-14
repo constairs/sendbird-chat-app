@@ -33,18 +33,18 @@ const getChannelListFailed = (state, error) => ({
 
 const createGroupChannel = state => ({
   ...state,
-  fetching: true,
+  channelFetching: true,
 });
 
 const createGroupChannelSuccessed = state => ({
   ...state,
-  fetching: false,
+  channelFetching: false,
 });
 
 const createGroupChannelFailed = (state, error) => ({
   ...state,
   error,
-  fetching: false,
+  channelFetching: false,
 });
 
 const inviteUsersFailed = (state, error) => ({
@@ -74,7 +74,17 @@ const onUserLeft = (state, userData) => ({
 
 const notificationOff = state => ({
   ...state,
+  notification: {
+    type: '',
+    channel: '',
+    user: '',
+  },
   notificationShow: false,
+});
+
+const refreshEnteredMember = (state, members) => ({
+  ...state,
+  channel: { ...state.channel, members }
 });
 
 const refreshedMembers = (state, channel) => ({
@@ -89,39 +99,37 @@ const refreshFailed = (state, error) => ({
 
 const changedToAnotherChannel = state => ({
   ...state,
-  channel: '',
-  receipt: '',
+  channel: null,
 });
 
-const createOpenChannel = (state, formData) => ({
+const createOpenChannel = state => ({
   ...state,
-  formData,
-  fetching: true,
+  channelFetching: true,
 });
-const createOpenChannelSuccessed = (state, channelData) => ({
+const createOpenChannelSuccessed = state => ({
   ...state,
-  channelData,
-  fetching: false,
+  channelFetching: false,
 });
 const createOpenChannelFailed = (state, error) => ({
   ...state,
   error,
-  fetching: false,
+  channelFetching: false,
 });
 
 const enterChannel = state => ({
   ...state,
-  fetching: true,
+  channelFetching: true,
+  channel: ''
 });
 const enterChannelSuccessed = (state, channel) => ({
   ...state,
   channel: getChannelFunc(channel),
-  fetching: false,
+  channelFetching: false,
 });
 const enterChannelFailed = (state, error) => ({
   ...state,
   error,
-  fetching: false,
+  channelFetching: false,
 });
 
 const getParticipantsSuccessed = (state, participantList) => ({
@@ -138,18 +146,17 @@ const getParticipantsFailed = (state, error) => ({
 
 const leaveChannel = state => ({
   ...state,
-  fetching: true,
+  channelFetching: true,
 });
 const leaveChannelSuccessed = (state, channelInfo) => ({
   ...state,
-  channel: '',
-  openChannelList: channelInfo.channelType === 'open' ? state.openChannelList.filter(channel => channel.url !== channelInfo.channelUrl) : state.openChannelList,
+  channel: null,
   groupChannelList: channelInfo.channelType === 'group' ? state.groupChannelList.filter(channel => channel.url !== channelInfo.channelUrl) : state.groupChannelList,
-  fetching: false,
+  channelFetching: false,
 });
 const leaveChannelFailed = state => ({
   ...state,
-  fetching: false,
+  channelFetching: false,
 });
 
 const channelUpdated = (state, channel) => ({
@@ -165,56 +172,23 @@ const userEntered = (state, action) => ({
   channel: getChannelFunc(action.channel),
 });
 
-const userExited = (state, action) => ({
+const userExited = (state, data) => ({
   ...state,
-  channel: getChannelFunc(action.channel),
-  participants: [
-    ...state.participants.filter(cur => cur.userId !== action.user.userId),
-  ],
-});
-
-const getRecentlyMessages = state => ({
-  ...state,
-  fetching: true,
-});
-const getRecentlyMessagesSuccessed = (state, message) => ({
-  ...state,
-  openChannelList: state.openChannelList.map(
-    channel =>
-      (channel.url === message.channel
-        ? { ...channel, messages: message.messages }
-        : channel)
-  ),
-  fetching: false,
-});
-const getRecentlyMessagesFailed = (state, error) => ({
-  ...state,
-  error,
-  fetching: false,
+  channel: getChannelFunc(data.channel),
 });
 
 const getSelectedChannel = state => ({
   ...state,
-  fetching: true,
+  channelFetching: true,
 });
 const getSelectedChannelSuccessed = (state, channel) => ({
   ...state,
   channel: getChannelFunc(channel),
-  fetching: false,
+  channelFetching: false,
 });
 const getSelectedChannelFailed = (state, error) => ({
   ...state,
-  fetching: false,
-  error
-});
-
-const updateChannelSuccessed = (state, coverUrl) => ({
-  ...state,
-  channel: { ...getChannelFunc(state.channel), coverUrl },
-});
-
-const updateChannelFailed = (state, error) => ({
-  ...state,
+  channelFetching: false,
   error
 });
 
@@ -234,11 +208,11 @@ const handlers = {
 
   [TYPES.NOTIFICATION_OFF]: notificationOff,
 
-  [TYPES.ON_READ_RECEIPT_UPDATED]: refreshedMembers,
+  [TYPES.ON_READ_RECEIPT_UPDATED]: refreshEnteredMember,
   [TYPES.REFRESHED_MEMBERS]: refreshedMembers,
   [TYPES.REFRESH_FAILED]: refreshFailed,
 
-  [TYPES.ENTER_CHANNEL_SUCCESSED]: changedToAnotherChannel,
+  [TYPES.ENTER_CHANNEL]: changedToAnotherChannel,
 
   [TYPES.ENTER_CHANNEL]: enterChannel,
   [TYPES.ENTER_CHANNEL_SUCCESSED]: enterChannelSuccessed,
@@ -254,12 +228,7 @@ const handlers = {
   [TYPES.CHANNEL_UPDATED]: channelUpdated,
 
   [TYPES.NEW_USER_ENTERED]: userEntered,
-
   [TYPES.USER_EXITED]: userExited,
-
-  [TYPES.GET_RECENTLY_MESSAGES]: getRecentlyMessages,
-  [TYPES.GET_RECENTLY_MESSAGES_SUCCESSED]: getRecentlyMessagesSuccessed,
-  [TYPES.GET_RECENTLY_MESSAGES_FAILED]: getRecentlyMessagesFailed,
 
   [TYPES.GET_CHANNEL_LIST]: getChannelList,
   [TYPES.GET_CHANNEL_LIST_SUCCESSED]: getChannelListSuccessed,
@@ -268,10 +237,6 @@ const handlers = {
   [TYPES.GET_SELECTED_CHANNEL]: getSelectedChannel,
   [TYPES.GET_SELECTED_CHANNEL_SUCCESSED]: getSelectedChannelSuccessed,
   [TYPES.GET_SELECTED_CHANNEL_FAILED]: getSelectedChannelFailed,
-
-  [TYPES.UPDATE_CHANNEL_SUCCESSED]: updateChannelSuccessed,
-  [TYPES.UPDATE_CHANNEL_FAILED]: updateChannelFailed,
 };
 
-export const channelsReducer = createReducer(initState, handlers);
-
+export const channels = createReducer(initState, handlers);

@@ -60,7 +60,7 @@ ChatHandler.onReadReceiptUpdated = function (channel) {
     (a, b) => a > b
   )[0];
   store.store.dispatch(readReceipt(receipt, channel.url));
-  store.store.dispatch(onReadReceiptUpdated(channel));
+  store.store.dispatch(onReadReceiptUpdated(channel.members));
 };
 
 GroupChannelHandler.onChannelChanged = function (channel) {
@@ -183,17 +183,6 @@ export function createGroupChannel(
         });
       }
     );
-  });
-}
-
-export function updateChannel(channelUrl, channelType, coverUrl) {
-  return new Promise((resolve, reject) => {
-    console.log(channelUrl, channelType, coverUrl);
-    getChannel(channelUrl, channelType).then(channel => {
-      // channel.update(coverUrl);
-      // console.log(channel.update(coverUrl));
-      resolve(coverUrl);
-    });
   });
 }
 

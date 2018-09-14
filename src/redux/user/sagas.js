@@ -6,6 +6,7 @@ import {
   connectToSB,
   disconnectFromSB,
   changeProfile,
+  exitChannel
 } from '../../services/sendbird';
 import {
   USER_LOGIN_REQUEST,
@@ -26,6 +27,7 @@ import {
   changeUserSuccessed,
   changeUserFailed,
 } from './actions';
+import { leaveChannel, leaveChannelSuccessed } from '../channels/actions';
 
 function* loginUserAsync(action) {
   try {
@@ -68,6 +70,11 @@ function* userReconnectAsync(action) {
 
 function* logoutUserAsync(action) {
   try {
+    if (action.payload && action.payload.channelType === 'open') {
+      yield put(leaveChannel(action.payload));
+      yield call(exitChannel, action.payload.channelUrl);
+      yield put(leaveChannelSuccessed(action.payload));
+    }
     const res = yield call(disconnectFromSB, action);
     yield put(logoutUserSuccessed(res));
   } catch (err) {

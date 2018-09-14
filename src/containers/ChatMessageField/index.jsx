@@ -7,7 +7,7 @@ import Modal from 'react-modal';
 import Dropzone from 'react-dropzone';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faFile, faTimes, faFileAudio, faFileVideo } from '@fortawesome/free-solid-svg-icons';
-import * as chatActions from '../../redux/chat/actions';
+import { messageTyping, messageTypingEnd, userTypingStart, userTypingEnd, sendMessage, sendFileMessage } from '../../redux/chat/actions';
 
 class MessageField extends React.Component {
   state = {
@@ -117,6 +117,7 @@ class MessageField extends React.Component {
 
   handleClearFile = () => {
     this.setState({
+      customMessageType: '',
       uploadedFile: [],
       fileToUpload: '',
       fileMessageText: '',
@@ -270,21 +271,21 @@ MessageField.defaultProps = {
   membersTyping: [],
 };
 
-function mapStateToProps(state) {
-  return {
-    user: state.persistedUserReducer,
-    userTyping: state.chatReducer.userTyping,
-    membersTyping: state.chatReducer.membersTyping,
-    sendingMessage: state.chatReducer.sendingMessage,
-  };
-}
-
-function mapDispatchToProps(dispatch) {
-  return {
-    chatActions: bindActionCreators(chatActions, dispatch),
-  };
-}
 export const ChatMessageField = connect(
-  mapStateToProps,
-  mapDispatchToProps
+  state => ({
+    user: state.persistedUser,
+    userTyping: state.chat.userTyping,
+    membersTyping: state.chat.membersTyping,
+    sendingMessage: state.chat.sendingMessage,
+  }),
+  dispatch => ({
+    chatActions: bindActionCreators({
+      messageTyping,
+      messageTypingEnd,
+      userTypingStart,
+      userTypingEnd,
+      sendMessage,
+      sendFileMessage
+    }, dispatch),
+  })
 )(MessageField);
