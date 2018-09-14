@@ -40,9 +40,9 @@ export const notificationOff = () => ({
   type: TYPES.NOTIFICATION_OFF,
 });
 
-export const refreshedMembers = response => ({
+export const refreshedMembers = members => ({
   type: TYPES.REFRESHED_MEMBERS,
-  payload: response,
+  payload: members,
 });
 
 export const refreshFailed = error => ({

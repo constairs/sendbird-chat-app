@@ -136,8 +136,8 @@ function* refreshMembersSaga(action) {
   try {
     if (action.type === ON_USER_JOINED || action.type === ON_USER_LEFT) {
       if (action.payload.myMemberState === 'joined') {
-        const response = yield call(refreshGroupMembers, action.payload);
-        yield put(refreshedMembers(response));
+        const members = yield call(refreshGroupMembers, action.payload);
+        yield put(refreshedMembers(members));
       }
     } else {
       const response = yield call(
@@ -148,6 +148,13 @@ function* refreshMembersSaga(action) {
     }
   } catch (error) {
     yield put(refreshFailed(error));
+  }
+}
+
+function* membersRefresher(action) {
+  while (action) {
+    yield call(delay, 20000);
+    yield refreshMembersSaga(action);
   }
 }
 
@@ -179,6 +186,7 @@ export function* channelsSagas() {
       [ON_USER_JOINED, ON_USER_LEFT, GET_SELECTED_CHANNEL_SUCCESSED],
       refreshMembersSaga
     ),
+    yield takeLatest(GET_SELECTED_CHANNEL_SUCCESSED, membersRefresher),
     yield takeLatest([ON_USER_JOINED, ON_USER_LEFT], membersUpdatedSaga),
     yield takeLatest([NEW_USER_ENTERED, USER_EXITED], getParticipantsSaga),
     yield takeLatest(ON_USER_JOINED, getChannelsListSaga),

@@ -29,7 +29,14 @@ class Profile extends React.Component {
   };
 
   handleLogout = () => {
-    this.props.userActions.logoutUserRequest();
+    if (this.props.channelUrl && this.props.channelType) {
+      this.props.userActions.logoutUserRequest({
+        channelUrl: this.props.channelUrl,
+        channelType: this.props.channelType
+      });
+    } else {
+      this.props.userActions.logoutUserRequest();
+    }
   };
 
   render() {
@@ -72,10 +79,16 @@ class Profile extends React.Component {
 Profile.propTypes = {
   user: PropTypes.objectOf(PropTypes.any).isRequired,
   userActions: PropTypes.objectOf(PropTypes.any).isRequired,
+  channelUrl: PropTypes.string.isRequired,
+  channelType: PropTypes.string.isRequired,
 };
 
 export const UserProfile = connect(
-  state => ({ user: state.persistedUser, }),
+  state => ({
+    user: state.persistedUser,
+    channelUrl: state.channels.channel ? state.channels.channel.url : '',
+    channelType: state.channels.channel ? state.channels.channel.channelType : '',
+  }),
   dispatch => ({
     userActions: bindActionCreators({
       changeUserRequest,

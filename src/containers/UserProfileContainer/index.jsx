@@ -90,13 +90,8 @@ UserProfile.propTypes = {
   userFetching: PropTypes.bool.isRequired,
   userName: PropTypes.string.isRequired,
   userImg: PropTypes.string.isRequired,
-  channelUrl: PropTypes.string,
-  channelType: PropTypes.string,
-};
-
-UserProfile.defaultProps = {
-  channelUrl: '',
-  channelType: '',
+  channelUrl: PropTypes.string.isRequired,
+  channelType: PropTypes.string.isRequired,
 };
 
 export const UserProfileContainer = connect(

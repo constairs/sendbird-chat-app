@@ -87,9 +87,9 @@ const refreshEnteredMember = (state, members) => ({
   channel: { ...state.channel, members }
 });
 
-const refreshedMembers = (state, channel) => ({
+const refreshedMembers = (state, members) => ({
   ...state,
-  channel: getChannelFunc(channel)
+  channel: { ...state.channel, members }
 });
 
 const refreshFailed = (state, error) => ({
@@ -97,9 +97,9 @@ const refreshFailed = (state, error) => ({
   error,
 });
 
-const changedToAnotherChannel = state => ({
+const changeActiveChannel = state => ({
   ...state,
-  channel: null,
+  channel: null
 });
 
 const createOpenChannel = state => ({
@@ -212,7 +212,8 @@ const handlers = {
   [TYPES.REFRESHED_MEMBERS]: refreshedMembers,
   [TYPES.REFRESH_FAILED]: refreshFailed,
 
-  [TYPES.ENTER_CHANNEL]: changedToAnotherChannel,
+  [TYPES.ENTER_CHANNEL]: changeActiveChannel,
+  [TYPES.CHANGE_ACTIVE_CHANNEL]: changeActiveChannel,
 
   [TYPES.ENTER_CHANNEL]: enterChannel,
   [TYPES.ENTER_CHANNEL_SUCCESSED]: enterChannelSuccessed,

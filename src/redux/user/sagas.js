@@ -27,7 +27,7 @@ import {
   changeUserSuccessed,
   changeUserFailed,
 } from './actions';
-import { leaveChannel, leaveChannelSuccessed } from '../channels/actions';
+import { leaveChannel, leaveChannelSuccessed, changeActiveChannel } from '../channels/actions';
 
 function* loginUserAsync(action) {
   try {
@@ -74,6 +74,8 @@ function* logoutUserAsync(action) {
       yield put(leaveChannel(action.payload));
       yield call(exitChannel, action.payload.channelUrl);
       yield put(leaveChannelSuccessed(action.payload));
+    } else if (action.payload && action.payload.channelType === 'group') {
+      yield put(changeActiveChannel());
     }
     const res = yield call(disconnectFromSB, action);
     yield put(logoutUserSuccessed(res));

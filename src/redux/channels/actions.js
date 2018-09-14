@@ -40,3 +40,7 @@ export const channelUpdated = channel => ({
   type: TYPES.CHANNEL_UPDATED,
   payload: channel,
 });
+
+export const changeActiveChannel = () => ({
+  type: TYPES.CHANGE_ACTIVE_CHANNEL
+});
