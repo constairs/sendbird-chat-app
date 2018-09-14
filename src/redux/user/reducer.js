@@ -1,7 +1,7 @@
 import { createReducer } from '../../utils/reducerUtils';
 import * as TYPES from './types';
 
-const initState = {
+export const initState = {
   userFetching: false,
   logged: false,
 };
