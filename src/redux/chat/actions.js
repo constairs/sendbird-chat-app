@@ -2,11 +2,11 @@ import * as TYPES from './types';
 
 export const sendMessage = messageData => ({
   type: TYPES.SEND_MESSAGE,
-  messageData,
+  messageData
 });
-export const sendMessageSuccessed = (channel, messages) => ({
+export const sendMessageSuccessed = (channel, message) => ({
   type: TYPES.SEND_MESSAGE_SUCCESSED,
-  payload: { channel, messages },
+  payload: { channel, message },
 });
 export const sendMessageFailed = error => ({
   type: TYPES.SEND_MESSAGE_FAILED,
@@ -17,9 +17,9 @@ export const sendFileMessage = fileMessageData => ({
   type: TYPES.SEND_FILE_MESSAGE,
   fileMessageData,
 });
-export const sendFileMessageSuccessed = (channel, fileMessage) => ({
+export const sendFileMessageSuccessed = (channel, message) => ({
   type: TYPES.SEND_FILE_MESSAGE_SUCCESSED,
-  payload: { channel, fileMessage },
+  payload: { channel, message },
 });
 export const sendFileMessageFailed = error => ({
   type: TYPES.SEND_FILE_MESSAGE_FAILED,
@@ -83,14 +83,14 @@ export const messageReceived = (channel, message) => ({
   payload: { channel, message },
 });
 
-export const messageDeleted = (channel, messageId) => ({
-  type: TYPES.MESSAGE_DELETED,
-  payload: messageId,
-});
-
 export const messageUpdated = (channel, message) => ({
   type: TYPES.MESSAGE_UPDATED,
   payload: { channel, message },
+});
+
+export const messageDeleted = messageId => ({
+  type: TYPES.MESSAGE_DELETED,
+  payload: messageId,
 });
 
 export const messageTyping = messageData => ({
@@ -112,6 +112,10 @@ export const messageTypingError = error => ({
   payload: error,
 });
 
+export const cleanChat = () => ({
+  type: TYPES.CLEAN_CHAT,
+});
+
 export const userTypingStart = channel => ({
   type: TYPES.USER_TYPING_START,
   payload: channel
@@ -120,10 +124,6 @@ export const userTypingStart = channel => ({
 export const userTypingEnd = channel => ({
   type: TYPES.USER_TYPING_END,
   payload: channel
-});
-
-export const cleanChat = () => ({
-  type: TYPES.CLEAN_CHAT,
 });
 
 export const readReceipt = (receipt, channelUrl) => ({

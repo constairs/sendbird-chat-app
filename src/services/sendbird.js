@@ -48,8 +48,8 @@ ChatHandler.onMessageReceived = function (channel, message) {
 ChatHandler.onMessageUpdated = function (channel, message) {
   store.store.dispatch(messageUpdated(channel, message));
 };
-ChatHandler.onMessageDeleted = function (channel, messageId) {
-  store.store.dispatch(messageDeleted(channel, messageId));
+ChatHandler.onMessageDeleted = function (messageId) {
+  store.store.dispatch(messageDeleted(messageId));
 };
 ChatHandler.onTypingStatusUpdated = function (groupChannel) {
   const typingMembers = groupChannel.getTypingMembers();
@@ -406,11 +406,11 @@ export function sendMessage(
 ) {
   return new Promise((resolve, reject) => {
     getChannel(channelUrl, channelType).then(channel => {
-      channel.sendUserMessage(message, (messages, err) => {
+      channel.sendUserMessage(message, (message, err) => {
         if (err) {
           reject(err);
         }
-        resolve({ channel, messages });
+        resolve({ channel, message });
       });
     });
   });
@@ -467,11 +467,11 @@ export function sendFileMessage(
             })
           );
         },
-        (fileMessage, error) => {
+        (message, error) => {
           if (error) {
             reject(error);
           }
-          resolve({ channel, fileMessage });
+          resolve({ channel, message });
         }
       );
     });

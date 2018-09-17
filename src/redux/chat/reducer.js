@@ -4,7 +4,7 @@ import { ENTER_CHANNEL_SUCCESSED, GET_SELECTED_CHANNEL_SUCCESSED, ON_USERS_TYPIN
 import { getLeastReceiptStatusTime } from './helpers';
 import { getChannelFunc } from '../channels/helpers';
 
-const initState = {
+export const initState = {
   messFetching: false,
   sendingMessage: false,
   error: '',
@@ -23,8 +23,8 @@ const sendMessage = state => ({
 
 const sendMessageSuccessed = (state, sendRes) => ({
   ...state,
-  messages: state.messages.length > 10 ?
-    [...state.messages, sendRes.messages].slice(1) : [...state.messages, sendRes.messages],
+  messages: state.messages.length === 10 ?
+    [...state.messages, sendRes.message].slice(1) : [...state.messages, sendRes.message],
   sendingMessage: false,
 });
 const sendMessageFailed = (state, error) => ({
@@ -35,7 +35,7 @@ const sendMessageFailed = (state, error) => ({
 
 const sendFileMessageSuccessed = (state, sendRes) => ({
   ...state,
-  messages: [...state.messages, sendRes.fileMessage],
+  messages: [...state.messages, sendRes.message],
 });
 const sendFileMessageFailed = (state, error) => ({
   ...state,
@@ -85,13 +85,20 @@ const getMessagesFailed = (state, error) => ({
   messFetching: false,
 });
 
-const messageReceived = (state, messageData) => ({
-  ...state,
-  messages:
-    state.currentChannel && state.currentChannel.url === messageData.channel.url
-      ? [...state.messages.slice(1), messageData.message]
-      : state.messages,
-});
+const messageReceived = (state, messageData) => {
+  if (state.currentChannel && state.currentChannel.url === messageData.channel.url) {
+    return {
+      ...state,
+      messages: state.messages.length === 10 ?
+        [...state.messages.slice(1), messageData.message]
+        :
+        [...state.messages, messageData.message]
+    };
+  }
+  return {
+    ...state,
+  };
+};
 
 const messageUpdated = (state, updatedData) => ({
   ...state,

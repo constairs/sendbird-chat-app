@@ -61,7 +61,7 @@ import {
 function* sendMessageSaga(action) {
   try {
     const sendRes = yield call(sendMessage, ...action.messageData);
-    yield put(sendMessageSuccessed(sendRes.channel, sendRes.messages));
+    yield put(sendMessageSuccessed(sendRes.channel, sendRes.message));
     if (sendRes.channel.channelType === 'group') {
       yield call(markAsReadSb, sendRes.channel);
       yield put(markAsRead());
