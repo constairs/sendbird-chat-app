@@ -1,50 +1,22 @@
-import { chat as reducer, initState } from '../../src/redux/chat/reducer';
-import * as actions from '../../src/redux/chat/actions';
-import { onUsersTyping } from '../../src/redux/channels/groupChannelsActions';
-import { getSelectedChannelSuccessed, channelUpdated } from '../../src/redux/channels/actions';
-import { enterChannelSuccessed } from '../../src/redux/channels/openChannelsActions';
-import { getChannelFunc } from '../../src/redux/channels/helpers';
-
-const message = {
-  messageType: ' user',
-  messageId: 1832802277,
-  channelUrl: 'sendbird_open_channel_41569_c0870af54119f6cf2e1cd9116d6f4de524710943',
-  createdAt: 1537151810941,
-  updatedAt: 0,
-  channelType: 'open',
-  mentionType: 'users',
-  mentionedUsers: '',
-  message: 'fdfd',
-  data: '',
-  reqId: '1537150730719',
-  customType: '',
-  translations: '',
-};
-const messageId = 1832802277;
-const editRes = {
-  ...message,
-  updatedAt: 1537151810948,
-  message: 'another text',
-};
-const replacer = editRes;
-const channel = {
-  url: 'sendbird_open_channel_41569_c0870af54119f6cf2e1cd9116d6f4de524710943'
-};
-const newChannel = {
-  url: 'sendbird_open_channel_41569_c0870af54119f6cf2e1cd9116d6f4de524710943',
-  channelType: 'group',
-  cachedReadReceiptStatus: {
-    test: 1536904355795,
-    user: 1536806256382
-  },
-};
-const metaData = {
-  userTyping: 'user',
-};
-const typingMembers = [1, 2];
-const receipt = 1546806256382;
-const progress = 66;
-
+import { chat as reducer, initState } from '../../../src/redux/chat/reducer';
+import * as actions from '../../../src/redux/chat/actions';
+import { onUsersTyping } from '../../../src/redux/channels/groupChannelsActions';
+import { getSelectedChannelSuccessed, channelUpdated } from '../../../src/redux/channels/actions';
+import { enterChannelSuccessed } from '../../../src/redux/channels/openChannelsActions';
+import { getChannelFunc } from '../../../src/redux/channels/helpers';
+import {
+  message,
+  messageId,
+  editRes,
+  replacer,
+  channel,
+  groupChannel,
+  newChannel,
+  metaData,
+  typingMembers,
+  receipt,
+  progress,
+} from '../../fixtures';
 
 describe('chat reducer', () => {
   it('sendMessage', () => {
@@ -240,7 +212,7 @@ describe('chat reducer', () => {
   it('channelUpdated', () => {
     const stateBefore = {
       ...initState,
-      currentChannel: channel
+      currentChannel: groupChannel
     };
     const state = reducer(stateBefore, channelUpdated(newChannel));
     expect(state.currentChannel).toEqual(getChannelFunc(newChannel));

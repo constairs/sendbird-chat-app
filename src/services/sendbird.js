@@ -33,10 +33,10 @@ ChannelHandler.onChannelChanged = function (channel) {
   store.store.dispatch(channelUpdated(channel));
 };
 ChannelHandler.onUserEntered = function (channel, user) {
-  store.store.dispatch(userEntered({ channel, user }));
+  store.store.dispatch(userEntered(channel, user ));
 };
 ChannelHandler.onUserExited = function (channel, user) {
-  store.store.dispatch(userExited({ channel, user }));
+  store.store.dispatch(userExited( channel, user ));
 };
 ChannelHandler.onMetaDataUpdated = function (channel, metaData) {
   store.store.dispatch(messageTypingSet(metaData));

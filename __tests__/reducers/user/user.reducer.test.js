@@ -1,17 +1,6 @@
-import { user as reducer, initState } from '../../src/redux/user/reducer';
-import * as actions from '../../src/redux/user/actions';
-
-const userData = {
-  nickname: 'test2',
-  profileUrl: 'https://sendbird-upload.s3.amazonaws.com/F5DB79DF-1EEE-4EE9-865F-1A47ECB2A09A/channels/b231b4e48ae96bb99b917c5dd41aa14de84069c5.jpg',
-  userId: 'test',
-  connectionStatus: 'nonavailable',
-  lastSeenAt: 0,
-  metaData: {},
-  isActive: true,
-  friendDiscoveryKey: null,
-  friendName: null,
-};
+import { user as reducer, initState } from '../../../src/redux/user/reducer';
+import * as actions from '../../../src/redux/user/actions';
+import { user as userData } from '../../fixtures';
 
 describe('user reducer', () => {
   it('userLoginRequest', () => {
