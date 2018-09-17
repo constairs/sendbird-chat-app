@@ -2,7 +2,7 @@ import { createReducer } from '../../utils/reducerUtils';
 import * as TYPES from './types';
 import { channelListFunc, getChannelFunc, updateChannelListItem } from './helpers';
 
-const initState = {
+export const initState = {
   channelsFetching: false,
   openChannelList: [],
   groupChannelList: [],
@@ -67,7 +67,7 @@ const onUserLeft = (state, userData) => ({
   notificationShow: true,
   notification: {
     type: 'userLeft',
-    channel: userData.groupChannel,
+    channel: getChannelFunc(userData.groupChannel),
     user: userData.user,
   },
 });
@@ -135,13 +135,11 @@ const enterChannelFailed = (state, error) => ({
 const getParticipantsSuccessed = (state, participantList) => ({
   ...state,
   channel: { ...state.channel, members: participantList },
-  fetching: false,
 });
 
 const getParticipantsFailed = (state, error) => ({
   ...state,
   error,
-  fetching: false,
 });
 
 const leaveChannel = state => ({

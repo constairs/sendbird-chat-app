@@ -63,14 +63,14 @@ function* createChannelSaga(action) {
       const createdChannel = yield call(createOpenChannel, ...action.payload);
       yield put(createOpenChannelSuccessed(createdChannel));
     } catch (error) {
-      yield put(createOpenChannelFailed(error));
+      yield put(createOpenChannelFailed(error.message));
     }
   } else {
     try {
       const createdChannel = yield call(createGroupChannel, ...action.payload);
       yield put(createGroupChannelSuccessed(createdChannel));
     } catch (error) {
-      yield put(createGroupChannelFailed(error));
+      yield put(createGroupChannelFailed(error.message));
     }
   }
 }
@@ -81,7 +81,7 @@ function* getChannelsListSaga() {
     const channelList = yield call(getChannelListFromSB);
     yield put(getChannelListSuccessed(channelList));
   } catch (error) {
-    yield put(getChannelListFailed(error));
+    yield put(getChannelListFailed(error.message));
   }
 }
 
@@ -99,7 +99,7 @@ function* getSelectedChannelSaga(action) {
     if (action.payload.channelType === 'open') {
       yield put(enterChannelFailed(error));
     } else {
-      yield put(getSelectedChannelFailed(error));
+      yield put(getSelectedChannelFailed(error.message));
     }
   }
 }
@@ -114,7 +114,7 @@ function* leaveChannelSaga(action) {
       yield put(leaveChannelSuccessed(action.payload));
     }
   } catch (error) {
-    yield put(leaveChannelFailed(error));
+    yield put(leaveChannelFailed(error.message));
   }
 }
 
@@ -123,7 +123,7 @@ function* inviteUserSaga(action) {
     const inviteRes = yield call(inviteToGroup, ...action.payload);
     yield put(inviteUsersSuccessed(inviteRes));
   } catch (error) {
-    yield put(inviteUsersFailed(error));
+    yield put(inviteUsersFailed(error.message));
   }
 }
 
@@ -147,7 +147,7 @@ function* refreshMembersSaga(action) {
       yield put(refreshedMembers(response));
     }
   } catch (error) {
-    yield put(refreshFailed(error));
+    yield put(refreshFailed(error.message));
   }
 }
 
@@ -164,7 +164,7 @@ function* getParticipantsSaga(action) {
     const participantsList = yield call(getParticipantsSb, action.payload.channel);
     yield put(getParticipantsSuccessed(participantsList));
   } catch (error) {
-    yield put(getParticipantsFailed(error));
+    yield put(getParticipantsFailed(error.message));
   }
 }
 
