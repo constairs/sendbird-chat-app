@@ -43,8 +43,6 @@ export class MessageItem extends React.Component {
     const { message, userId, uploadProgress } = this.props;
     return (
       <div
-        // className={message.messageType !== 'file' && message.customType ?
-        // 'message-item custom-message' : 'message-item'}
         className="message-item"
       >
         <div className="sender-img">

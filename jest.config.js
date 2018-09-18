@@ -12,4 +12,5 @@ module.exports = {
     '^.+\\.(eot|ttf|otf|woff|woff2)': 'identity-obj-proxy',
   },
   setupFiles: ['<rootDir>/__tests__/setup.js'],
+  modulePathIgnorePatterns: ['./fixtures/', './setup']
 };
