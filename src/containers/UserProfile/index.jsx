@@ -10,7 +10,7 @@ import { changeUserRequest, logoutUserRequest } from '../../redux/user/actions';
 
 import './index.scss';
 
-class Profile extends React.Component {
+export class Profile extends React.Component {
   state = {
     modalIsOpen: false,
   };

@@ -37,8 +37,6 @@ describe('<MessageItem />', () => {
     const messageItem = shallow(
       <MessageItem
         message={message}
-        // key={message.createdAt}
-        // uploadProgress={{ progress }}
       />
     );
     expect(messageItem.find('.sender-nick').text()).toBe(message.sender.nickname);
@@ -49,7 +47,7 @@ describe('<MessageItem />', () => {
     const messageItem = shallow(
       <MessageItem message={fileMessage} />
     );
-    expect(messageItem.find('.message-file-preview').children()).toHaveLength(1);
+    expect(messageItem.find('.message-file-preview').children()).toExist();
   });
   it('should render image message preview', () => {
     const imageMessage = {
@@ -86,7 +84,7 @@ describe('<MessageItem />', () => {
         userId={user.userId}
       />
     );
-    expect(messageItem.find('.isReadIndicator').children()).toHaveLength(1);
+    expect(messageItem.find('.isReadIndicator').children()).toExist();
   });
   it('should render file message text', () => {
     const messageItem = shallow(
@@ -109,7 +107,7 @@ describe('<MessageItem />', () => {
     );
     expect(messageItem.find('.loading-progress').text()).toBe(`${uploadProgress.progress} %`);
   });
-  it('should hide upload cancel upload button', () => {
+  it('should render upload cancel upload button', () => {
     uploadProgress.progress = 66;
     const messageItem = shallow(
       <MessageItem
@@ -118,5 +116,13 @@ describe('<MessageItem />', () => {
       />
     );
     expect(messageItem.find('.cancel-button')).toBeTruthy();
+  });
+  it('should render sender buttons', () => {
+    const messageItem = shallow(
+      <MessageItem
+        message={message}
+      />
+    );
+    expect(messageItem.find('.edit-btn')).toBeTruthy();
   });
 });

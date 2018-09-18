@@ -107,7 +107,8 @@ export class MessageItem extends React.Component {
                         </div>
                       )}
                     </div>
-                    )}
+                  )
+                }
                 <p>
                   <a href={message.url || '#'} target="_blank">
                     {message.name} ({message.size} кб)

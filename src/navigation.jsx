@@ -6,7 +6,7 @@ import { ConnectedRouter } from 'connected-react-router';
 import { LoginContainer } from './containers/LoginContainer/';
 import { ChannelsConstainer } from './containers/ChannelsContainer';
 import { Banner } from './components/Banner';
-import { UserProfileContainer } from './containers/UserProfileContainer';
+import { UserProfile } from './containers/UserProfile';
 import { history } from './redux/store';
 import { Header } from './containers/Header';
 
@@ -50,7 +50,7 @@ export const Navigation = () => (
         <Route exact path="/" component={Banner} />
         <Route exact path="/login/" component={LoginContainer} />
         <PrivateRoute component={ChannelsConstainer} path="/channels/" />
-        <PrivateRoute component={UserProfileContainer} path="/profile/" />
+        <PrivateRoute component={UserProfile} path="/profile/" />
       </Switch>
     </React.Fragment>
   </ConnectedRouter>
