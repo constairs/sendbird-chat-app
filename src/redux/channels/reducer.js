@@ -152,9 +152,10 @@ const leaveChannelSuccessed = (state, channelInfo) => ({
   groupChannelList: channelInfo.channelType === 'group' ? state.groupChannelList.filter(channel => channel.url !== channelInfo.channelUrl) : state.groupChannelList,
   channelFetching: false,
 });
-const leaveChannelFailed = state => ({
+const leaveChannelFailed = (state, error) => ({
   ...state,
   channelFetching: false,
+  error
 });
 
 const channelUpdated = (state, channel) => ({
@@ -165,14 +166,14 @@ const channelUpdated = (state, channel) => ({
   groupChannelList: channel.channelType === 'group' ? updateChannelListItem(state.groupChannelList, channel, 'group') : state.groupChannelList,
 });
 
-const userEntered = (state, action) => ({
+const userEntered = (state, enterData) => ({
   ...state,
-  channel: getChannelFunc(action.channel),
+  channel: getChannelFunc(enterData.channel),
 });
 
-const userExited = (state, data) => ({
+const userExited = (state, exitData) => ({
   ...state,
-  channel: getChannelFunc(data.channel),
+  channel: getChannelFunc(exitData.channel),
 });
 
 const getSelectedChannel = state => ({

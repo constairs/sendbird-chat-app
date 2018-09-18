@@ -39,13 +39,13 @@ export const getParticipantsFailed = error => ({
   payload: error,
 });
 
-export const userEntered = data => ({
+export const userEntered = (channel, user) => ({
   type: TYPES.NEW_USER_ENTERED,
-  payload: data,
+  payload: { channel, user },
 });
 
-export const userExited = data => ({
+export const userExited = (channel, user) => ({
   type: TYPES.USER_EXITED,
-  payload: data
+  payload: { channel, user }
 });
 
