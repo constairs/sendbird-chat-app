@@ -9,13 +9,31 @@ const user = {
   userId: 'test',
 };
 
+const channelUrl = 'https://url.com/';
+
+const channelType = 'open';
+
+const mockObj = { fn: jest.fn() };
+
 describe('<UserProfile />', () => {
   it('should render user cover img', () => {
-    const profile = shallow(<Profile user={user} />);
+    const profile = shallow(
+      <Profile
+        user={user}
+        channelUrl={channelUrl}
+        channelType={channelType}
+        userActions={mockObj}
+      />);
     expect(profile.find('.user-cover img').prop('src')).toBe(user.userImg);
   });
   it('should render user nickname', () => {
-    const profile = shallow(<Profile user={user} />);
+    const profile = shallow(
+      <Profile
+        user={user}
+        channelUrl={channelUrl}
+        channelType={channelType}
+        userActions={mockObj}
+      />);
     expect(profile.find('.user-nickname').text()).toBe(user.userName);
   });
 });

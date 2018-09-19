@@ -7,29 +7,59 @@ const channelItem = {
   name: 'neme',
   unreadMessageCount: '2',
   coverUrl: 'https://img.jpg',
+  createdAt: 1111,
   lastMessage: {
     message: 'ddd',
     messageType: 'user'
   },
   channelType: 'group',
 };
+const mock = jest.fn();
 
 describe('<ChannelListItem />', () => {
   it('should render channel cover', () => {
-    const channelListItem = shallow(<ChannelListItem channelItem={channelItem} />);
+    const channelListItem = shallow(
+      <ChannelListItem
+        channelItem={channelItem}
+        key={channelItem.createdAt}
+        selectedChan={mock}
+        onLeave={mock}
+        onInviteUsers={mock}
+      />);
     expect(channelListItem.find('.channel-info img').prop('src')).toBe(channelItem.coverUrl);
     expect(channelListItem.find('.channel-info img').prop('alt')).toBe(channelItem.name);
   });
   it('should render unread messages counter', () => {
-    const channnelListItem = shallow(<ChannelListItem channelItem={channelItem} />);
+    const channnelListItem = shallow(
+      <ChannelListItem
+        channelItem={channelItem}
+        key={channelItem.createdAt}
+        selectedChan={mock}
+        onLeave={mock}
+        onInviteUsers={mock}
+      />);
     expect(channnelListItem.find('.unread-count').text()).toBe(channelItem.unreadMessageCount);
   });
   it('should render channel name', () => {
-    const wrapper = shallow(<ChannelListItem channelItem={channelItem} />);
+    const wrapper = shallow(
+      <ChannelListItem
+        channelItem={channelItem}
+        key={channelItem.createdAt}
+        selectedChan={mock}
+        onLeave={mock}
+        onInviteUsers={mock}
+      />);
     expect(wrapper.find('.channel-item-name').text()).toEqual(channelItem.name);
   });
   it('should render last messages', () => {
-    let channnelListItem = shallow(<ChannelListItem channelItem={channelItem} />);
+    let channnelListItem = shallow(
+      <ChannelListItem
+        channelItem={channelItem}
+        key={channelItem.createdAt}
+        selectedChan={mock}
+        onLeave={mock}
+        onInviteUsers={mock}
+      />);
     expect(channnelListItem.find('.last-message')).toBeTruthy();
     expect(channnelListItem.find('.last-message').children().text()).toBe(channelItem.lastMessage.message);
     channelItem.lastMessage = {
@@ -38,11 +68,25 @@ describe('<ChannelListItem />', () => {
       url: 'https://img.jpg',
       data: 'text',
     };
-    channnelListItem = shallow(<ChannelListItem channelItem={channelItem} />);
+    channnelListItem = shallow(
+      <ChannelListItem
+        channelItem={channelItem}
+        key={channelItem.createdAt}
+        selectedChan={mock}
+        onLeave={mock}
+        onInviteUsers={mock}
+      />);
     expect(channnelListItem.find('.last-message').children()).toExist();
   });
   it('should render control buttons', () => {
-    const channnelListItem = shallow(<ChannelListItem channelItem={channelItem} />);
+    const channnelListItem = shallow(
+      <ChannelListItem
+        channelItem={channelItem}
+        key={channelItem.createdAt}
+        selectedChan={mock}
+        onLeave={mock}
+        onInviteUsers={mock}
+      />);
     expect(channnelListItem.find('.btns').children()).toHaveLength(2);
   });
 });

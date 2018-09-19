@@ -15,10 +15,6 @@ export class CreateChannelForm extends React.Component {
     this.setState({ [name]: value });
   };
 
-  handleFilesLoad = (file) => {
-    this.setState({ coverFile: file });
-  };
-
   handleSubmit = (e) => {
     e.preventDefault();
     const formData = [

@@ -32,11 +32,18 @@ const uploadProgress = {
   progress: 100
 };
 
+const mock = jest.fn();
+
 describe('<MessageItem />', () => {
   it('should render sender info', () => {
     const messageItem = shallow(
       <MessageItem
         message={message}
+        userId={user.userId}
+        uploadProgress={uploadProgress}
+        onDeleteMessage={mock}
+        onEditMessage={mock}
+        onCancelUploading={mock}
       />
     );
     expect(messageItem.find('.sender-nick').text()).toBe(message.sender.nickname);
@@ -45,7 +52,14 @@ describe('<MessageItem />', () => {
   });
   it('should render file message preview', () => {
     const messageItem = shallow(
-      <MessageItem message={fileMessage} />
+      <MessageItem
+        message={fileMessage}
+        userId={user.userId}
+        uploadProgress={uploadProgress}
+        onDeleteMessage={mock}
+        onEditMessage={mock}
+        onCancelUploading={mock}
+      />
     );
     expect(messageItem.find('.message-file-preview').children()).toExist();
   });
@@ -55,33 +69,58 @@ describe('<MessageItem />', () => {
       customType: 'IMAGE',
     };
     const messageItem = shallow(
-      <MessageItem message={imageMessage} />
+      <MessageItem
+        userId={user.userId}
+        uploadProgress={uploadProgress}
+        message={imageMessage}
+        onDeleteMessage={mock}
+        onEditMessage={mock}
+        onCancelUploading={mock}
+      />
     );
     expect(messageItem.find('.message-file-preview img').prop('src')).toBe(imageMessage.url);
     expect(messageItem.find('.message-file-preview img').prop('alt')).toBe(imageMessage.name);
   });
   it('should render file message link', () => {
     const messageItem = shallow(
-      <MessageItem message={fileMessage} />
+      <MessageItem
+        userId={user.userId}
+        uploadProgress={uploadProgress}
+        message={fileMessage}
+        onDeleteMessage={mock}
+        onEditMessage={mock}
+        onCancelUploading={mock}
+      />
     );
     expect(messageItem.find('.file-message-item a').prop('href')).toBe(fileMessage.url);
     expect(messageItem.find('.file-message-item a').text()).toBe(`${fileMessage.name} (${fileMessage.size} кб)`);
   });
   it('should render message text', () => {
     const messageItem = shallow(
-      <MessageItem message={message} />
+      <MessageItem
+        userId={user.userId}
+        uploadProgress={uploadProgress}
+        message={message}
+        onDeleteMessage={mock}
+        onEditMessage={mock}
+        onCancelUploading={mock}
+      />
     );
     expect(messageItem.find('.message-text').text()).toBe(message.message);
   });
   it('should render read indicator', () => {
     const messageItem = shallow(
       <MessageItem
+        userId={user.userId}
+        uploadProgress={uploadProgress}
         message={message}
         isNotRead={
           receipt < message.createdAt &&
           receipt !== 0
         }
-        userId={user.userId}
+        onDeleteMessage={mock}
+        onEditMessage={mock}
+        onCancelUploading={mock}
       />
     );
     expect(messageItem.find('.isReadIndicator').children()).toExist();
@@ -89,7 +128,12 @@ describe('<MessageItem />', () => {
   it('should render file message text', () => {
     const messageItem = shallow(
       <MessageItem
+        userId={user.userId}
+        uploadProgress={uploadProgress}
         message={fileMessage}
+        onDeleteMessage={mock}
+        onEditMessage={mock}
+        onCancelUploading={mock}
       />
     );
     expect(messageItem.find('.message-text').text()).toBe(fileMessage.data);
@@ -101,8 +145,12 @@ describe('<MessageItem />', () => {
     };
     const messageItem = shallow(
       <MessageItem
-        message={fakeMessage}
+        userId={user.userId}
         uploadProgress={uploadProgress}
+        message={fakeMessage}
+        onDeleteMessage={mock}
+        onEditMessage={mock}
+        onCancelUploading={mock}
       />
     );
     expect(messageItem.find('.loading-progress').text()).toBe(`${uploadProgress.progress} %`);
@@ -111,8 +159,12 @@ describe('<MessageItem />', () => {
     uploadProgress.progress = 66;
     const messageItem = shallow(
       <MessageItem
-        message={fileMessage}
+        userId={user.userId}
         uploadProgress={uploadProgress}
+        message={fileMessage}
+        onDeleteMessage={mock}
+        onEditMessage={mock}
+        onCancelUploading={mock}
       />
     );
     expect(messageItem.find('.cancel-button')).toBeTruthy();
@@ -120,7 +172,12 @@ describe('<MessageItem />', () => {
   it('should render sender buttons', () => {
     const messageItem = shallow(
       <MessageItem
+        userId={user.userId}
+        uploadProgress={uploadProgress}
         message={message}
+        onDeleteMessage={mock}
+        onEditMessage={mock}
+        onCancelUploading={mock}
       />
     );
     expect(messageItem.find('.edit-btn')).toBeTruthy();

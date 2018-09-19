@@ -40,7 +40,7 @@ export class ChannelList extends React.Component {
 
 ChannelList.defaultProps = {
   channelsFetching: false,
-  inviteUsers: PropTypes.func
+  inviteUsers: PropTypes.func,
 };
 
 ChannelList.propTypes = {
