@@ -9,7 +9,7 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faFile, faTimes, faFileAudio, faFileVideo } from '@fortawesome/free-solid-svg-icons';
 import { messageTyping, messageTypingEnd, userTypingStart, userTypingEnd, sendMessage, sendFileMessage } from '../../redux/chat/actions';
 
-class MessageField extends React.Component {
+export class MessageField extends React.Component {
   state = {
     messageText: '',
     fileMessageText: '',
@@ -154,7 +154,7 @@ class MessageField extends React.Component {
                 />
               </span>
             ) : null}
-            {membersTyping.length ? (
+            {membersTyping.length > 0 ? (
               <span className="typing-indicator">
                 {membersTyping.map((member, i) => {
                   if (
@@ -176,6 +176,7 @@ class MessageField extends React.Component {
               onClick={this.fileUploadModal}
               type="button"
               title="Отправить файл"
+              className="file-upload-modal-btn"
             >
               <FontAwesomeIcon icon={faFile} />
             </button>
@@ -186,7 +187,9 @@ class MessageField extends React.Component {
             >
               Отправить
               {this.props.sendingMessage ? (
-                <Spinner color="#ffffff" secondaryColor="#40c9ff" size={10} />
+                <span>
+                  <Spinner color="#ffffff" secondaryColor="#40c9ff" size={10} />
+                </span>
               ) : null}
             </button>
           </form>

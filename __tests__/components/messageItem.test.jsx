@@ -156,18 +156,24 @@ describe('<MessageItem />', () => {
     expect(messageItem.find('.loading-progress').text()).toBe(`${uploadProgress.progress} %`);
   });
   it('should render upload cancel upload button', () => {
-    uploadProgress.progress = 66;
+    const progress = {
+      progress: 66
+    };
+    const fakeMessage = {
+      ...fileMessage,
+      isFake: true
+    };
     const messageItem = shallow(
       <MessageItem
         userId={user.userId}
-        uploadProgress={uploadProgress}
-        message={fileMessage}
+        uploadProgress={progress}
+        message={fakeMessage}
         onDeleteMessage={mock}
         onEditMessage={mock}
         onCancelUploading={mock}
       />
     );
-    expect(messageItem.find('.cancel-button')).toBeTruthy();
+    expect(messageItem.find('.message-file-preview button')).toExist();
   });
   it('should render sender buttons', () => {
     const messageItem = shallow(
@@ -180,6 +186,26 @@ describe('<MessageItem />', () => {
         onCancelUploading={mock}
       />
     );
-    expect(messageItem.find('.edit-btn')).toBeTruthy();
+    expect(messageItem.find('.edit-btn')).toExist();
+  });
+  it('should show edit message form', () => {
+    const messageItem = shallow(
+      <MessageItem
+        userId={user.userId}
+        uploadProgress={uploadProgress}
+        message={message}
+        onDeleteMessage={mock}
+        onEditMessage={mock}
+        onCancelUploading={mock}
+      />
+    );
+    expect(messageItem.state('onEdit')).toBe(false);
+    messageItem.find('.edit-btn').simulate('click');
+    expect(messageItem.state('onEdit')).toBe(true);
+    expect(messageItem.find('.edit-message-form')).toExist();
+    expect(messageItem.state('messageInput')).toBe(message.message);
+    const mockEvent = { target: {}, value: 'value' };
+    messageItem.find('.edit-message-form input').simulate('change', mockEvent);
+    expect(messageItem.state('messageInput')).toBe(messageItem.find('.edit-message-form input').prop('value'));
   });
 });

@@ -60,7 +60,7 @@ describe('<ChannelListItem />', () => {
         onLeave={mock}
         onInviteUsers={mock}
       />);
-    expect(channnelListItem.find('.last-message')).toBeTruthy();
+    expect(channnelListItem.find('.last-message')).toExist();
     expect(channnelListItem.find('.last-message').children().text()).toBe(channelItem.lastMessage.message);
     channelItem.lastMessage = {
       messageType: 'file',

@@ -24,7 +24,7 @@ describe('<NotificationWindow />', () => {
         notificationShow
         onNotificationClose={mock}
       />);
-    expect(wrapper.find('.notification-window p')).toBeTruthy();
+    expect(wrapper.find('.notification-window p')).toExist();
   });
   it('should show notification', () => {
     const wrapper = shallow(

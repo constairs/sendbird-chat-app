@@ -75,7 +75,7 @@ export class MessageItem extends React.Component {
                   <div className="message-file-preview">
                     <Spinner color="#ffffff" secondaryColor="#40c9ff" size={70} />
                     <span className="loading-progress">{uploadProgress.progress} %</span>
-                    {uploadProgress.progress !== 100 ? (
+                    {uploadProgress.progress < 100 ? (
                       <button onClick={this.handleCancelUploading} className="cancel-button">
                         <FontAwesomeIcon icon={faTimes} />
                       </button>

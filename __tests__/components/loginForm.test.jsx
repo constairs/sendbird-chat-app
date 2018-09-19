@@ -19,4 +19,11 @@ describe('<LoginForm />', () => {
     form.find('#userNick').simulate('change', mockedEvent);
     expect(form.state('userNick')).toBe(form.find('#userNick').prop('value'));
   });
+  it('call login function on submit form', () => {
+    // const form = shallow(<LoginForm
+    //   onLogin={mock}
+    // />);
+    // form.find('form').simulate('submit', { target: {} });
+    // expect(form.prop('onLogin')).toHaveBeenCalled();
+  });
 });

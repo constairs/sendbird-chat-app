@@ -12,10 +12,13 @@ import { LoginForm } from '../../components/LoginForm';
 
 import './index.scss';
 
-class LoginConnected extends React.Component {
+export class Login extends React.Component {
   handleLogin = (data) => {
     this.props.userActions.loginUserRequest(data);
   };
+  handleCloseModal = () => {
+    this.props.userActions.clearLoginError();
+  }
 
   render() {
     const { user } = this.props;
@@ -36,11 +39,11 @@ class LoginConnected extends React.Component {
             className="modal file-upload-modal"
             isOpen={!!user.error}
             onAfterOpen={this.afterOpenModal}
-            onRequestClose={this.fileUploadModal}
+            onRequestClose={this.handleCloseModal}
             contentLabel="Example Modal"
             ariaHideApp={false}
           >
-            <button className="x-btn" onClick={this.props.userActions.clearLoginError}>
+            <button className="x-btn" onClick={this.handleCloseModal}>
               <FontAwesomeIcon icon={faTimes} />
             </button>
             <h3>{user.error}</h3>
@@ -52,7 +55,7 @@ class LoginConnected extends React.Component {
   }
 }
 
-LoginConnected.propTypes = {
+Login.propTypes = {
   userActions: PropTypes.objectOf(PropTypes.func).isRequired,
   user: PropTypes.objectOf(PropTypes.any).isRequired,
 };
@@ -65,4 +68,4 @@ export const LoginContainer = connect(
       clearLoginError
     }, dispatch)
   })
-)(LoginConnected);
+)(Login);

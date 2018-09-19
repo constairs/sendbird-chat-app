@@ -13,13 +13,16 @@ const channels = {
     channel: '',
     user: '',
   },
-
+  channel: {
+    name: 'name',
+  }
 };
 
 const user = {
   userId: 'user',
   userName: 'user',
   userImg: 'https://img.jpg',
+  userFetching: true,
 };
 
 describe('<Channels />', () => {
@@ -32,7 +35,7 @@ describe('<Channels />', () => {
         user={user}
         channels={channels}
       />);
-    expect(wrapper.find('.preloader')).toBeTruthy();
+    expect(wrapper.find('.preloader')).toExist();
   });
   it('should render channel', () => {
     const wrapper = shallow(
@@ -44,6 +47,6 @@ describe('<Channels />', () => {
         channels={channels}
       />
     );
-    expect(wrapper.find('.channel-sidebar .channel-page-content')).toBeTruthy();
+    expect(wrapper.find('.channel-page-content')).toExist();
   });
 });
