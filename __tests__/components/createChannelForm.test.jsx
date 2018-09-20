@@ -5,6 +5,7 @@ import { CreateChannelForm } from '../../src/components/CreateChannelForm';
 
 
 const mock = jest.fn();
+const mockedEvent = { target: {}, preventDefault: () => {} };
 
 describe('<CreateChannelForm />', () => {
   it('should change inputs', () => {
@@ -12,7 +13,6 @@ describe('<CreateChannelForm />', () => {
       <CreateChannelForm
         onSubmitForm={mock}
       />);
-    const mockedEvent = { target: {} };
     expect(form.state('channelName')).toBe('');
     expect(form.state('coverUrl')).toBe('');
     expect(form.state('channelData')).toBe('');
@@ -24,5 +24,19 @@ describe('<CreateChannelForm />', () => {
     expect(form.state('coverUrl')).toBe(form.find('#coverUrl').prop('value'));
     form.find('#customType').simulate('change', mockedEvent);
     expect(form.state('customType')).toBe(form.find('#customType').prop('value'));
+  });
+  it('should call onSubmitForm', () => {
+    const form = shallow(
+      <CreateChannelForm onSubmitForm={mock} />
+    );
+    form.find('form').simulate('submit', mockedEvent);
+    const formData = [
+      form.state('channelName'),
+      form.state('coverUrl'),
+      form.state('coverFile'),
+      form.state('channelData'),
+      form.state('customType'),
+    ];
+    expect(mock).toHaveBeenLastCalledWith(formData);
   });
 });

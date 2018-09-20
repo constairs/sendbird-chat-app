@@ -36,4 +36,18 @@ describe('<UserProfile />', () => {
       />);
     expect(profile.find('.user-nickname').text()).toBe(user.userName);
   });
+  it('should open/hide modal', () => {
+    const profile = shallow(
+      <Profile
+        user={user}
+        channelUrl={channelUrl}
+        channelType={channelType}
+        userActions={mockObj}
+      />);
+    expect(profile.state('modalIsOpen')).toBe(false);
+    profile.find('.change-profile-btn').simulate('click');
+    expect(profile.state('modalIsOpen')).toBe(true);
+    profile.find('.x-btn').simulate('click');
+    expect(profile.state('modalIsOpen')).toBe(false);
+  });
 });

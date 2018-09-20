@@ -4,7 +4,7 @@ import { shallow } from 'enzyme';
 import { CreateGroupForm } from '../../src/components/CreateGroupForm';
 
 const mock = jest.fn();
-const mockEvent = { target: '' };
+const mockEvent = { target: '', preventDefault: () => {} };
 
 describe('<CreateGroupForm />', () => {
   it('should change inputs', () => {
@@ -35,5 +35,25 @@ describe('<CreateGroupForm />', () => {
     expect(form.state('usersToInvite')).toEqual([]);
     form.find('.invite-button').simulate('click');
     expect(form.state('usersToInvite').length).toBeGreaterThan(0);
+  });
+  it('should del user from array', () => {
+    const form = shallow(<CreateGroupForm onSubmitForm={mock} />);
+    form.setState({ usersToInvite: ['user', 'test'] });
+    form.find('.users-to-invite li:first-child button').simulate('click', { target: { id: 'user' } });
+    expect(form.state('usersToInvite')).toHaveLength(1);
+  });
+  it('should call onSubmitForm', () => {
+    const form = shallow(<CreateGroupForm onSubmitForm={mock} />);
+    form.find('form').simulate('submit', mockEvent);
+    const formData = [
+      form.state('usersToInvite'),
+      form.state('channelDistinct'),
+      form.state('channelName'),
+      form.state('coverUrl'),
+      form.state('coverFile'),
+      form.state('channelData'),
+      form.state('customType'),
+    ];
+    expect(mock).toHaveBeenCalledWith(formData);
   });
 });

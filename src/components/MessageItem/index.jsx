@@ -138,10 +138,10 @@ export class MessageItem extends React.Component {
         </div>
         {userId === message.sender.userId ? (
           <div>
-            <button onClick={this.handleDeleteBtn} className="x-btn">
+            <button onClick={this.handleDeleteBtn} id="delMessage" className="x-btn">
               <FontAwesomeIcon icon={faTimes} />
             </button>
-            <button onClick={this.handleEditMessage} className="edit-btn">
+            <button onClick={this.handleEditMessage} if="editMessage" className="edit-btn">
               <FontAwesomeIcon icon={faPen} />
             </button>
           </div>

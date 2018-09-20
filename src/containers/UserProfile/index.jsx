@@ -46,7 +46,7 @@ export class Profile extends React.Component {
       <div className="user-profile">
         <div className="user-cover">
           <img src={userImg} alt="user-img" />
-          <button onClick={this.handleOpenModal} title="Change profile data">
+          <button onClick={this.handleOpenModal} className="change-profile-btn" title="Change profile data">
             Change
           </button>
         </div>

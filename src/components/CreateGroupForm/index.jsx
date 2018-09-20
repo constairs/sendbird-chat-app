@@ -22,10 +22,6 @@ export class CreateGroupForm extends React.Component {
     this.setState({ channelDistinct: !this.state.channelDistinct });
   };
 
-  handleFilesLoad = (file) => {
-    this.setState({ coverFile: file });
-  };
-
   handleAddUser = () => {
     this.setState({
       usersToInvite: [...this.state.usersToInvite, this.state.groupUsersInput],
@@ -50,6 +46,7 @@ export class CreateGroupForm extends React.Component {
       this.state.channelData,
       this.state.customType,
     ];
+    this.props.onSubmitForm(formData);
     this.setState({
       channelName: '',
       coverUrl: '',
@@ -59,7 +56,6 @@ export class CreateGroupForm extends React.Component {
       channelDistinct: false,
       usersToInvite: [],
     });
-    this.props.onSubmitForm(formData);
   };
 
   render() {

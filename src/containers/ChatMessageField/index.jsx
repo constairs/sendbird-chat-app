@@ -65,13 +65,13 @@ export class MessageField extends React.Component {
       this.state.fileMessageText,
       this.state.customMessageType
     ];
+    this.props.chatActions.sendFileMessage(fileMessageData);
     this.setState({
       uploadedFile: [],
       fileUploadModal: false,
       fileToUpload: '',
       fileMessageText: '',
     });
-    this.props.chatActions.sendFileMessage(fileMessageData);
   };
 
   fileUploadModal = () => {
@@ -212,7 +212,7 @@ export class MessageField extends React.Component {
                 <p>Файл для отправки</p>
                 <div className="files-to-upload">
                   <div className="file-item">
-                    <button onClick={this.handleClearFile}>
+                    <button className="clear-file-upload" onClick={this.handleClearFile}>
                       <FontAwesomeIcon icon={faTimes} />
                     </button>
                     <div className="file-preview">

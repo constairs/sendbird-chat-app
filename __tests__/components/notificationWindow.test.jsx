@@ -37,4 +37,16 @@ describe('<NotificationWindow />', () => {
     );
     expect(wrapper.prop('className')).toBe('notification-window show');
   });
+  it('should close notification', () => {
+    const wrapper = shallow(
+      <NotificationWindow
+        notification={notification}
+        nickname={nick}
+        notificationShow
+        onNotificationClose={mock}
+      />
+    );
+    wrapper.find('.x-btn').simulate('click');
+    expect(mock).toHaveBeenCalled();
+  });
 });
