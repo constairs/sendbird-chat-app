@@ -126,12 +126,13 @@ export function changeProfile(nickname, profileUrl) {
   });
 }
 
-export function createOpenChannel(
+export function createOpenChannel({
   channelName,
   coverUrl,
   coverFile,
   channelData,
-  customType) {
+  customType
+}) {
   return new Promise((resolve, reject) => {
     sb.OpenChannel.createChannel(
       channelName,

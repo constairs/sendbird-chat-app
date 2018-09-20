@@ -57,10 +57,10 @@ import {
 } from './groupChannelsActions';
 import { cleanChat } from '../chat/actions';
 
-function* createChannelSaga(action) {
+export function* createChannelSaga(action) {
   if (action.type === CREATE_OPEN_CHANNEL) {
     try {
-      const createdChannel = yield call(createOpenChannel, ...action.payload);
+      const createdChannel = yield call(createOpenChannel, action.payload);
       yield put(createOpenChannelSuccessed(createdChannel));
     } catch (error) {
       yield put(createOpenChannelFailed(error.message));
