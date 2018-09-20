@@ -45,7 +45,7 @@ function* loginUserAsync(action) {
   }
 }
 
-function* loginSuccessed() {
+export function* loginSuccessed() {
   yield put(push('/channels'));
 }
 
@@ -98,12 +98,10 @@ function* changeUserAsync(action) {
 }
 
 export function* userSagas() {
-  yield all([
-    yield takeLatest(USER_LOGIN_REQUEST, loginUserAsync),
-    yield takeLatest(USER_LOGIN_SUCCESSED, loginSuccessed),
-    yield takeLatest(REHYDRATE, userReconnectAsync),
-    yield takeLatest(USER_LOGOUT_REQUEST, logoutUserAsync),
-    yield takeLatest(USER_LOGOUT_SUCCESSED, logoutUserComplete),
-    yield takeLatest(USER_CHANGE_REQUEST, changeUserAsync),
-  ]);
+  yield takeLatest(USER_LOGIN_REQUEST, loginUserAsync);
+  yield takeLatest(USER_LOGIN_SUCCESSED, loginSuccessed);
+  yield takeLatest(REHYDRATE, userReconnectAsync);
+  yield takeLatest(USER_LOGOUT_REQUEST, logoutUserAsync);
+  yield takeLatest(USER_LOGOUT_SUCCESSED, logoutUserComplete);
+  yield takeLatest(USER_CHANGE_REQUEST, changeUserAsync);
 }
