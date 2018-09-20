@@ -6,7 +6,7 @@ import { MessageField } from '../../src/containers/ChatMessageField';
 
 const channelUrl = 'https://url.com';
 const channelType = 'group';
-const mockEvent = { target: '', value: 'dd' };
+const mockEvent = { target: '', value: 'dd', preventDefault: () => {} };
 
 const user = {
   userId: 'user',
@@ -24,7 +24,21 @@ const membersTyping = [
     nickname: 'test2'
   }
 ];
-const fileToUpload = { name: 'ddd', size: 111, preview: 'https://url.com/' };
+const fileToUpload = {
+  name: 'ddd',
+  size: 111,
+  preview: 'blob:http://0.0.0.0:3003/bc15c8f6-0252-47a0-b179-2e4bf52bf164',
+  type: 'image/jpeg'
+};
+
+const chatActions = {
+  messageTyping: jest.fn(),
+  messageTypingEnd: jest.fn(),
+  userTypingStart: jest.fn(),
+  userTypingEnd: jest.fn(),
+  sendMessage: jest.fn(),
+  sendFileMessage: jest.fn()
+};
 
 describe('<MessageField />', () => {
   it('should change input', () => {
@@ -32,7 +46,7 @@ describe('<MessageField />', () => {
       <MessageField
         channelUrl={channelUrl}
         channelType={channelType}
-        chatActions={{ fn: jest.fn() }}
+        chatActions={chatActions}
         user={user}
         userTyping={userTyping}
         sendingMessage={sendingMessage}
@@ -47,7 +61,7 @@ describe('<MessageField />', () => {
       <MessageField
         channelUrl={channelUrl}
         channelType={channelType}
-        chatActions={{ fn: jest.fn() }}
+        chatActions={chatActions}
         user={user}
         userTyping={userTyping}
         sendingMessage={sendingMessage}
@@ -60,7 +74,7 @@ describe('<MessageField />', () => {
       <MessageField
         channelUrl={channelUrl}
         channelType={channelType}
-        chatActions={{ fn: jest.fn() }}
+        chatActions={chatActions}
         user={user}
         userTyping={userTyping}
         sendingMessage={sendingMessage}
@@ -74,7 +88,7 @@ describe('<MessageField />', () => {
       <MessageField
         channelUrl={channelUrl}
         channelType={channelType}
-        chatActions={{ fn: jest.fn() }}
+        chatActions={chatActions}
         user={user}
         userTyping={userTyping}
         sendingMessage={sendingMessage}
@@ -90,7 +104,7 @@ describe('<MessageField />', () => {
       <MessageField
         channelUrl={channelUrl}
         channelType={channelType}
-        chatActions={{ fn: jest.fn() }}
+        chatActions={chatActions}
         user={user}
         userTyping={userTyping}
         sendingMessage
@@ -118,5 +132,56 @@ describe('<MessageField />', () => {
     wrapper.setState({ customMessageType: 'IMAGE' });
     expect(wrapper.find('.files-to-upload img').prop('src')).toBe(fileToUpload.preview);
     expect(wrapper.find('.file-item p').text()).toBe(`${fileToUpload.size} кб`);
+  });
+  it('should clear file for uploading', () => {
+    const wrapper = shallow(
+      <MessageField
+        channelUrl={channelUrl}
+        channelType={channelType}
+        chatActions={{ fn: jest.fn() }}
+        user={user}
+        userTyping={userTyping}
+        sendingMessage
+        membersTyping={membersTyping}
+      />
+    );
+    wrapper.setState({ fileToUpload });
+    wrapper.find('.clear-file-upload').simulate('click');
+  });
+  it('should call sendMessage & messageTypingEnd/userTypingEnd', () => {
+    const wrapper = shallow(
+      <MessageField
+        channelUrl={channelUrl}
+        channelType={channelType}
+        chatActions={chatActions}
+        user={user}
+        userTyping={userTyping}
+        sendingMessage
+        membersTyping={membersTyping}
+      />
+    );
+    wrapper.find('.chat-message-form').simulate('submit', mockEvent);
+    const messageData = [
+      channelUrl,
+      channelType,
+      'MESG',
+      user.userId,
+      wrapper.state('messageText'),
+    ];
+    expect(chatActions.sendMessage).toHaveBeenCalledWith(messageData);
+    expect(chatActions.userTypingEnd).toHaveBeenCalledWith([channelUrl, channelType]);
+    const wrapperOpenCh = shallow(
+      <MessageField
+        channelUrl={channelUrl}
+        channelType="open"
+        chatActions={chatActions}
+        user={user}
+        userTyping={userTyping}
+        sendingMessage
+        membersTyping={membersTyping}
+      />
+    );
+    wrapperOpenCh.find('.chat-message-form').simulate('submit', mockEvent);
+    expect(chatActions.messageTypingEnd).toHaveBeenCalled();
   });
 });

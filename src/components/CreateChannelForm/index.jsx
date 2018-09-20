@@ -24,6 +24,7 @@ export class CreateChannelForm extends React.Component {
       this.state.channelData,
       this.state.customType,
     ];
+    this.props.onSubmitForm(formData);
     this.setState({
       channelName: '',
       coverUrl: '',
@@ -31,7 +32,6 @@ export class CreateChannelForm extends React.Component {
       channelData: '',
       customType: '',
     });
-    this.props.onSubmitForm(formData);
   };
 
   render() {

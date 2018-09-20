@@ -85,8 +85,8 @@ export class ChannelListItem extends React.Component {
         </button>
         {channelItem.channelType === 'group' && !channelItem.isDistinct ? (
           <div className="btns">
-            <button onClick={this.handleInviteClick}>Пригласить</button>
-            <button onClick={this.handleLeaveClick}>Покинуть</button>
+            <button id="inviteBtn" onClick={this.handleInviteClick}>Пригласить</button>
+            <button id="leaveBtn" onClick={this.handleLeaveClick}>Покинуть</button>
           </div>
         ) : null}
 
