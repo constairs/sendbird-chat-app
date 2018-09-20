@@ -21,11 +21,17 @@ const uploadProgress = {
 const channelType = 'group';
 const channelUrl = 'https://img.jpg';
 
+const chatActions = {
+  deleteMessage: jest.fn(),
+  editMessage: jest.fn(),
+  cancelUploadingMessage: jest.fn()
+};
+
 describe('<Chat />', () => {
   it('should render preloader', () => {
     const chat = shallow(<Chat
       user={user}
-      chatActions={{ fn: jest.fn() }}
+      chatActions={chatActions}
       messages={messages}
       messFetching={messFetching}
       uploadProgress={uploadProgress}
@@ -38,7 +44,7 @@ describe('<Chat />', () => {
   it('should render messages', () => {
     const chat = shallow(<Chat
       user={user}
-      chatActions={{ fn: jest.fn() }}
+      chatActions={chatActions}
       messages={messages}
       messFetching={messFetching}
       uploadProgress={uploadProgress}

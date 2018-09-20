@@ -7,6 +7,7 @@ const channelItem = {
   name: 'neme',
   unreadMessageCount: '2',
   coverUrl: 'https://img.jpg',
+  url: 'https://url.com/',
   createdAt: 1111,
   lastMessage: {
     message: 'ddd',
@@ -15,6 +16,12 @@ const channelItem = {
   channelType: 'group',
 };
 const mock = jest.fn();
+
+const mockEvent = {
+  target: {},
+  preventDefault: () => {},
+  value: 'value'
+};
 
 describe('<ChannelListItem />', () => {
   it('should render channel cover', () => {
@@ -88,5 +95,107 @@ describe('<ChannelListItem />', () => {
         onInviteUsers={mock}
       />);
     expect(channnelListItem.find('.btns').children()).toHaveLength(2);
+  });
+  it('should change input', () => {
+    const channelListItem = shallow(
+      <ChannelListItem
+        channelItem={channelItem}
+        key={channelItem.createdAt}
+        selectedChan={mock}
+        onLeave={mock}
+        onInviteUsers={mock}
+      />);
+    channelListItem.find('#inviteBtn').simulate('click');
+    expect(channelListItem.state('usersIdsInput')).toBe('');
+    channelListItem.find('#userId').simulate('change', mockEvent);
+    expect(channelListItem.state('usersIdsInput')).toBe(channelListItem.find('#userId').prop('value'));
+  });
+  it('should add users to array', () => {
+    const channelListItem = shallow(
+      <ChannelListItem
+        channelItem={channelItem}
+        key={channelItem.createdAt}
+        selectedChan={mock}
+        onLeave={mock}
+        onInviteUsers={mock}
+      />);
+    expect(channelListItem.state('usersToInvite')).toEqual([]);
+    channelListItem.find('#inviteBtn').simulate('click');
+    channelListItem.find('.invite-button').simulate('click');
+    expect(channelListItem.state('usersToInvite').length).toBeGreaterThan(0);
+  });
+  it('should del user from array', () => {
+    const channelListItem = shallow(
+      <ChannelListItem
+        channelItem={channelItem}
+        key={channelItem.createdAt}
+        selectedChan={mock}
+        onLeave={mock}
+        onInviteUsers={mock}
+      />);
+    channelListItem.setState({ usersToInvite: ['user', 'test'] });
+    channelListItem.find('#inviteBtn').simulate('click');
+    channelListItem.find('.users-to-invite li:first-child button').simulate('click', { target: { id: 'user' } });
+    expect(channelListItem.state('usersToInvite')).toHaveLength(1);
+  });
+  it('should show invite form', () => {
+    const channelListItem = shallow(
+      <ChannelListItem
+        channelItem={channelItem}
+        key={channelItem.createdAt}
+        selectedChan={mock}
+        onLeave={mock}
+        onInviteUsers={mock}
+      />);
+    channelListItem.find('#inviteBtn').simulate('click');
+    expect(channelListItem.state('inviteForm')).toBe(true);
+  });
+  it('should call onInviteUsers', () => {
+    const channelListItem = shallow(
+      <ChannelListItem
+        channelItem={channelItem}
+        key={channelItem.createdAt}
+        selectedChan={mock}
+        onLeave={mock}
+        onInviteUsers={mock}
+      />);
+    channelListItem.find('#inviteBtn').simulate('click');
+    channelListItem.find('.invite-form').simulate('submit', mockEvent);
+    channelListItem.setState({ userToInvite: ['user', 'test'] });
+    const formData = [
+      channelItem.url,
+      channelListItem.state('usersToInvite'),
+    ];
+    expect(mock).toHaveBeenCalledWith(formData);
+  });
+  it('should call onLeave', () => {
+    const channelListItem = shallow(
+      <ChannelListItem
+        channelItem={channelItem}
+        key={channelItem.createdAt}
+        selectedChan={mock}
+        onLeave={mock}
+        onInviteUsers={mock}
+      />);
+    channelListItem.find('#leaveBtn').simulate('click');
+    expect(mock).toHaveBeenCalledWith({
+      channelUrl: channelItem.url,
+      channelType: channelItem.channelType
+    });
+  });
+  it('should call selecteChan', () => {
+    const channelListItem = shallow(
+      <ChannelListItem
+        channelItem={channelItem}
+        key={channelItem.createdAt}
+        selectedChan={mock}
+        onLeave={mock}
+        onInviteUsers={mock}
+      />);
+    channelListItem.find('.channel-list-item').simulate('click');
+    expect(mock).toHaveBeenCalledWith({
+      channelUrl: channelItem.url,
+      channelType: channelItem.channelType,
+    });
   });
 });

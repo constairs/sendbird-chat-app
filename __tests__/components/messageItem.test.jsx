@@ -13,6 +13,8 @@ const message = {
   },
   createdAt: 1546806300000,
   message: 'messsage',
+  messageType: 'user',
+  messageId: '1'
 };
 
 const receipt = 1546806200000;
@@ -33,6 +35,12 @@ const uploadProgress = {
 };
 
 const mock = jest.fn();
+
+const mockEvent = {
+  target: {},
+  preventDefault: () => {},
+  value: 'value'
+};
 
 describe('<MessageItem />', () => {
   it('should render sender info', () => {
@@ -204,8 +212,36 @@ describe('<MessageItem />', () => {
     expect(messageItem.state('onEdit')).toBe(true);
     expect(messageItem.find('.edit-message-form')).toExist();
     expect(messageItem.state('messageInput')).toBe(message.message);
-    const mockEvent = { target: {}, value: 'value' };
     messageItem.find('.edit-message-form input').simulate('change', mockEvent);
     expect(messageItem.state('messageInput')).toBe(messageItem.find('.edit-message-form input').prop('value'));
+  });
+  it('should call onDelete func', () => {
+    const messageItem = shallow(
+      <MessageItem
+        userId={user.userId}
+        uploadProgress={uploadProgress}
+        message={message}
+        onDeleteMessage={mock}
+        onEditMessage={mock}
+        onCancelUploading={mock}
+      />
+    );
+    messageItem.find('#delMessage').simulate('click');
+    expect(mock).toHaveBeenCalledWith(message);
+  });
+  it('should call onDelete func', () => {
+    const messageItem = shallow(
+      <MessageItem
+        userId={user.userId}
+        uploadProgress={uploadProgress}
+        message={message}
+        onDeleteMessage={mock}
+        onEditMessage={mock}
+        onCancelUploading={mock}
+      />
+    );
+    messageItem.setState({ onEdit: true });
+    messageItem.find('.edit-message-form').simulate('submit', mockEvent);
+    expect(mock).toHaveBeenCalledWith([message.messageType, message.messageId, messageItem.state('messageInput')]);
   });
 });

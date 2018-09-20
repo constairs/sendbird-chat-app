@@ -25,6 +25,11 @@ const user = {
   userFetching: true,
 };
 
+const mockEvent = {
+  target: {},
+  preventDefault: () => {}
+};
+
 describe('<Channels />', () => {
   it('should render preloader', () => {
     const wrapper = shallow(
@@ -48,5 +53,35 @@ describe('<Channels />', () => {
       />
     );
     expect(wrapper.find('.channel-page-content')).toExist();
+  });
+  it('should show modal', () => {
+    const wrapper = shallow(
+      <Channels
+        channelsActions={mockObj}
+        groupChannelsActions={mockObj}
+        createOpenChannel={jest.fn}
+        user={user}
+        channels={channels}
+      />
+    );
+    wrapper.find('button[name="createOpen"]').simulate('click', mockEvent);
+    expect(wrapper.state('modalIsOpen')).toBe(true);
+    wrapper.setState({ modalIsOpen: false });
+    wrapper.find('button[name="createGroup"]').simulate('click', mockEvent);
+    expect(wrapper.state('modalIsOpen')).toBe(true);
+  });
+  it('should hide modal', () => {
+    const wrapper = shallow(
+      <Channels
+        channelsActions={mockObj}
+        groupChannelsActions={mockObj}
+        createOpenChannel={jest.fn}
+        user={user}
+        channels={channels}
+      />
+    );
+    wrapper.setState({ modalIsOpen: true });
+    wrapper.find('.x-btn').simulate('click');
+    expect(wrapper.state('modalIsOpen')).toBe(false);
   });
 });

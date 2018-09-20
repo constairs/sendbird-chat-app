@@ -5,13 +5,14 @@ import { LoginForm } from '../../src/components/LoginForm';
 
 const mock = jest.fn();
 
+const mockedEvent = { target: {}, preventDefault: () => {} };
+
 describe('<LoginForm />', () => {
   it('should change inputs', () => {
     const form = shallow(
       <LoginForm
         onLogin={mock}
       />);
-    const mockedEvent = { target: {} };
     expect(form.state('userId')).toBe('');
     expect(form.state('userNick')).toBe('');
     form.find('#userId').simulate('change', mockedEvent);
@@ -20,10 +21,14 @@ describe('<LoginForm />', () => {
     expect(form.state('userNick')).toBe(form.find('#userNick').prop('value'));
   });
   it('call login function on submit form', () => {
-    // const form = shallow(<LoginForm
-    //   onLogin={mock}
-    // />);
-    // form.find('form').simulate('submit', { target: {} });
-    // expect(form.prop('onLogin')).toHaveBeenCalled();
+    const form = shallow(<LoginForm
+      onLogin={mock}
+    />);
+    form.find('form').simulate('submit', mockedEvent);
+    const formData = {
+      userId: form.state('userId'),
+      userNick: form.state('userNick'),
+    };
+    expect(mock).toHaveBeenCalledWith(formData);
   });
 });
