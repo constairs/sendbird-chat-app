@@ -58,7 +58,7 @@ import {
   cancelUploadingFailed,
 } from './actions';
 
-function* sendMessageSaga(action) {
+export function* sendMessageSaga(action) {
   try {
     const sendRes = yield call(sendMessage, ...action.messageData);
     yield put(sendMessageSuccessed(sendRes.channel, sendRes.message));
@@ -67,11 +67,11 @@ function* sendMessageSaga(action) {
       yield put(markAsRead());
     }
   } catch (error) {
-    yield put(sendMessageFailed(error));
+    yield put(sendMessageFailed(error.message));
   }
 }
 
-function* cancelUploadingSaga(action) {
+export function* cancelUploadingSaga(action) {
   try {
     const cancelRes = yield call(
       cancelUploadingMessage,
@@ -80,11 +80,11 @@ function* cancelUploadingSaga(action) {
     );
     yield put(cancelUploadingSuccessed(cancelRes));
   } catch (error) {
-    yield put(cancelUploadingFailed(error));
+    yield put(cancelUploadingFailed(error.message));
   }
 }
 
-function* sendFileMessageSaga(action) {
+export function* sendFileMessageSaga(action) {
   try {
     const fakeId = v4();
     const creationTime = new Date();
@@ -134,7 +134,7 @@ function* sendFileMessageSaga(action) {
   }
 }
 
-function* deleteMessageSaga(action) {
+export function* deleteMessageSaga(action) {
   try {
     const delChannel = yield call(deleteMessage, ...action.messageData);
     yield put(deleteMessageSuccessed(delChannel));
@@ -152,7 +152,7 @@ function* editMessageSaga(action) {
   }
 }
 
-function* getMessagesSaga(action) {
+export function* getMessagesSaga(action) {
   yield put(getMessagesRequest(action.payload));
   try {
     const messages = yield call(
@@ -170,7 +170,7 @@ function* getMessagesSaga(action) {
   }
 }
 
-function* messageTypingSaga(action) {
+export function* messageTypingSaga(action) {
   try {
     const startRes = yield call(onMessageTyping, ...action.payload);
     yield put(messageTypingSet(startRes));
@@ -188,11 +188,11 @@ function* messageTypingSaga(action) {
   }
 }
 
-function* userTypingEndSaga(action) {
+export function* userTypingEndSaga(action) {
   yield call(typingEnd, ...action.payload);
 }
 
-function* userTypingSaga(action) {
+export function* userTypingSaga(action) {
   if (action.type === 'USER_TYPING_START') {
     yield call(typingStart, ...action.payload);
     yield call(delay, 2000);
@@ -200,7 +200,7 @@ function* userTypingSaga(action) {
   }
 }
 
-function* editFileMessageSaga(action) {
+export function* editFileMessageSaga(action) {
   try {
     const editRes = yield call(editFileMessage, ...action.updFileMessage);
     yield put(editFileMessageSuccessed(editRes));
@@ -209,7 +209,7 @@ function* editFileMessageSaga(action) {
   }
 }
 
-function* markAsReadSaga(action) {
+export function* markAsReadSaga(action) {
   if (action.payload.channel.channelType === 'group') {
     yield call(delay, 1000);
     yield call(markAsReadSb, action.payload.channel);
