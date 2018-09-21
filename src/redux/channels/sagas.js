@@ -67,7 +67,7 @@ export function* createChannelSaga(action) {
     }
   } else {
     try {
-      const createdChannel = yield call(createGroupChannel, ...action.payload);
+      const createdChannel = yield call(createGroupChannel, action.payload);
       yield put(createGroupChannelSuccessed(createdChannel));
     } catch (error) {
       yield put(createGroupChannelFailed(error.message));
@@ -75,7 +75,7 @@ export function* createChannelSaga(action) {
   }
 }
 
-function* getChannelsListSaga() {
+export function* getChannelsListSaga() {
   yield put(getChannelList());
   try {
     const channelList = yield call(getChannelListFromSB);
@@ -85,26 +85,26 @@ function* getChannelsListSaga() {
   }
 }
 
-function* getSelectedChannelSaga(action) {
+export function* getSelectedChannelSaga(action) {
   yield put(cleanChat());
   try {
     const channel = yield call(selectChannel, action.payload);
     if (action.payload.channelType === 'open') {
-      yield put(enterChannel(action));
+      yield put(enterChannel(action.payload.channelUrl));
       yield put(enterChannelSuccessed(channel));
     } else {
       yield put(getSelectedChannelSuccessed(channel));
     }
   } catch (error) {
     if (action.payload.channelType === 'open') {
-      yield put(enterChannelFailed(error));
+      yield put(enterChannelFailed(error.message));
     } else {
       yield put(getSelectedChannelFailed(error.message));
     }
   }
 }
 
-function* leaveChannelSaga(action) {
+export function* leaveChannelSaga(action) {
   try {
     if (action.payload.channelType === 'open') {
       yield call(exitChannel, action.payload.channelUrl);
@@ -118,7 +118,7 @@ function* leaveChannelSaga(action) {
   }
 }
 
-function* inviteUserSaga(action) {
+export function* inviteUserSaga(action) {
   try {
     const inviteRes = yield call(inviteToGroup, ...action.payload);
     yield put(inviteUsersSuccessed(inviteRes));
@@ -127,12 +127,12 @@ function* inviteUserSaga(action) {
   }
 }
 
-function* membersUpdatedSaga() {
+export function* membersUpdatedSaga() {
   yield call(delay, 5000);
   yield put(notificationOff());
 }
 
-function* refreshMembersSaga(action) {
+export function* refreshMembersSaga(action) {
   try {
     if (action.type === ON_USER_JOINED || action.type === ON_USER_LEFT) {
       if (action.payload.myMemberState === 'joined') {
@@ -151,14 +151,14 @@ function* refreshMembersSaga(action) {
   }
 }
 
-function* membersRefresher(action) {
+export function* membersRefresher(action) {
   while (action) {
     yield call(delay, 20000);
     yield refreshMembersSaga(action);
   }
 }
 
-function* getParticipantsSaga(action) {
+export function* getParticipantsSaga(action) {
   yield put(getParticipants());
   try {
     const participantsList = yield call(getParticipantsSb, action.payload.channel);

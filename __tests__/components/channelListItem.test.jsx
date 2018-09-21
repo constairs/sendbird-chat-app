@@ -183,7 +183,6 @@ describe('<ChannelListItem />', () => {
       channelType: channelItem.channelType
     });
   });
-<<<<<<< HEAD
   it('should call selecteChan', () => {
     const channelListItem = shallow(
       <ChannelListItem
@@ -199,6 +198,4 @@ describe('<ChannelListItem />', () => {
       channelType: channelItem.channelType,
     });
   });
-=======
->>>>>>> 0ecd7152b3cf911c799accbeae2630f662bd7f74
 });

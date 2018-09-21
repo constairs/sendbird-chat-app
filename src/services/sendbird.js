@@ -155,7 +155,7 @@ export function createOpenChannel({
   });
 }
 
-export function createGroupChannel(
+export function createGroupChannel({
   userIds,
   channelDistinct,
   channelName,
@@ -163,7 +163,7 @@ export function createGroupChannel(
   coverFile,
   channelData,
   customType
-) {
+}) {
   return new Promise((resolve, reject) => {
     sb.GroupChannel.createChannelWithUserIds(
       [...userIds],
@@ -311,10 +311,10 @@ export function enterChannel(channelUrl) {
   });
 }
 
-export function inviteToGroup(channelUrl, userIds) {
+export function leaveGroup(channelUrl) {
   return new Promise((resolve, reject) => {
     getChannel(channelUrl, 'group').then(groupChannel => {
-      groupChannel.inviteWithUserIds([...userIds], function (response, error) {
+      groupChannel.leave(function (response, error) {
         if (error) {
           reject(error);
         }
@@ -324,10 +324,10 @@ export function inviteToGroup(channelUrl, userIds) {
   });
 }
 
-export function leaveGroup(channelUrl) {
+export function inviteToGroup(channelUrl, userIds) {
   return new Promise((resolve, reject) => {
     getChannel(channelUrl, 'group').then(groupChannel => {
-      groupChannel.leave(function (response, error) {
+      groupChannel.inviteWithUserIds([...userIds], function (response, error) {
         if (error) {
           reject(error);
         }
@@ -361,6 +361,19 @@ export function exitChannel(channelUrl) {
         }
         resolve(response);
       });
+    });
+  });
+}
+
+
+export function getParticipantsSb(channel) {
+  return new Promise((resolve, reject) => {
+    const participantListQuery = channel.createParticipantListQuery();
+    participantListQuery.next((participantList, err) => {
+      if (err) {
+        reject(err);
+      }
+      resolve(participantList);
     });
   });
 }
@@ -566,16 +579,4 @@ export function typingEnd(channelUrl, channelType) {
 
 export function markAsReadSb(channel) {
   channel.markAsRead();
-}
-
-export function getParticipantsSb(channel) {
-  return new Promise((resolve, reject) => {
-    const participantListQuery = channel.createParticipantListQuery();
-    participantListQuery.next((participantList, err) => {
-      if (err) {
-        reject(err);
-      }
-      resolve(participantList);
-    });
-  });
 }
