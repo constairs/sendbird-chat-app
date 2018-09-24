@@ -65,19 +65,6 @@ export const editMessageFailed = error => ({
   payload: error,
 });
 
-export const editFileMessage = updFileMessage => ({
-  type: TYPES.EDIT_FILE_MESSAGE,
-  payload: updFileMessage,
-});
-export const editFileMessageSuccessed = editRes => ({
-  type: TYPES.EDIT_FILE_MESSAGE_SUCCESSED,
-  payload: editRes,
-});
-export const editFileMessageFailed = error => ({
-  type: TYPES.EDIT_FILE_MESSAGE_FAILED,
-  payload: error,
-});
-
 export const getMessagesRequest = channelUrl => ({
   type: TYPES.GET_MESSAGES,
   channelUrl,
@@ -137,6 +124,19 @@ export const userTypingStart = channel => ({
 export const userTypingEnd = channel => ({
   type: TYPES.USER_TYPING_END,
   payload: channel
+});
+
+export const editFileMessage = updFileMessage => ({
+  type: TYPES.EDIT_FILE_MESSAGE,
+  payload: updFileMessage,
+});
+export const editFileMessageSuccessed = editRes => ({
+  type: TYPES.EDIT_FILE_MESSAGE_SUCCESSED,
+  payload: editRes,
+});
+export const editFileMessageFailed = error => ({
+  type: TYPES.EDIT_FILE_MESSAGE_FAILED,
+  payload: error,
 });
 
 export const readReceipt = (receipt, channelUrl) => ({

@@ -19,7 +19,6 @@ import {
   getMessages,
   onMessageTyping,
   markAsReadSb,
-  editFileMessage,
   cancelUploadingMessage,
   typingStart,
   typingEnd
@@ -56,6 +55,7 @@ import {
   replaceMessage,
   cancelUploadingSuccessed,
   cancelUploadingFailed,
+  sendFileMessageFailed,
 } from './actions';
 
 export function* sendMessageSaga(action) {
@@ -120,7 +120,7 @@ export function* sendFileMessageSaga(action) {
 
     const replacer = {
       messageId: fakeId,
-      message: sendRes.fileMessage,
+      message: sendRes.message,
     };
 
     yield put(replaceMessage(replacer));
@@ -130,7 +130,7 @@ export function* sendFileMessageSaga(action) {
       yield put(markAsRead());
     }
   } catch (error) {
-    yield put(sendMessageFailed(error));
+    yield put(sendFileMessageFailed(error.message));
   }
 }
 
@@ -139,16 +139,16 @@ export function* deleteMessageSaga(action) {
     const delChannel = yield call(deleteMessage, ...action.messageData);
     yield put(deleteMessageSuccessed(delChannel));
   } catch (error) {
-    yield put(deleteMessageFailed(error));
+    yield put(deleteMessageFailed(error.message));
   }
 }
 
-function* editMessageSaga(action) {
+export function* editMessageSaga(action) {
   try {
     const editRes = yield call(editMessage, ...action.messageData);
     yield put(editMessageSuccessed(editRes));
   } catch (error) {
-    yield put(editMessageFailed(error));
+    yield put(editMessageFailed(error.message));
   }
 }
 
@@ -166,7 +166,7 @@ export function* getMessagesSaga(action) {
       yield put(markAsRead());
     }
   } catch (error) {
-    yield put(getMessagesFailed(error));
+    yield put(getMessagesFailed(error.message));
   }
 }
 
@@ -184,7 +184,7 @@ export function* messageTypingSaga(action) {
     );
     yield put(messageTypingEnd(endRes));
   } catch (error) {
-    yield put(messageTypingError(error));
+    yield put(messageTypingError(error.message));
   }
 }
 
@@ -202,10 +202,10 @@ export function* userTypingSaga(action) {
 
 export function* editFileMessageSaga(action) {
   try {
-    const editRes = yield call(editFileMessage, ...action.updFileMessage);
+    const editRes = yield call(editMessage, ...action.payload);
     yield put(editFileMessageSuccessed(editRes));
   } catch (error) {
-    yield put(editFileMessageFailed(error));
+    yield put(editFileMessageFailed(error.message));
   }
 }
 
