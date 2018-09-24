@@ -1,4 +1,4 @@
-import { call, put, takeLatest, all, race } from 'redux-saga/effects';
+import { call, put, takeLatest, race } from 'redux-saga/effects';
 import { delay } from 'redux-saga';
 import { REHYDRATE } from 'redux-persist';
 import { push } from 'connected-react-router';
@@ -29,7 +29,7 @@ import {
 } from './actions';
 import { leaveChannel, leaveChannelSuccessed, changeActiveChannel } from '../channels/actions';
 
-function* loginUserAsync(action) {
+export function* loginUserSaga(action) {
   try {
     const { user, timeout } = yield race({
       user: call(connectToSB, action.payload.userId),
@@ -40,8 +40,8 @@ function* loginUserAsync(action) {
     } else if (timeout) {
       yield put(loginUserTimeout('Login timeout'));
     }
-  } catch (err) {
-    yield put(loginUserFailed(err));
+  } catch (error) {
+    yield put(loginUserFailed(error.message));
   }
 }
 
@@ -49,7 +49,7 @@ export function* loginSuccessed() {
   yield put(push('/channels'));
 }
 
-function* userReconnectAsync(action) {
+export function* userReconnectSaga(action) {
   if (action.payload && action.payload.userId) {
     try {
       yield put(userReconnect());
@@ -62,13 +62,13 @@ function* userReconnectAsync(action) {
       } else if (timeout) {
         yield put(loginUserTimeout('Login timeout'));
       }
-    } catch (err) {
-      yield put(userReconnectFailed(err));
+    } catch (error) {
+      yield put(userReconnectFailed(error.message));
     }
   }
 }
 
-function* logoutUserAsync(action) {
+export function* logoutUserSaga(action) {
   try {
     if (action.payload && action.payload.channelType === 'open') {
       yield put(leaveChannel(action.payload));
@@ -79,29 +79,29 @@ function* logoutUserAsync(action) {
     }
     const res = yield call(disconnectFromSB, action);
     yield put(logoutUserSuccessed(res));
-  } catch (err) {
-    yield put(logoutUserFailed(err));
+  } catch (error) {
+    yield put(logoutUserFailed(error.message));
   }
 }
 
-function* logoutUserComplete() {
+export function* logoutUserComplete() {
   yield put(push('/'));
 }
 
-function* changeUserAsync(action) {
+export function* changeUserSaga(action) {
   try {
     const newData = yield call(changeProfile, ...action.newUserData);
     yield put(changeUserSuccessed(newData));
-  } catch (err) {
-    yield put(changeUserFailed(err));
+  } catch (error) {
+    yield put(changeUserFailed(error.message));
   }
 }
 
 export function* userSagas() {
-  yield takeLatest(USER_LOGIN_REQUEST, loginUserAsync);
+  yield takeLatest(USER_LOGIN_REQUEST, loginUserSaga);
   yield takeLatest(USER_LOGIN_SUCCESSED, loginSuccessed);
-  yield takeLatest(REHYDRATE, userReconnectAsync);
-  yield takeLatest(USER_LOGOUT_REQUEST, logoutUserAsync);
+  yield takeLatest(REHYDRATE, userReconnectSaga);
+  yield takeLatest(USER_LOGOUT_REQUEST, logoutUserSaga);
   yield takeLatest(USER_LOGOUT_SUCCESSED, logoutUserComplete);
-  yield takeLatest(USER_CHANGE_REQUEST, changeUserAsync);
+  yield takeLatest(USER_CHANGE_REQUEST, changeUserSaga);
 }

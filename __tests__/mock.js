@@ -10,7 +10,14 @@ export const mockSendbird = () => {
     refreshGroupMembers: jest.fn(userData => userData),
     getParticipantsSb: jest.fn(channel => channel),
     sendMessage: jest.fn(messageData => messageData),
+    sendFileMessage: jest.fn(),
     cancelUploadingMessage: jest.fn(messageData => messageData),
-    sendFileMessage: jest.fn(fileMessageData => fileMessageData),
+    deleteMessage: jest.fn((channelUrl, channelType) => ({ channelUrl, channelType })),
+    editMessage: jest.fn(),
+    getMessages: jest.fn(),
+    onMessageTyping: jest.fn(),
+    typingStart: jest.fn(),
+    typingEnd: jest.fn(),
+    markAsReadSb: jest.fn(),
   }));
 };
