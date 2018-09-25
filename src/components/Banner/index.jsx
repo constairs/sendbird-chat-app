@@ -1,8 +1,6 @@
 import React from 'react';
 import styled from 'styled-components';
 
-// import './index.scss';
-
 const Page = styled.div`
   position: relative;
   padding: 40px;
@@ -17,7 +15,7 @@ const Background = styled.div`
   border-radius: 2px;
 `;
 
-const TitleH2 = styled.h2`
+const Title = styled.h2`
   position: absolute;
   top: 50%;
   left: 50%;
@@ -29,7 +27,7 @@ const TitleH2 = styled.h2`
 export const Banner = () => (
   <Page>
     <Background>
-      <TitleH2>Banner</TitleH2>
+      <Title>Banner</Title>
     </Background>
   </Page>
 );
