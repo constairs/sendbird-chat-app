@@ -43,6 +43,7 @@
     "redux-persist": "^5.10.0",
     "redux-saga": "^0.16.0",
     "sendbird": "^3.0.70",
+    "styled-components": "^3.4.9",
     "uuid": "^3.3.2"
   },
   "devDependencies": {
