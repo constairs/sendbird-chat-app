@@ -3,12 +3,40 @@ import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import Modal from 'react-modal';
+import styled from 'styled-components';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faSignOutAlt } from '@fortawesome/free-solid-svg-icons';
 import { UserForm } from '../../components/UserForm';
+import { ImgRound } from '../../components/ImgRound';
 import { changeUserRequest, logoutUserRequest } from '../../redux/user/actions';
 
-import './index.scss';
+// import './index.scss';
+
+// .user-profile {
+//   display: flex;
+//   align-items: center;
+//   padding: 10px;
+// }
+
+// .user-logout-btn {
+//   width: 20px;
+//   height: 20px;
+//   padding: 0;
+//   background-color: #e4dcdc;
+//   font-size: 12px;
+//   text-align: center;
+//   margin: 5px;
+// }
+
+const ProfileCard = styled.div`
+  display: flex;
+  align-items: center;
+  padding: 10px;
+`;
+
+// const LogoutBtn = styled.btn`
+//   ${props => props.theme.buttons.btn}
+// `;
 
 export class Profile extends React.Component {
   state = {
@@ -43,13 +71,14 @@ export class Profile extends React.Component {
     const { userName, userImg } = this.props.user;
 
     return (
-      <div className="user-profile">
-        <div className="user-cover">
+      <ProfileCard>
+        <ImgRound src={userImg} btn btnTitle="change" onClickBtn={this.handleOpenModal} additionalTitle="Change profile data" />
+        {/* <div className="user-cover">
           <img src={userImg} alt="user-img" />
           <button onClick={this.handleOpenModal} className="change-profile-btn" title="Change profile data">
             Change
           </button>
-        </div>
+        </div> */}
         <h2 className="user-nickname">{userName}</h2>
         <button
           className="user-logout-btn"
@@ -71,7 +100,7 @@ export class Profile extends React.Component {
           </button>
           <UserForm onChangeProfile={this.handleChangeProfile} />
         </Modal>
-      </div>
+      </ProfileCard>
     );
   }
 }

@@ -6,33 +6,6 @@ import { ChatBox } from '../../containers/ChatBox';
 
 const ChannelItem = styled.div`
   width: 100%;
-  .img-place {
-    width: 100px;
-    height: 100px;
-  }
-  /* .channel-header {
-    display: flex;
-    justify-content: space-between;
-    margin-bottom: 20px;
-  } */
-  
-  .channel-info {
-    display: flex;
-    align-items: center;
-    .img-place {
-      margin-right: 15px;
-      position: relative;
-    }
-    .channel-name {
-      margin-top: 0;
-      margin-bottom: 5px;
-      display: flex;
-      align-items: flex-start;
-    }
-    button {
-      margin-left: 10px;
-    }
-  }
 `;
 
 const ChannelHeader = styled.div`
@@ -41,20 +14,19 @@ const ChannelHeader = styled.div`
   margin-bottom: 20px;
 `;
 
-const ChannelInfo = styled.div`
+export const ChannelInfo = styled.div`
   display: flex;
   align-items: center;
+  button {
+    margin-left: 10px;
+  }
 `;
 
-const ChannelName = styled.h1`
+export const ChannelName = styled.h1`
   margin-top: 0;
   margin-bottom: 5px;
   display: flex;
   align-items: flex-start;
-`;
-
-const ChannelUsers = styled.p`
-
 `;
 
 const ImgPlace = styled.div`
@@ -82,7 +54,7 @@ const ConnectionStatus = styled.span`
 };
 `;
 
-const UserList = styled.ul`
+export const UserList = styled.ul`
   list-style-type: none;
   padding-left: 0;
   display: flex;
@@ -125,10 +97,8 @@ export const Channel = ({ ...props }) => {
             />
           </ImgPlace>
           <div>
-            {/* <h1 className="channel-name">{name}</h1> */}
             <ChannelName>{name}</ChannelName>
-            <ChannelUsers>Online: {memberCount}</ChannelUsers>
-            {/* <p className="channel-users">Online: {memberCount}</p> */}
+            <p className="channel-users">Online: {memberCount}</p>
           </div>
         </ChannelInfo>
         <UserList>
@@ -147,24 +117,6 @@ export const Channel = ({ ...props }) => {
           )) : null}
         </UserList>
       </ChannelHeader>
-      <div className="channel-header">
-        {/* <div className="channel-info">
-          <div className="img-place">
-            <img
-              src={
-              coverUrl ||
-              'http://dxstmhyqfqr1o.cloudfront.net/images/icon-chat-04.png'
-            }
-              alt={name}
-            />
-          </div>
-          <div>
-            <h1 className="channel-name">{name}</h1>
-            <p className="channel-users">Online: {memberCount}</p>
-          </div>
-        </div> */}
-
-      </div>
       <ChatBox
         currentChannel={channel}
         channelUrl={channel.url}
