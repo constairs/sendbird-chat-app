@@ -6,31 +6,12 @@ export const theme = {
     dGrey: '#cacaca',
     black: '#2b2b2b',
     main: '#40c9ff',
+    mainDarken: 'darken(#40c9ff, 6%)',
+    accent: '#e36209',
   },
   fonts: {
     font: '\'Helvetica\', sans-serif',
     mainFont: '\'OpenSans\', sans-serif',
-  },
-  buttons: {
-    btn: `
-      background-color: #40c9ff;
-      color: #ffffff;
-      border: none;
-      border-radius: 3px;
-      padding: 5px 10px;
-      font-size: 14px;
-      transition: .2s;
-      :focus {
-        outline: none
-      }
-      &:hover {
-        background-color: darken(#40c9ff, 6%);
-      }
-      &[disabled] {
-        background-color: #ccc;
-        color: #999999;
-      }
-    `,
   },
   imgWrap: `{
     display: block;
@@ -70,3 +51,20 @@ export const theme = {
     padding: 40px;
   }`,
 };
+
+// export const darkTheme = {
+//   colors: {
+//     light: '#f0f0f0',
+//     grey: '#eeeeee',
+//     greyHover: '#d6d4d4',
+//     dGrey: '#cacaca',
+//     black: '#2b2b2b',
+//     main: '#40c9ff',
+//     mainDarken: 'darken(#40c9ff, 6%)',
+//     accent: '#e36209',
+//   },
+//   fonts: {
+//     font: '\'Helvetica\', sans-serif',
+//     mainFont: '\'OpenSans\', sans-serif',
+//   },
+// };

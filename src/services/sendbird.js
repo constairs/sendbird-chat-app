@@ -343,7 +343,6 @@ export function refreshGroupMembers(channel) {
       if (error) {
         reject(error);
       }
-      console.log(response.members);
       resolve(response.members);
     });
   });

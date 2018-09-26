@@ -21,7 +21,7 @@ const ChatItem = styled.div`
 
   .chat-box {
     border-radius: 3px;
-    height: calc(100vh - 362px);
+    height: calc(100vh - 370px);
     overflow-y: scroll;
     color: ${props => props.theme.colors.black};
     background-color: ${props => props.theme.colors.grey};
@@ -84,7 +84,6 @@ export class Chat extends React.Component {
     const { messFetching, messages, user } = this.props;
     const { channelUrl, channelType } = this.props;
     return (
-      // <div className="chat">
       <ChatItem>
         {messFetching ? (
           <div className="preloader">

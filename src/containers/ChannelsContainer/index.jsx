@@ -17,20 +17,19 @@ import { Page } from '../../theme/Page';
 import { FlexContainer } from '../../theme/FlexContainer';
 
 const ChannelsPage = styled(Page)`
-  .channel-sidebar {
-    width: 30%;
-    transition: .2s;
-    height: calc(100vh - 172px);
-    overflow-y: scroll;
-    margin-right: 20px;
-    padding-right: 10px;
-    &.min {
-      width: 35%;
-    }
-  }
-  .channel-page-content {
-    width: 70%;
-  }
+`;
+
+const ChannelSidebar = styled.div`
+  width: 30%;
+  transition: .2s;
+  height: calc(100vh - 172px);
+  overflow-y: scroll;
+  margin-right: 20px;
+  padding-right: 10px;
+`;
+
+const ChannelContent = styled.div`
+  width: 70%;
 `;
 
 export class Channels extends React.Component {
@@ -103,7 +102,7 @@ export class Channels extends React.Component {
           </div>
         ) : null}
         <FlexContainer>
-          <div className="channel-sidebar">
+          <ChannelSidebar>
             <button name="createOpen" onClick={this.handleOpenModal}>
               Создать открытый канал
             </button>
@@ -135,15 +134,15 @@ export class Channels extends React.Component {
                 />
               </div>
             ) : null}
-          </div>
+          </ChannelSidebar>
           {
             channel ? (
-              <div className="channel-page-content">
+              <ChannelContent>
                 <Channel
                   user={this.props.user}
                   channel={channel}
                 />
-              </div>
+              </ChannelContent>
             ) : null
           }
         </FlexContainer>

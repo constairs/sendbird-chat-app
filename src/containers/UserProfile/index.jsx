@@ -23,7 +23,6 @@ const ImgWrap = styled(ImgRound)`
 `;
 
 const LogoutBtn = styled.button`
-  ${props => props.theme.buttons.btn}
   width: 20px;
   height: 20px;
   padding: 0;

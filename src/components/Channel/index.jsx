@@ -11,7 +11,7 @@ const ChannelItem = styled.div`
 const ChannelHeader = styled.div`
   display: flex;
   justify-content: space-between;
-  margin-bottom: 20px;
+  margin-bottom: 14px;
 `;
 
 export const ChannelInfo = styled.div`

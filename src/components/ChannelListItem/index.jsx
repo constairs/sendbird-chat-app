@@ -1,6 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { ListItem } from './index.styles';
+import { ListItem, ItemBtn } from './index.styles';
 
 export class ChannelListItem extends React.Component {
   state = {
@@ -55,7 +55,7 @@ export class ChannelListItem extends React.Component {
     const { usersToInvite, usersIdsInput, inviteForm } = this.state;
     return (
       <ListItem>
-        <button className={channelItem.customType ? 'channel-list-item custom-type' : 'channel-list-item'} onClick={this.handleItemClick}>
+        <ItemBtn custom={channelItem.customType} onClick={this.handleItemClick}>
           <div className="channel-info">
             <span className="img">
               <img
@@ -83,7 +83,7 @@ export class ChannelListItem extends React.Component {
               </div>
             </div>
           ) : null}
-        </button>
+        </ItemBtn>
         {channelItem.channelType === 'group' && !channelItem.isDistinct ? (
           <div className="btns">
             <button id="inviteBtn" onClick={this.handleInviteClick}>Пригласить</button>

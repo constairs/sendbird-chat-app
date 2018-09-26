@@ -15,6 +15,7 @@ const WindowInner = styled.div`
   background-color: ${props => props.theme.colors.light};
   transition: .3s ease-in-out;
   z-index: 10;
+  visibility: ${props => (props.show ? 'visible' : 'hidden')};  
   opacity: ${props => (props.show ? 100 : 0)};
   .x-btn {
     background-color: #d6d4d4;

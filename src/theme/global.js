@@ -4,6 +4,7 @@ export const globalStyles = `
   * {
   box-sizing: border-box;
   }
+  
   body {
     margin: 0;
     padding: 0;
@@ -12,6 +13,10 @@ export const globalStyles = `
 
   h1, h2, h3, h4 {
     font-family: ${theme.fonts.font};
+  }
+
+  h1 {
+    font-size: 26px;
   }
 
   .title {
@@ -73,16 +78,16 @@ export const globalStyles = `
     padding: 5px 10px;
     font-size: 14px;
     transition: .2s;
-    :focus {
-      outline: none
-    }
+    &:focus {
+      outline: none;
+    };
     &:hover {
-      background-color: darken(${theme.colors.main}, 6%);
-    }
+      background-color: ${theme.colors.mainDarken};
+    };
     &[disabled] {
       background-color: #ccc;
       color: #999999;
-    }
+    };
   }
   
   form {
@@ -107,10 +112,10 @@ export const globalStyles = `
       width: 100%;
       height: 40px;
       border-radius: 3px;
-      border: 1px solid #999;
-      :hover {
-        border-color: #333;
-      }
+      // border: 1px solid #999;
+      // :hover {
+      //   border-color: #333;
+      // }
     }
     input[type=file] {
       width: 100%;

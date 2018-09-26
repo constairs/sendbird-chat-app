@@ -3,8 +3,8 @@ import styled from 'styled-components';
 import { Page } from '../../theme/Page';
 
 const Background = styled.div`
-  width: 400px;
-  height: 250px;
+  width: 100%;
+  height: 100%;
   transform: translateZ(0);
   background: url('../../assets/img/background.jpg');
   background-size: cover;
@@ -22,8 +22,10 @@ const Title = styled.h2`
 
 export const Banner = () => (
   <Page>
-    <Background>
-      <Title>Banner</Title>
-    </Background>
+    <div id="root">
+      <Background>
+        <Title>Banner</Title>
+      </Background>
+    </div>
   </Page>
 );

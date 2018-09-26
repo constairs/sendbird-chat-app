@@ -6,27 +6,6 @@ export const ListItem = styled.li`
   border: none;
   border-radius: 3px;
   font-size: 16px;
-  .channel-list-item {
-    background-color: inherit;
-    transition: .2s;
-    padding: 10px;
-    height: 100%;
-    width: 100%;
-    color: ${props => props.theme.colors.black};
-    &.custom-type {
-      background-color: ${props => props.theme.colors.main};
-      color: ${props => props.theme.colors.light};
-    }
-    .channel-info {
-      display: flex;
-      align-items: center;
-      margin-bottom: 10px;
-    }
-    &:hover {
-      background-color: ${props => props.theme.colors.greyHover};
-      color: ${props => props.theme.colors.black};
-    }
-  }
   .channel-item-name {
     margin-left: 10px;
   }
@@ -36,6 +15,11 @@ export const ListItem = styled.li`
     display: block;
     margin-right: 10px;
     position: relative;
+    img {
+    width: 100%;
+    display: block;
+    border-radius: 100%;
+    };
     .unread-count {
       position: absolute;
       width: 12px;
@@ -48,11 +32,7 @@ export const ListItem = styled.li`
       right: -4px;
     }
   }
-  img {
-    width: 100%;
-    display: block;
-    border-radius: 100%;
-  }
+
   .btns {
     display: flex;
     button {
@@ -69,5 +49,24 @@ export const ListItem = styled.li`
     border-top: 1px solid ${props => props.theme.colors.dGrey};
     line-height: 20px;
     font-size: 12px;
+  }
+`;
+
+export const ItemBtn = styled.button`
+  background-color: inherit;
+  border: 1px solid ${props => (props.custom ? props.theme.colors.main : 'inherit')};
+  color: ${props => props.theme.colors.black};
+  transition: .2s;
+  padding: 10px;
+  height: 100%;
+  width: 100%;
+  color: ${props => props.theme.colors.black};
+  .channel-info {
+    display: flex;
+    align-items: center;
+    margin-bottom: 10px;
+  }
+  &:hover {
+    background-color: ${props => props.theme.colors.greyHover};
   }
 `;
