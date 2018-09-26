@@ -43,8 +43,6 @@ export class MessageItem extends React.Component {
     const { message, userId, uploadProgress } = this.props;
     return (
       <div
-        // className={message.messageType !== 'file' && message.customType ?
-        // 'message-item custom-message' : 'message-item'}
         className="message-item"
       >
         <div className="sender-img">
@@ -77,7 +75,7 @@ export class MessageItem extends React.Component {
                   <div className="message-file-preview">
                     <Spinner color="#ffffff" secondaryColor="#40c9ff" size={70} />
                     <span className="loading-progress">{uploadProgress.progress} %</span>
-                    {uploadProgress.progress !== 100 ? (
+                    {uploadProgress.progress < 100 ? (
                       <button onClick={this.handleCancelUploading} className="cancel-button">
                         <FontAwesomeIcon icon={faTimes} />
                       </button>
@@ -109,7 +107,8 @@ export class MessageItem extends React.Component {
                         </div>
                       )}
                     </div>
-                    )}
+                  )
+                }
                 <p>
                   <a href={message.url || '#'} target="_blank">
                     {message.name} ({message.size} кб)
@@ -139,10 +138,10 @@ export class MessageItem extends React.Component {
         </div>
         {userId === message.sender.userId ? (
           <div>
-            <button onClick={this.handleDeleteBtn} className="x-btn">
+            <button onClick={this.handleDeleteBtn} id="delMessage" className="x-btn">
               <FontAwesomeIcon icon={faTimes} />
             </button>
-            <button onClick={this.handleEditMessage} className="edit-btn">
+            <button onClick={this.handleEditMessage} if="editMessage" className="edit-btn">
               <FontAwesomeIcon icon={faPen} />
             </button>
           </div>

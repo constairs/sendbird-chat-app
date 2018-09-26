@@ -33,10 +33,10 @@ ChannelHandler.onChannelChanged = function (channel) {
   store.store.dispatch(channelUpdated(channel));
 };
 ChannelHandler.onUserEntered = function (channel, user) {
-  store.store.dispatch(userEntered({ channel, user }));
+  store.store.dispatch(userEntered(channel, user ));
 };
 ChannelHandler.onUserExited = function (channel, user) {
-  store.store.dispatch(userExited({ channel, user }));
+  store.store.dispatch(userExited( channel, user ));
 };
 ChannelHandler.onMetaDataUpdated = function (channel, metaData) {
   store.store.dispatch(messageTypingSet(metaData));
@@ -48,8 +48,8 @@ ChatHandler.onMessageReceived = function (channel, message) {
 ChatHandler.onMessageUpdated = function (channel, message) {
   store.store.dispatch(messageUpdated(channel, message));
 };
-ChatHandler.onMessageDeleted = function (channel, messageId) {
-  store.store.dispatch(messageDeleted(channel, messageId));
+ChatHandler.onMessageDeleted = function (messageId) {
+  store.store.dispatch(messageDeleted(messageId));
 };
 ChatHandler.onTypingStatusUpdated = function (groupChannel) {
   const typingMembers = groupChannel.getTypingMembers();
@@ -126,12 +126,13 @@ export function changeProfile(nickname, profileUrl) {
   });
 }
 
-export function createOpenChannel(
+export function createOpenChannel({
   channelName,
   coverUrl,
   coverFile,
   channelData,
-  customType) {
+  customType
+}) {
   return new Promise((resolve, reject) => {
     sb.OpenChannel.createChannel(
       channelName,
@@ -154,7 +155,7 @@ export function createOpenChannel(
   });
 }
 
-export function createGroupChannel(
+export function createGroupChannel({
   userIds,
   channelDistinct,
   channelName,
@@ -162,7 +163,7 @@ export function createGroupChannel(
   coverFile,
   channelData,
   customType
-) {
+}) {
   return new Promise((resolve, reject) => {
     sb.GroupChannel.createChannelWithUserIds(
       [...userIds],
@@ -310,10 +311,10 @@ export function enterChannel(channelUrl) {
   });
 }
 
-export function inviteToGroup(channelUrl, userIds) {
+export function leaveGroup(channelUrl) {
   return new Promise((resolve, reject) => {
     getChannel(channelUrl, 'group').then(groupChannel => {
-      groupChannel.inviteWithUserIds([...userIds], function (response, error) {
+      groupChannel.leave(function (response, error) {
         if (error) {
           reject(error);
         }
@@ -323,10 +324,10 @@ export function inviteToGroup(channelUrl, userIds) {
   });
 }
 
-export function leaveGroup(channelUrl) {
+export function inviteToGroup(channelUrl, userIds) {
   return new Promise((resolve, reject) => {
     getChannel(channelUrl, 'group').then(groupChannel => {
-      groupChannel.leave(function (response, error) {
+      groupChannel.inviteWithUserIds([...userIds], function (response, error) {
         if (error) {
           reject(error);
         }
@@ -360,6 +361,19 @@ export function exitChannel(channelUrl) {
         }
         resolve(response);
       });
+    });
+  });
+}
+
+
+export function getParticipantsSb(channel) {
+  return new Promise((resolve, reject) => {
+    const participantListQuery = channel.createParticipantListQuery();
+    participantListQuery.next((participantList, err) => {
+      if (err) {
+        reject(err);
+      }
+      resolve(participantList);
     });
   });
 }
@@ -406,11 +420,11 @@ export function sendMessage(
 ) {
   return new Promise((resolve, reject) => {
     getChannel(channelUrl, channelType).then(channel => {
-      channel.sendUserMessage(message, (messages, err) => {
+      channel.sendUserMessage(message, (message, err) => {
         if (err) {
           reject(err);
         }
-        resolve({ channel, messages });
+        resolve({ channel, message });
       });
     });
   });
@@ -467,11 +481,11 @@ export function sendFileMessage(
             })
           );
         },
-        (fileMessage, error) => {
+        (message, error) => {
           if (error) {
             reject(error);
           }
-          resolve({ channel, fileMessage });
+          resolve({ channel, message });
         }
       );
     });
@@ -565,16 +579,4 @@ export function typingEnd(channelUrl, channelType) {
 
 export function markAsReadSb(channel) {
   channel.markAsRead();
-}
-
-export function getParticipantsSb(channel) {
-  return new Promise((resolve, reject) => {
-    const participantListQuery = channel.createParticipantListQuery();
-    participantListQuery.next((participantList, err) => {
-      if (err) {
-        reject(err);
-      }
-      resolve(participantList);
-    });
-  });
 }

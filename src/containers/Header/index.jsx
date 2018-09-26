@@ -6,7 +6,7 @@ import { UserProfile } from '../UserProfile';
 
 import './index.scss';
 
-class Head extends React.Component {
+export class Head extends React.Component {
   state = {};
   render() {
     const { logged } = this.props;

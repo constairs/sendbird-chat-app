@@ -35,17 +35,20 @@ export class NotificationWindow extends React.Component {
       >
         {type === 'onUserJoined' ? (
           <p>
-            {user.nickname === nickname
+            {
+              user.nickname === nickname
               ? `Вас пригласили в групповой канал ${channel.name}`
               : `Пользователь ${user.nickname} присоединился к каналу ${
-                  channel.name
-                }`}
+                channel.name
+              }`
+            }
           </p>
         ) : (
           <p>
             {user.nickname === nickname
               ? `Вы покинули в групповой канал ${channel.name}`
-              : `Пользователь ${user.nickname} покинул канал ${channel.name}`}
+              : `Пользователь ${user.nickname} покинул канал ${channel.name}`
+            }
           </p>
         )}
 
@@ -57,8 +60,12 @@ export class NotificationWindow extends React.Component {
   }
 }
 
+NotificationWindow.defaultProps = {
+  notificationShow: false
+};
+
 NotificationWindow.propTypes = {
-  notificationShow: PropTypes.bool.isRequired,
+  notificationShow: PropTypes.bool,
   onNotificationClose: PropTypes.func.isRequired,
   notification: PropTypes.objectOf(PropTypes.any).isRequired,
   nickname: PropTypes.string.isRequired,

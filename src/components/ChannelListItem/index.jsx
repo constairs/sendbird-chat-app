@@ -59,9 +59,7 @@ export class ChannelListItem extends React.Component {
             <span className="img">
               <img
                 src={
-                  channelItem.coverUrl
-                    ? channelItem.coverUrl
-                    : 'http://dxstmhyqfqr1o.cloudfront.net/images/icon-chat-04.png'
+                  channelItem.coverUrl || 'http://dxstmhyqfqr1o.cloudfront.net/images/icon-chat-04.png'
                 }
                 alt={channelItem.name}
               />
@@ -70,7 +68,7 @@ export class ChannelListItem extends React.Component {
             <span className="channel-item-name">{channelItem.name}</span>
           </div>
           {channelItem.lastMessage ? (
-            <div>
+            <div className="last-message">
               <div className="recently-messages">
                 {channelItem.lastMessage.messageType === 'file' ? (
                   <span>
@@ -87,8 +85,8 @@ export class ChannelListItem extends React.Component {
         </button>
         {channelItem.channelType === 'group' && !channelItem.isDistinct ? (
           <div className="btns">
-            <button onClick={this.handleInviteClick}>Пригласить</button>
-            <button onClick={this.handleLeaveClick}>Покинуть</button>
+            <button id="inviteBtn" onClick={this.handleInviteClick}>Пригласить</button>
+            <button id="leaveBtn" onClick={this.handleLeaveClick}>Покинуть</button>
           </div>
         ) : null}
 

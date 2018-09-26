@@ -2,7 +2,7 @@ import { createReducer } from '../../utils/reducerUtils';
 import * as TYPES from './types';
 import { channelListFunc, getChannelFunc, updateChannelListItem } from './helpers';
 
-const initState = {
+export const initState = {
   channelsFetching: false,
   openChannelList: [],
   groupChannelList: [],
@@ -67,7 +67,7 @@ const onUserLeft = (state, userData) => ({
   notificationShow: true,
   notification: {
     type: 'userLeft',
-    channel: userData.groupChannel,
+    channel: getChannelFunc(userData.groupChannel),
     user: userData.user,
   },
 });
@@ -135,13 +135,11 @@ const enterChannelFailed = (state, error) => ({
 const getParticipantsSuccessed = (state, participantList) => ({
   ...state,
   channel: { ...state.channel, members: participantList },
-  fetching: false,
 });
 
 const getParticipantsFailed = (state, error) => ({
   ...state,
   error,
-  fetching: false,
 });
 
 const leaveChannel = state => ({
@@ -154,9 +152,10 @@ const leaveChannelSuccessed = (state, channelInfo) => ({
   groupChannelList: channelInfo.channelType === 'group' ? state.groupChannelList.filter(channel => channel.url !== channelInfo.channelUrl) : state.groupChannelList,
   channelFetching: false,
 });
-const leaveChannelFailed = state => ({
+const leaveChannelFailed = (state, error) => ({
   ...state,
   channelFetching: false,
+  error
 });
 
 const channelUpdated = (state, channel) => ({
@@ -167,14 +166,14 @@ const channelUpdated = (state, channel) => ({
   groupChannelList: channel.channelType === 'group' ? updateChannelListItem(state.groupChannelList, channel, 'group') : state.groupChannelList,
 });
 
-const userEntered = (state, action) => ({
+const userEntered = (state, enterData) => ({
   ...state,
-  channel: getChannelFunc(action.channel),
+  channel: getChannelFunc(enterData.channel),
 });
 
-const userExited = (state, data) => ({
+const userExited = (state, exitData) => ({
   ...state,
-  channel: getChannelFunc(data.channel),
+  channel: getChannelFunc(exitData.channel),
 });
 
 const getSelectedChannel = state => ({

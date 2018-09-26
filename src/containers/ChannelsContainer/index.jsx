@@ -11,9 +11,9 @@ import { CreateChannelForm } from '../../components/CreateChannelForm';
 import { CreateGroupForm } from '../../components/CreateGroupForm';
 import { ChannelList } from '../../components/ChannelList';
 import { Channel } from '../../components/Channel';
-import { NotificationWindow } from '../NotificationWindow';
+import { NotificationWindow } from '../../components/NotificationWindow';
 
-class Channels extends React.Component {
+export class Channels extends React.Component {
   state = {
     modalIsOpen: false,
     groupChModal: false,
@@ -154,7 +154,6 @@ class Channels extends React.Component {
     );
   }
 }
-
 
 Channels.propTypes = {
   channelsActions: PropTypes.objectOf(PropTypes.func).isRequired,

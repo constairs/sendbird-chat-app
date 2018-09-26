@@ -1,7 +1,7 @@
 import { createReducer } from '../../utils/reducerUtils';
 import * as TYPES from './types';
 
-const initState = {
+export const initState = {
   userFetching: false,
   logged: false,
 };
@@ -42,23 +42,17 @@ const userReconnectSuccessed = state => ({
   ...state,
   userFetching: false,
 });
-const userReconnectFailed = (state, err) => ({
+const userReconnectFailed = (state, error) => ({
   ...state,
   userFetching: false,
-  err,
+  error,
 });
 
-const userLogoutRequest = state => ({
-  ...state,
-  userFetching: false,
-});
 const userLogoutSuccessed = () => ({
-  userFetching: false,
   logged: false,
 });
 const userLogoutFailed = (state, error) => ({
   ...state,
-  userFetching: false,
   error,
 });
 
@@ -84,7 +78,6 @@ const handlers = {
   [TYPES.USER_LOGIN_FAILED]: userLoginFailed,
   [TYPES.USER_LOGIN_TIMEOUT]: userLoginTimeout,
   [TYPES.CLEAR_LOGIN_ERROR]: clearLoginError,
-  [TYPES.USER_LOGOUT_REQUEST]: userLogoutRequest,
   [TYPES.USER_LOGOUT_SUCCESSED]: userLogoutSuccessed,
   [TYPES.USER_LOGOUT_FAILED]: userLogoutFailed,
   [TYPES.USER_CHANGE_REQUEST]: changeUserRequest,

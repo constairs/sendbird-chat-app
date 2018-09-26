@@ -19,7 +19,6 @@ import {
   getMessages,
   onMessageTyping,
   markAsReadSb,
-  editFileMessage,
   cancelUploadingMessage,
   typingStart,
   typingEnd
@@ -56,22 +55,23 @@ import {
   replaceMessage,
   cancelUploadingSuccessed,
   cancelUploadingFailed,
+  sendFileMessageFailed,
 } from './actions';
 
-function* sendMessageSaga(action) {
+export function* sendMessageSaga(action) {
   try {
     const sendRes = yield call(sendMessage, ...action.messageData);
-    yield put(sendMessageSuccessed(sendRes.channel, sendRes.messages));
+    yield put(sendMessageSuccessed(sendRes.channel, sendRes.message));
     if (sendRes.channel.channelType === 'group') {
       yield call(markAsReadSb, sendRes.channel);
       yield put(markAsRead());
     }
   } catch (error) {
-    yield put(sendMessageFailed(error));
+    yield put(sendMessageFailed(error.message));
   }
 }
 
-function* cancelUploadingSaga(action) {
+export function* cancelUploadingSaga(action) {
   try {
     const cancelRes = yield call(
       cancelUploadingMessage,
@@ -80,11 +80,11 @@ function* cancelUploadingSaga(action) {
     );
     yield put(cancelUploadingSuccessed(cancelRes));
   } catch (error) {
-    yield put(cancelUploadingFailed(error));
+    yield put(cancelUploadingFailed(error.message));
   }
 }
 
-function* sendFileMessageSaga(action) {
+export function* sendFileMessageSaga(action) {
   try {
     const fakeId = v4();
     const creationTime = new Date();
@@ -120,7 +120,7 @@ function* sendFileMessageSaga(action) {
 
     const replacer = {
       messageId: fakeId,
-      message: sendRes.fileMessage,
+      message: sendRes.message,
     };
 
     yield put(replaceMessage(replacer));
@@ -130,29 +130,29 @@ function* sendFileMessageSaga(action) {
       yield put(markAsRead());
     }
   } catch (error) {
-    yield put(sendMessageFailed(error));
+    yield put(sendFileMessageFailed(error.message));
   }
 }
 
-function* deleteMessageSaga(action) {
+export function* deleteMessageSaga(action) {
   try {
     const delChannel = yield call(deleteMessage, ...action.messageData);
     yield put(deleteMessageSuccessed(delChannel));
   } catch (error) {
-    yield put(deleteMessageFailed(error));
+    yield put(deleteMessageFailed(error.message));
   }
 }
 
-function* editMessageSaga(action) {
+export function* editMessageSaga(action) {
   try {
     const editRes = yield call(editMessage, ...action.messageData);
     yield put(editMessageSuccessed(editRes));
   } catch (error) {
-    yield put(editMessageFailed(error));
+    yield put(editMessageFailed(error.message));
   }
 }
 
-function* getMessagesSaga(action) {
+export function* getMessagesSaga(action) {
   yield put(getMessagesRequest(action.payload));
   try {
     const messages = yield call(
@@ -166,11 +166,11 @@ function* getMessagesSaga(action) {
       yield put(markAsRead());
     }
   } catch (error) {
-    yield put(getMessagesFailed(error));
+    yield put(getMessagesFailed(error.message));
   }
 }
 
-function* messageTypingSaga(action) {
+export function* messageTypingSaga(action) {
   try {
     const startRes = yield call(onMessageTyping, ...action.payload);
     yield put(messageTypingSet(startRes));
@@ -184,15 +184,15 @@ function* messageTypingSaga(action) {
     );
     yield put(messageTypingEnd(endRes));
   } catch (error) {
-    yield put(messageTypingError(error));
+    yield put(messageTypingError(error.message));
   }
 }
 
-function* userTypingEndSaga(action) {
+export function* userTypingEndSaga(action) {
   yield call(typingEnd, ...action.payload);
 }
 
-function* userTypingSaga(action) {
+export function* userTypingSaga(action) {
   if (action.type === 'USER_TYPING_START') {
     yield call(typingStart, ...action.payload);
     yield call(delay, 2000);
@@ -200,16 +200,16 @@ function* userTypingSaga(action) {
   }
 }
 
-function* editFileMessageSaga(action) {
+export function* editFileMessageSaga(action) {
   try {
-    const editRes = yield call(editFileMessage, ...action.updFileMessage);
+    const editRes = yield call(editMessage, ...action.payload);
     yield put(editFileMessageSuccessed(editRes));
   } catch (error) {
-    yield put(editFileMessageFailed(error));
+    yield put(editFileMessageFailed(error.message));
   }
 }
 
-function* markAsReadSaga(action) {
+export function* markAsReadSaga(action) {
   if (action.payload.channel.channelType === 'group') {
     yield call(delay, 1000);
     yield call(markAsReadSb, action.payload.channel);
