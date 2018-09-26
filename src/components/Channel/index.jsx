@@ -79,7 +79,6 @@ const UserListItem = styled.li`
   }
 `;
 
-
 export const Channel = ({ ...props }) => {
   const { channel } = props;
   const { name, coverUrl, memberCount } = props.channel;

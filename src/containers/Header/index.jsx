@@ -5,27 +5,6 @@ import { connect } from 'react-redux';
 import styled from 'styled-components';
 import { UserProfile } from '../UserProfile';
 
-// import './index.scss';
-
-
-// header {
-//   .user-cover {
-//     width: 50px;
-//     button {
-//       border-radius: 100%;
-//       padding: 0;
-//       font-size: 10px;
-//       &:hover {
-//         background-color: rgba(0,0,0,.33);
-//       }
-//     }
-//   }
-//   .user-nickname {
-//     font-size: 16px;
-//     font-weight: 400;
-//   }
-// }
-
 const StyledHeader = styled.header`
   background-color: ${props => props.theme.colors.light};
   display: block;
@@ -34,6 +13,21 @@ const StyledHeader = styled.header`
   justify-content: space-around;
   align-items: center;
 `;
+
+const HeaderUserProfile = styled(UserProfile)`
+  div {
+    width: 60px!important;
+    height: 60px;
+    button {
+      font-size: 11px;
+    }
+  }
+  h2 {
+    font-size: 16px;
+    font-weight: 400;
+  }
+`;
+
 
 const Nav = styled.nav`
   ul {
@@ -49,9 +43,9 @@ const Nav = styled.nav`
       font-size: 18px;
       text-decoration: none;
       background-color: ${props => props.theme.colors.main};
-      color: #ffffff;
-      box-shadow: 0 0 10px rgba
-      font-family:  ${props => props.theme.fonts.mainFont};
+      color: ${props => props.theme.colors.light};
+      box-shadow: 0 0 10px rgba(0,0,0,.3);
+      font-family: ${props => props.theme.fonts.mainFont};
     }
   };
   }
@@ -62,7 +56,6 @@ export class Head extends React.Component {
   render() {
     const { logged } = this.props;
     return (
-      // <header>
       <StyledHeader>
         <Nav>
           <ul>
@@ -86,7 +79,7 @@ export class Head extends React.Component {
           </ul>
         </Nav>
         {logged ? (
-          <UserProfile />
+          <HeaderUserProfile />
         ) : (
           <div>
             <Link href="/login" to="/login">
@@ -94,7 +87,6 @@ export class Head extends React.Component {
             </Link>
           </div>
         )}
-        {/* </header> */}
       </StyledHeader>
     );
   }
@@ -103,7 +95,6 @@ export class Head extends React.Component {
 Head.propTypes = {
   logged: PropTypes.bool.isRequired,
 };
-
 
 export const Header = connect(
   state => ({ logged: state.persistedUser.logged, }),

@@ -3,14 +3,17 @@ import React from 'react';
 import { hot } from 'react-hot-loader';
 import { Provider } from 'react-redux';
 import { PersistGate } from 'redux-persist/integration/react';
-import { ThemeProvider } from 'styled-components';
+import { ThemeProvider, injectGlobal } from 'styled-components';
 import { Navigation } from './navigation';
 import { configureStore } from './redux/store';
 import { rootSaga } from './redux/sagas';
 
-import './assets/css/styles.css';
-import './assets/scss/styles.scss';
+import { globalStyles } from './theme/global';
 import { theme } from './theme/theme';
+
+/* eslint-disable */
+injectGlobal`${globalStyles}`;
+/* eslint-disable */
 
 export const store = configureStore();
 store.store.runSaga(rootSaga);

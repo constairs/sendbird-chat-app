@@ -1,10 +1,5 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import styled from 'styled-components';
-
-const ImgWrap = styled.div`
-  ${props => props.theme.imgWrap}
-`;
 
 export const ImgRound = ({ ...props }) => {
   const {
@@ -15,14 +10,14 @@ export const ImgRound = ({ ...props }) => {
     additionalTitle
   } = props;
   return (
-    <ImgWrap>
+    <div className={props.className}>
       <img src={src} alt={src} />
       {btn ? (
         <button onClick={onClickBtn} title={additionalTitle}>
           {btnTitle}
         </button>
       ) : null}
-    </ImgWrap>
+    </div>
   );
 };
 
@@ -31,6 +26,7 @@ ImgRound.defaultProps = {
   btnTitle: '',
   onClickBtn: null,
   additionalTitle: '',
+  className: '',
 };
 
 ImgRound.propTypes = {
@@ -38,6 +34,7 @@ ImgRound.propTypes = {
   btn: PropTypes.bool,
   btnTitle: PropTypes.string,
   onClickBtn: PropTypes.func,
-  additionalTitle: PropTypes.string
+  additionalTitle: PropTypes.string,
+  className: PropTypes.string
 };
 

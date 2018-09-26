@@ -1,10 +1,6 @@
 import React from 'react';
 import styled from 'styled-components';
-
-const Page = styled.div`
-  position: relative;
-  padding: 40px;
-`;
+import { Page } from '../../theme/Page';
 
 const Background = styled.div`
   width: 400px;

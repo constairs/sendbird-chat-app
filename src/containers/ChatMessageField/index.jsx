@@ -5,9 +5,49 @@ import PropTypes from 'prop-types';
 import { Spinner, Text } from 'react-preloading-component';
 import Modal from 'react-modal';
 import Dropzone from 'react-dropzone';
+import styled from 'styled-components';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faFile, faTimes, faFileAudio, faFileVideo } from '@fortawesome/free-solid-svg-icons';
 import { messageTyping, messageTypingEnd, userTypingStart, userTypingEnd, sendMessage, sendFileMessage } from '../../redux/chat/actions';
+
+const Field = styled.form`
+    margin-top: 10px;
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: flex-end;
+    padding: 0;
+    box-shadow: none;
+    background-color: #ffffff;
+    input {
+      width: 100%;
+      height: 40px;
+      border: 1px solid ${props => props.theme.colors.main};
+      border-radius: 3px;
+      margin-bottom: 5px;
+      padding-left: 5px;
+      padding-top: 5px;
+    }
+    button {
+      margin-left: 14px;
+      width: auto;
+      height: 30px;
+    }
+    .send-message-btn {
+      display: flex;
+      span {
+        margin-left: 5px;
+      }
+    }
+
+    .typing-indicator {
+      display: flex;
+      align-items: center;
+      margin-right: 8px;
+      .PreLoading-Text {
+        margin-left: 6px;
+      }
+    }
+`;
 
 export class MessageField extends React.Component {
   state = {
@@ -136,27 +176,26 @@ export class MessageField extends React.Component {
     const { userTyping, user, membersTyping } = this.props;
     return (
       <div>
-        <div className="chat-message-filed">
-          <form className="chat-message-form" onSubmit={this.handleSubmit}>
-            <input
-              type="text"
-              onInput={this.handleTextInput}
-              name="messageText"
-              value={messageText}
-            />
-            {userTyping && userTyping !== user.userName ? (
-              <span className="typing-indicator">
-                {userTyping}
-                <Text
-                  color="#000000"
-                  fontSize="1em"
-                  text="набирает сообщение"
-                />
-              </span>
+        <Field onSubmit={this.handleSubmit}>
+          <input
+            type="text"
+            onInput={this.handleTextInput}
+            name="messageText"
+            value={messageText}
+          />
+          {userTyping && userTyping !== user.userName ? (
+            <span className="typing-indicator">
+              {userTyping}
+              <Text
+                color="#000000"
+                fontSize="1em"
+                text="набирает сообщение"
+              />
+            </span>
             ) : null}
-            {membersTyping.length > 0 ? (
-              <span className="typing-indicator">
-                {membersTyping.map((member, i) => {
+          {membersTyping.length > 0 ? (
+            <span className="typing-indicator">
+              {membersTyping.map((member, i) => {
                   if (
                     membersTyping.length > 1 &&
                     i !== membersTyping.length - 1
@@ -165,35 +204,34 @@ export class MessageField extends React.Component {
                   }
                   return <span key={member.userId}>{member.nickname}</span>;
                 })}
-                <Text
-                  color="#000000"
-                  fontSize="1em"
-                  text="набирает сообщение"
-                />
-              </span>
+              <Text
+                color="#000000"
+                fontSize="1em"
+                text="набирает сообщение"
+              />
+            </span>
             ) : null}
-            <button
-              onClick={this.fileUploadModal}
-              type="button"
-              title="Отправить файл"
-              className="file-upload-modal-btn"
-            >
-              <FontAwesomeIcon icon={faFile} />
-            </button>
-            <button
-              className="send-message-btn"
-              type="submit"
-              disabled={!messageText}
-            >
+          <button
+            onClick={this.fileUploadModal}
+            type="button"
+            title="Отправить файл"
+            className="file-upload-modal-btn"
+          >
+            <FontAwesomeIcon icon={faFile} />
+          </button>
+          <button
+            className="send-message-btn"
+            type="submit"
+            disabled={!messageText}
+          >
               Отправить
-              {this.props.sendingMessage ? (
-                <span>
-                  <Spinner color="#ffffff" secondaryColor="#40c9ff" size={10} />
-                </span>
+            {this.props.sendingMessage ? (
+              <span>
+                <Spinner color="#ffffff" secondaryColor="#40c9ff" size={10} />
+              </span>
               ) : null}
-            </button>
-          </form>
-        </div>
+          </button>
+        </Field>
         <Modal
           className="modal file-upload-modal"
           isOpen={fileUploadModal}

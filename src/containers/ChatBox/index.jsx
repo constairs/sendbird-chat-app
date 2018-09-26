@@ -3,12 +3,40 @@ import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import { Spinner } from 'react-preloading-component';
 import PropTypes from 'prop-types';
+import styled from 'styled-components';
 import { deleteMessage, editMessage, cancelUploadingMessage } from '../../redux/chat/actions';
 import { MessageItem } from '../../components/MessageItem';
 import { ChatMessageField } from '../ChatMessageField';
 import { addHandler, removeHandler } from '../../services/sendbird';
 
-import './index.scss';
+const ChatItem = styled.div`
+  height: 100%;
+  position: relative;
+ .preloader {
+   width: 100%;
+   height: 100%;
+   position: absolute;
+   z-index: 1;
+ }
+
+  .chat-box {
+    border-radius: 3px;
+    height: calc(100vh - 362px);
+    overflow-y: scroll;
+    color: ${props => props.theme.colors.black};
+    background-color: ${props => props.theme.colors.grey};
+    position: relative;
+    &__update-btn {
+      background-color: ${props => props.theme.colors.main};
+    }
+  }
+
+  .chat-user {
+    text-decoration: underline;
+    color: ${props => props.theme.colors.main};
+    font-weight: bold;
+  }
+`;
 
 export class Chat extends React.Component {
   constructor(props) {
@@ -56,7 +84,8 @@ export class Chat extends React.Component {
     const { messFetching, messages, user } = this.props;
     const { channelUrl, channelType } = this.props;
     return (
-      <div className="chat">
+      // <div className="chat">
+      <ChatItem>
         {messFetching ? (
           <div className="preloader">
             <Spinner color="#ffffff" secondaryColor="#40c9ff" size={50} />
@@ -83,7 +112,7 @@ export class Chat extends React.Component {
           channelUrl={channelUrl}
           channelType={channelType}
         />
-      </div>
+      </ChatItem>
     );
   }
 }

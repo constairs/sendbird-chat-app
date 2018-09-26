@@ -1,7 +1,15 @@
 import React from 'react';
 import PropTypes from 'prop-types';
+import styled from 'styled-components';
 
-import './index.scss';
+const Form = styled.form`
+  background-color: rgba(240, 240, 240, 0.377);
+  box-shadow: 0 0 15px rgba(0,0,0,.3);
+  border-radius: 3px;
+  min-width: 300px;
+  padding: 40px;
+  box-sizing: border-box;
+`;
 
 export class LoginForm extends React.Component {
   state = {
@@ -27,31 +35,31 @@ export class LoginForm extends React.Component {
   render() {
     const { userId, userNick } = this.state;
     return (
-      <div className="form login-form">
-        <form onSubmit={this.handleSubmit}>
-          <label htmlFor="userId">
-            <span>UserId</span>
-            <input
-              id="userId"
-              name="userId"
-              value={userId}
-              onChange={this.handleTextInput}
-              type="text"
-            />
-          </label>
-          <label htmlFor="userLogin">
-            <span>UserNick</span>
-            <input
-              id="userNick"
-              name="userNick"
-              value={userNick}
-              onChange={this.handleTextInput}
-              type="text"
-            />
-          </label>
-          <button disabled={!userId}>Login</button>
-        </form>
-      </div>
+      <Form onSubmit={this.handleSubmit}>
+        {/* <form onSubmit={this.handleSubmit}> */}
+        <label htmlFor="userId">
+          <span>UserId</span>
+          <input
+            id="userId"
+            name="userId"
+            value={userId}
+            onChange={this.handleTextInput}
+            type="text"
+          />
+        </label>
+        <label htmlFor="userLogin">
+          <span>UserNick</span>
+          <input
+            id="userNick"
+            name="userNick"
+            value={userNick}
+            onChange={this.handleTextInput}
+            type="text"
+          />
+        </label>
+        <button disabled={!userId}>Login</button>
+        {/* </form> */}
+      </Form>
     );
   }
 }

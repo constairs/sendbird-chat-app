@@ -4,6 +4,7 @@ import { connect } from 'react-redux';
 import { Spinner } from 'react-preloading-component';
 import PropTypes from 'prop-types';
 import Modal from 'react-modal';
+import styled from 'styled-components';
 import { getSelectedChannel, leaveChannel } from '../../redux/channels/actions';
 import { createGroupChannel, inviteUsers, notificationOff } from '../../redux/channels/groupChannelsActions';
 import { createOpenChannel } from '../../redux/channels/openChannelsActions';
@@ -12,6 +13,25 @@ import { CreateGroupForm } from '../../components/CreateGroupForm';
 import { ChannelList } from '../../components/ChannelList';
 import { Channel } from '../../components/Channel';
 import { NotificationWindow } from '../../components/NotificationWindow';
+import { Page } from '../../theme/Page';
+import { FlexContainer } from '../../theme/FlexContainer';
+
+const ChannelsPage = styled(Page)`
+  .channel-sidebar {
+    width: 30%;
+    transition: .2s;
+    height: calc(100vh - 172px);
+    overflow-y: scroll;
+    margin-right: 20px;
+    padding-right: 10px;
+    &.min {
+      width: 35%;
+    }
+  }
+  .channel-page-content {
+    width: 70%;
+  }
+`;
 
 export class Channels extends React.Component {
   state = {
@@ -76,13 +96,13 @@ export class Channels extends React.Component {
     } = this.props.channels;
     const { userName, userFetching } = this.props.user;
     return (
-      <div className="page channel-page">
+      <ChannelsPage>
         {userFetching || channelFetching ? (
           <div className="preloader">
             <Spinner color="#ffffff" secondaryColor="#40c9ff" size={100} />
           </div>
         ) : null}
-        <div className="flex-container">
+        <FlexContainer>
           <div className="channel-sidebar">
             <button name="createOpen" onClick={this.handleOpenModal}>
               Создать открытый канал
@@ -126,7 +146,7 @@ export class Channels extends React.Component {
               </div>
             ) : null
           }
-        </div>
+        </FlexContainer>
         <Modal
           className="modal"
           isOpen={this.state.modalIsOpen}
@@ -150,7 +170,7 @@ export class Channels extends React.Component {
           nickname={userName}
           onNotificationClose={this.handleNotificationClose}
         />
-      </div>
+      </ChannelsPage>
     );
   }
 }

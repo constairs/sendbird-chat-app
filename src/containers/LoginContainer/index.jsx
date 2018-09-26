@@ -6,11 +6,30 @@ import PropTypes from 'prop-types';
 import { Redirect } from 'react-router';
 import Modal from 'react-modal';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import styled from 'styled-components';
 import { faTimes } from '@fortawesome/free-solid-svg-icons';
 import { loginUserRequest, clearLoginError } from '../../redux/user/actions';
 import { LoginForm } from '../../components/LoginForm';
+import { Page } from '../../theme/Page';
 
-import './index.scss';
+const LoginPage = styled(Page)`
+  display: flex;
+  justify-content: center;
+  align-items: center; 
+
+  .preloader {
+    position: fixed;
+    left: 0;
+    top: 0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-color: rgba(255,255,255,.7);
+    width: 100%;
+    height: 100vh;
+    z-index: 1;
+}
+`;
 
 export class Login extends React.Component {
   handleLogin = (data) => {
@@ -23,7 +42,7 @@ export class Login extends React.Component {
   render() {
     const { user } = this.props;
     return (
-      <div className="page login-page">
+      <LoginPage>
         {user.userFetching ? (
           <div className="preloader">
             <Spinner color="#ffffff" secondaryColor="#40c9ff" size={100} />
@@ -49,8 +68,7 @@ export class Login extends React.Component {
             <h3>{user.error}</h3>
           </Modal>
         }
-
-      </div>
+      </LoginPage>
     );
   }
 }

@@ -1,13 +1,15 @@
 export const theme = {
   colors: {
     light: '#f0f0f0',
-    grey: 'rgba(133, 133, 133, 0.616)',
+    grey: '#eeeeee',
+    greyHover: '#d6d4d4',
+    dGrey: '#cacaca',
+    black: '#2b2b2b',
     main: '#40c9ff',
-    dblue: '#475366',
   },
   fonts: {
     font: '\'Helvetica\', sans-serif',
-    mainFont: '\'OpenSans\' sans-serif',
+    mainFont: '\'OpenSans\', sans-serif',
   },
   buttons: {
     btn: `
@@ -36,7 +38,6 @@ export const theme = {
     border-radius: 100%;
     position: relative;
     background-color: #ffffff;
-    margin-right: 10px;
     img {
       display: block;
       width: 100%;
@@ -63,5 +64,9 @@ export const theme = {
        transform: translateY(0px);
      };
     };
-  }`
+  }`,
+  page: `{
+    position: relative;
+    padding: 40px;
+  }`,
 };

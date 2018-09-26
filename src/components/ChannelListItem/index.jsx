@@ -1,5 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
+import { ListItem } from './index.styles';
 
 export class ChannelListItem extends React.Component {
   state = {
@@ -53,7 +54,7 @@ export class ChannelListItem extends React.Component {
     const { channelItem } = this.props;
     const { usersToInvite, usersIdsInput, inviteForm } = this.state;
     return (
-      <li>
+      <ListItem>
         <button className={channelItem.customType ? 'channel-list-item custom-type' : 'channel-list-item'} onClick={this.handleItemClick}>
           <div className="channel-info">
             <span className="img">
@@ -114,7 +115,7 @@ export class ChannelListItem extends React.Component {
             <button type="submit">Пригласить</button>
           </form>
         ) : null}
-      </li>
+      </ListItem>
     );
   }
 }

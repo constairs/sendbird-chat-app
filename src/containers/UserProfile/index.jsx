@@ -10,33 +10,28 @@ import { UserForm } from '../../components/UserForm';
 import { ImgRound } from '../../components/ImgRound';
 import { changeUserRequest, logoutUserRequest } from '../../redux/user/actions';
 
-// import './index.scss';
-
-// .user-profile {
-//   display: flex;
-//   align-items: center;
-//   padding: 10px;
-// }
-
-// .user-logout-btn {
-//   width: 20px;
-//   height: 20px;
-//   padding: 0;
-//   background-color: #e4dcdc;
-//   font-size: 12px;
-//   text-align: center;
-//   margin: 5px;
-// }
-
 const ProfileCard = styled.div`
   display: flex;
   align-items: center;
   padding: 10px;
+  h2 {
+    margin-left: 10px;
+  }
+`;
+const ImgWrap = styled(ImgRound)`
+  ${props => props.theme.imgWrap}
 `;
 
-// const LogoutBtn = styled.btn`
-//   ${props => props.theme.buttons.btn}
-// `;
+const LogoutBtn = styled.button`
+  ${props => props.theme.buttons.btn}
+  width: 20px;
+  height: 20px;
+  padding: 0;
+  background-color: #e4dcdc;
+  font-size: 12px;
+  text-align: center;
+  margin: 8px;
+`;
 
 export class Profile extends React.Component {
   state = {
@@ -71,22 +66,16 @@ export class Profile extends React.Component {
     const { userName, userImg } = this.props.user;
 
     return (
-      <ProfileCard>
-        <ImgRound src={userImg} btn btnTitle="change" onClickBtn={this.handleOpenModal} additionalTitle="Change profile data" />
-        {/* <div className="user-cover">
-          <img src={userImg} alt="user-img" />
-          <button onClick={this.handleOpenModal} className="change-profile-btn" title="Change profile data">
-            Change
-          </button>
-        </div> */}
-        <h2 className="user-nickname">{userName}</h2>
-        <button
+      <ProfileCard className={this.props.className}>
+        <ImgWrap src={userImg} btn btnTitle="change" onClickBtn={this.handleOpenModal} additionalTitle="Change profile data" />
+        <h2>{userName}</h2>
+        <LogoutBtn
           className="user-logout-btn"
           title="Logout"
           onClick={this.handleLogout}
         >
           <FontAwesomeIcon icon={faSignOutAlt} size="xs" />
-        </button>
+        </LogoutBtn>
         <Modal
           className="modal"
           isOpen={this.state.modalIsOpen}
@@ -105,11 +94,16 @@ export class Profile extends React.Component {
   }
 }
 
+Profile.defaultProps = {
+  className: ''
+};
+
 Profile.propTypes = {
   user: PropTypes.objectOf(PropTypes.any).isRequired,
   userActions: PropTypes.objectOf(PropTypes.any).isRequired,
   channelUrl: PropTypes.string.isRequired,
   channelType: PropTypes.string.isRequired,
+  className: PropTypes.string,
 };
 
 export const UserProfile = connect(
