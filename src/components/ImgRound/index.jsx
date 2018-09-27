@@ -1,7 +1,9 @@
 import React from 'react';
 import PropTypes from 'prop-types';
+import styled from 'styled-components';
+import { media } from '../../theme/media';
 
-export const ImgRound = ({ ...props }) => {
+const ImgRound = ({ ...props }) => {
   const {
     src,
     btn,
@@ -38,3 +40,18 @@ ImgRound.propTypes = {
   className: PropTypes.string
 };
 
+export const ImgWrap = styled(ImgRound)`
+  ${props => props.theme.imgWrap}
+  ${media.tablet`
+    width: 80px;
+    height: 80px;
+  `}
+  ${media.phoneMd`
+    width: 60px;
+    height: 60px;
+  `}
+  ${media.phoneSm`
+    width: 50px;
+    height: 50px;
+  `}
+`;

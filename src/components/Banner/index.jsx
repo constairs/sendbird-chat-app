@@ -1,6 +1,6 @@
 import React from 'react';
 import styled from 'styled-components';
-import { Page } from '../../theme/Page';
+import { Page } from '../UI/Page';
 
 const Background = styled.div`
   width: 100%;

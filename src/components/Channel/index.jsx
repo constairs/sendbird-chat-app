@@ -1,6 +1,8 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import styled from 'styled-components';
+import { ImgWrap } from '../ImgRound';
+import { media } from '../../theme/media';
 
 import { ChatBox } from '../../containers/ChatBox';
 
@@ -20,6 +22,11 @@ export const ChannelInfo = styled.div`
   button {
     margin-left: 10px;
   }
+  ${media.phoneLg`
+    p {
+      font-size: 12px;
+    }
+  `}
 `;
 
 export const ChannelName = styled.h1`
@@ -27,17 +34,12 @@ export const ChannelName = styled.h1`
   margin-bottom: 5px;
   display: flex;
   align-items: flex-start;
-`;
-
-const ImgPlace = styled.div`
-  margin-right: 15px;
-  position: relative;
-  width: 100px;
-  height: 100px;
-  img {
-    border-radius: 100%;
-    width: 100%;
-  }
+  ${media.phoneLg`
+    font-size: 18px;
+  `}
+  ${media.phoneMd`
+    font-size: 16px;
+  `}
 `;
 
 const ConnectionStatus = styled.span`
@@ -86,15 +88,10 @@ export const Channel = ({ ...props }) => {
     <ChannelItem>
       <ChannelHeader>
         <ChannelInfo>
-          <ImgPlace>
-            <img
-              src={
-              coverUrl ||
-              'http://dxstmhyqfqr1o.cloudfront.net/images/icon-chat-04.png'
-            }
-              alt={name}
-            />
-          </ImgPlace>
+          <ImgWrap
+            src={coverUrl ||
+              'http://dxstmhyqfqr1o.cloudfront.net/images/icon-chat-04.png'}
+          />
           <div>
             <ChannelName>{name}</ChannelName>
             <p className="channel-users">Online: {memberCount}</p>

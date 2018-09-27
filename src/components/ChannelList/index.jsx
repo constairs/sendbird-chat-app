@@ -56,6 +56,7 @@ export class ChannelList extends React.Component {
               selectedChan={this.handleChanSelect}
               onInviteUsers={this.handleInviteUsers}
               onLeave={this.handleLeaveGroup}
+              isActive={this.props.current === channelItem.url}
             />
           ))
         }
@@ -67,6 +68,7 @@ export class ChannelList extends React.Component {
 ChannelList.defaultProps = {
   channelsFetching: false,
   inviteUsers: PropTypes.func,
+  current: null,
 };
 
 ChannelList.propTypes = {
@@ -75,4 +77,5 @@ ChannelList.propTypes = {
   channelsFetching: PropTypes.bool,
   inviteUsers: PropTypes.func,
   onLeave: PropTypes.func.isRequired,
+  current: PropTypes.string,
 };

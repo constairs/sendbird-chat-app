@@ -8,6 +8,7 @@ import { deleteMessage, editMessage, cancelUploadingMessage } from '../../redux/
 import { MessageItem } from '../../components/MessageItem';
 import { ChatMessageField } from '../ChatMessageField';
 import { addHandler, removeHandler } from '../../services/sendbird';
+import { media } from '../../theme/media';
 
 const ChatItem = styled.div`
   height: 100%;
@@ -29,6 +30,12 @@ const ChatItem = styled.div`
     &__update-btn {
       background-color: ${props => props.theme.colors.main};
     }
+    ${media.phoneMd`
+      height: calc(100vh - 300px);
+    `}
+    ${media.phoneSm`
+      height: calc(100vh - 320px);
+    `}
   }
 
   .chat-user {

@@ -1,12 +1,16 @@
 import styled from 'styled-components';
+import { media } from '../../theme/media';
 
 export const Message = styled.div`
   width: 100%;
   display: flex;
   align-items: center;
   padding: 10px 15px;
-  border-bottom: 1px solid ${props => props.theme.dGrey};
+  border-bottom: 1px solid ${props => props.theme.colors.dGrey};
   position: relative;
+  ${media.phoneSm`
+    padding: 10px;
+  `}
 
   .edit-message-form {
     display: flex;
@@ -25,7 +29,6 @@ export const Message = styled.div`
       padding: 0;
     }
   }
-
   p {
     margin: 0;
   }
@@ -33,9 +36,15 @@ export const Message = styled.div`
     display: flex;
     align-items: center;
     margin-bottom: 20px;
+    ${media.phoneMd`
+      margin-bottom: 10px;
+    `}
     .sender-nick {
       color: ${props => props.theme.colors.main};
       margin-right: 10px;
+      ${media.phoneMd`
+        font-size: 14px;
+      `}
     }
     .sending-date {
       font-size: 10px;
@@ -78,6 +87,9 @@ export const Message = styled.div`
 
   .message-body {
     padding: 10px 20px;
+    ${media.phoneMd`
+      padding: 5px;
+    `}
   }
 
   .file-info {

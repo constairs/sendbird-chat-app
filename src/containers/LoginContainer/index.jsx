@@ -10,7 +10,7 @@ import styled from 'styled-components';
 import { faTimes } from '@fortawesome/free-solid-svg-icons';
 import { loginUserRequest, clearLoginError } from '../../redux/user/actions';
 import { LoginForm } from '../../components/LoginForm';
-import { Page } from '../../theme/Page';
+import { Page } from '../../components/UI/Page';
 
 const LoginPage = styled(Page)`
   display: flex;

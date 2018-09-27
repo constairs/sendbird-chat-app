@@ -7,7 +7,7 @@ import styled from 'styled-components';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faSignOutAlt } from '@fortawesome/free-solid-svg-icons';
 import { UserForm } from '../../components/UserForm';
-import { ImgRound } from '../../components/ImgRound';
+import { ImgWrap } from '../../components/ImgRound';
 import { changeUserRequest, logoutUserRequest } from '../../redux/user/actions';
 
 const ProfileCard = styled.div`
@@ -17,9 +17,6 @@ const ProfileCard = styled.div`
   h2 {
     margin-left: 10px;
   }
-`;
-const ImgWrap = styled(ImgRound)`
-  ${props => props.theme.imgWrap}
 `;
 
 const LogoutBtn = styled.button`

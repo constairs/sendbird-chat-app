@@ -4,6 +4,7 @@ import { Link } from 'react-router-dom';
 import { connect } from 'react-redux';
 import styled from 'styled-components';
 import { UserProfile } from '../UserProfile';
+import { media } from '../../theme/media';
 
 const StyledHeader = styled.header`
   background-color: ${props => props.theme.colors.light};
@@ -12,14 +13,28 @@ const StyledHeader = styled.header`
   display: flex;
   justify-content: space-around;
   align-items: center;
+  ${media.phoneLg`
+    padding: 5px 10px;
+  `}
+  ${media.phoneSm`
+    padding: 5px;
+  `}
 `;
 
 const HeaderUserProfile = styled(UserProfile)`
   div {
     width: 60px!important;
     height: 60px;
+    ${media.phoneLg`
+      width: 40px!important;
+      height: 40px;
+    `}
     button {
       font-size: 11px;
+      ${media.phoneLg`
+        font-size: 9px;
+        padding: 0;
+      `}
     }
   }
   h2 {
@@ -34,9 +49,19 @@ const Nav = styled.nav`
   list-style-type: none;
   padding-left: 0;
   margin: 10px 0;
+  ${media.phoneSm`
+    padding-left: 20px;
+  `};
   li {
     display: inline-block;
     margin: 0 10px;
+    ${media.phoneLg`
+      margin: 0 5px;
+    `}
+    ${media.phoneSm`
+      display: block;
+      margin-bottom: 10px;
+    `}
     a {
       padding: 5px 20px;
       border-radius: 3px;
@@ -46,6 +71,17 @@ const Nav = styled.nav`
       color: ${props => props.theme.colors.light};
       box-shadow: 0 0 10px rgba(0,0,0,.3);
       font-family: ${props => props.theme.fonts.mainFont};
+      ${media.tablet`
+        font-size: 14px;
+        padding: 5px 15px;
+      `};
+      ${media.phoneLg`
+        font-size: 12px;
+        padding: 5px 10px;
+      `}
+      ${media.phoneSm`
+        padding: 3px 10px;
+      `}
     }
   };
   }

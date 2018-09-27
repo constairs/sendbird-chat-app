@@ -1,10 +1,11 @@
+import { css } from 'styled-components';
 import { theme } from './theme';
 
-export const globalStyles = `
+export const globalStyles = css`
   * {
   box-sizing: border-box;
   }
-  
+
   body {
     margin: 0;
     padding: 0;
@@ -92,9 +93,6 @@ export const globalStyles = `
   
   form {
     background-color: #f0f0f0;
-    padding: 40px;
-    min-width: 300px;
-    box-shadow: 0 0 15px rgba(0,0,0,.3);
     label {
       display: block;
       margin-bottom: 20px;
@@ -112,15 +110,8 @@ export const globalStyles = `
       width: 100%;
       height: 40px;
       border-radius: 3px;
-      // border: 1px solid #999;
-      // :hover {
-      //   border-color: #333;
-      // }
-    }
-    input[type=file] {
-      width: 100%;
-      border-radius: 3px;
-      border: none;
+      padding-left: 5px;
+      border: 1px solid ${theme.colors.main};
     }
     button {
       width: 100%;
@@ -286,9 +277,10 @@ export const globalStyles = `
   .modal {
     max-width: 300px;
     position: relative;
+    z-index: 15;
     &:focus {
       outline: none
-    }
+    };
     .x-btn {
       right: 10px;
       top: 10px;
@@ -296,6 +288,11 @@ export const globalStyles = `
       padding: 0;
       height: 20px;
       position: absolute;
+    };
+    form {
+      padding: 40px;
+      min-width: 300px;
+      box-shadow: 0 0 15px rgba(0,0,0,.3);
     }
   }
 `;
