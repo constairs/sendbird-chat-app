@@ -1,6 +1,15 @@
 import React from 'react';
 import PropTypes from 'prop-types';
+import styled from 'styled-components';
 import { ListItem, ItemBtn } from './index.styles';
+import { UsersToInvite } from '../UI/UsersToInvite';
+
+const InviteForm = styled.form`
+  box-shadow: none;
+  background-color: #d6d4d4;
+  min-width: auto;
+  padding: 15px;
+`;
 
 export class ChannelListItem extends React.Component {
   state = {
@@ -51,11 +60,11 @@ export class ChannelListItem extends React.Component {
   };
 
   render() {
-    const { channelItem } = this.props;
+    const { channelItem, isActive } = this.props;
     const { usersToInvite, usersIdsInput, inviteForm } = this.state;
     return (
       <ListItem>
-        <ItemBtn custom={channelItem.customType} onClick={this.handleItemClick}>
+        <ItemBtn isActive={isActive} custom={channelItem.customType} onClick={this.handleItemClick}>
           <div className="channel-info">
             <span className="img">
               <img
@@ -92,7 +101,7 @@ export class ChannelListItem extends React.Component {
         ) : null}
 
         {inviteForm ? (
-          <form onSubmit={this.handleFormSubmit} className="form invite-form">
+          <InviteForm onSubmit={this.handleFormSubmit}>
             <label htmlFor="userId" className="groupUsers">
               <span>user ids</span>
               <input id="userId" value={usersIdsInput} onChange={this.handleInput} type="text" />
@@ -100,7 +109,7 @@ export class ChannelListItem extends React.Component {
                     ок
               </button>
               {usersToInvite.length !== 0 ? (
-                <ul className="users-to-invite">
+                <UsersToInvite>
                   {usersToInvite.map(item => (
                     <li key={item}>
                       {item}{' '}
@@ -109,11 +118,11 @@ export class ChannelListItem extends React.Component {
                       </button>
                     </li>
                   ))}
-                </ul>
+                </UsersToInvite>
               ) : null}
             </label>
             <button type="submit">Пригласить</button>
-          </form>
+          </InviteForm>
         ) : null}
       </ListItem>
     );
@@ -124,5 +133,6 @@ ChannelListItem.propTypes = {
   selectedChan: PropTypes.func.isRequired,
   onLeave: PropTypes.func.isRequired,
   onInviteUsers: PropTypes.func.isRequired,
-  channelItem: PropTypes.objectOf(PropTypes.any).isRequired
+  channelItem: PropTypes.objectOf(PropTypes.any).isRequired,
+  isActive: PropTypes.bool.isRequired,
 };

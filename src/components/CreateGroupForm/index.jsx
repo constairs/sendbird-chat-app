@@ -1,5 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
+import { UsersToInvite } from '../UI/UsersToInvite';
 
 export class CreateGroupForm extends React.Component {
   state = {
@@ -123,16 +124,16 @@ export class CreateGroupForm extends React.Component {
                       ок
             </button>
             {usersToInvite.length !== 0 ? (
-              <ul className="users-to-invite">
+              <UsersToInvite>
                 {usersToInvite.map(item => (
                   <li key={item}>
                     {item}{' '}
                     <button id={item} onClick={this.handleDelUser} type="button">
-                            x
+                      x
                     </button>
                   </li>
                     ))}
-              </ul>
+              </UsersToInvite>
               ) : null}
           </label>
           <label htmlFor="customType">

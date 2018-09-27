@@ -53,14 +53,13 @@ export const ListItem = styled.li`
 `;
 
 export const ItemBtn = styled.button`
-  background-color: inherit;
+  background-color: ${props => (props.isActive ? props.theme.colors.main : 'inherit')};
   border: 1px solid ${props => (props.custom ? props.theme.colors.main : 'inherit')};
-  color: ${props => props.theme.colors.black};
+  color: ${props => (props.isActive ? props.theme.colors.light : props.theme.colors.black)};
   transition: .2s;
   padding: 10px;
   height: 100%;
   width: 100%;
-  color: ${props => props.theme.colors.black};
   .channel-info {
     display: flex;
     align-items: center;

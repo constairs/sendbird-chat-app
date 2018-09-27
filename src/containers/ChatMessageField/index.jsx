@@ -9,6 +9,9 @@ import styled from 'styled-components';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faFile, faTimes, faFileAudio, faFileVideo } from '@fortawesome/free-solid-svg-icons';
 import { messageTyping, messageTypingEnd, userTypingStart, userTypingEnd, sendMessage, sendFileMessage } from '../../redux/chat/actions';
+import { FilePreview } from '../../components/UI/FilePreview';
+import { FileItem } from '../../components/UI/FileItem';
+import { FileUploadModal } from '../../components/UI/FileUploadModal';
 
 const Field = styled.form`
   margin-top: 10px;
@@ -242,17 +245,17 @@ export class MessageField extends React.Component {
           <button className="x-btn" onClick={this.fileUploadModal}>
             <FontAwesomeIcon icon={faTimes} />
           </button>
-          <form onSubmit={this.handleFileForm}>
-            <Dropzone className="dropzone" onDrop={this.handleDropFile} />
-            {fileToUpload ? (
-              <div>
-                <p>Файл для отправки</p>
-                <div className="files-to-upload">
-                  <div className="file-item">
+          <FileUploadModal>
+            <form onSubmit={this.handleFileForm}>
+              <Dropzone className="dropzone" onDrop={this.handleDropFile} />
+              {fileToUpload ? (
+                <div>
+                  <p>Файл для отправки</p>
+                  <FileItem>
                     <button className="clear-file-upload" onClick={this.handleClearFile}>
                       <FontAwesomeIcon icon={faTimes} />
                     </button>
-                    <div className="file-preview">
+                    <FilePreview>
                       {customMessageType === '' ? (
                         <FontAwesomeIcon icon={faFile} />
                       ) : (
@@ -274,23 +277,23 @@ export class MessageField extends React.Component {
                           }
                         </div>
                       )}
-                    </div>
+                    </FilePreview>
                     <p>{fileToUpload.size} кб</p>
-                  </div>
+                  </FileItem>
                 </div>
-              </div>
             ) : null}
-            {errorUpload || null}
-            <input
-              type="text"
-              placeholder="Сообщение"
-              name="fileMessageText"
-              value={fileMessageText}
-              onChange={this.handleTextInput}
-              disabled={!fileToUpload}
-            />
-            <button type="submit">Отправить</button>
-          </form>
+              {errorUpload || null}
+              <input
+                type="text"
+                placeholder="Сообщение"
+                name="fileMessageText"
+                value={fileMessageText}
+                onChange={this.handleTextInput}
+                disabled={!fileToUpload}
+              />
+              <button type="submit">Отправить</button>
+            </form>
+          </FileUploadModal>
         </Modal>
       </div>
     );

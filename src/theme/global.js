@@ -3,7 +3,12 @@ import { theme } from './theme';
 
 export const globalStyles = css`
   * {
-  box-sizing: border-box;
+    box-sizing: border-box;
+  }
+
+  #root {
+    height: 100vh;
+    width: 100%;
   }
 
   body {
@@ -12,18 +17,15 @@ export const globalStyles = css`
     font-family: ${theme.fonts.mainFont};
   }
 
-  h1, h2, h3, h4 {
+  h1,
+  h2,
+  h3,
+  h4 {
     font-family: ${theme.fonts.font};
   }
 
   h1 {
     font-size: 26px;
-  }
-
-  .title {
-    color: ${theme.colors.main};
-    font-family: ${theme.fonts.font};
-    font-size: 28px;
   }
 
   ul {
@@ -35,24 +37,6 @@ export const globalStyles = css`
     color: ${theme.colors.main};
   }
 
-  #root {
-    height: 100vh;
-    width: 100%;
-  }
-
-  .img-place {
-    display: block;
-    img {
-      border-radius: 100%;
-      width: 100%;
-      display: block;
-    }
-  }
-
-  .lazy-load-container {
-    height: 100%;
-  }
-
   input, button, textarea {
     &:focus {
       outline: none;
@@ -60,13 +44,13 @@ export const globalStyles = css`
   }
   
   input {
-    :focus {
+    &:focus {
       outline: none;
     }
   }
   
   textarea {
-    :focus {
+    &:focus {
       outline: none;
     }
   }
@@ -113,6 +97,10 @@ export const globalStyles = css`
       padding-left: 5px;
       border: 1px solid ${theme.colors.main};
     }
+    input[type="checkbox"] {
+      width: 20px;
+      height: 20px;
+    }
     button {
       width: 100%;
       border-radius: 3px;
@@ -123,137 +111,12 @@ export const globalStyles = css`
       transition: all .2s
     }
   }
-  
-  .invite-form {
-    box-shadow: none;
-    background-color: #d6d4d4;
-    min-width: auto;
-  }
-  
-  .users-to-invite {
-    list-style-type: none;
-    padding-left: 0;
+
+  .ReactModal__Overlay {
     display: flex;
-    flex-wrap: wrap;
-    margin-top: 10px;
-    li {
-      background-color: ${theme.colors.main};
-      border-radius: 3px;
-      height: 30px;
-      text-align: center;
-      position: relative;
-      padding-right: 25px;
-      padding-left: 5px;
-      display: inline-flex;
-      align-items: center;
-      color: #ffffff;
-      margin-right: 8px;
-      >button {
-        background-color: transparent;
-        width: 16px;
-        height: 16px;
-        padding: 0;
-        position: absolute;
-        right: 5px;
-        top: 50%;
-        margin-top: -9px;
-        color: #fff;
-        cursor: pointer;
-        z-index: 2;
-      }
-    }
-  }
-  
-  .groupUsers {
-    position: relative;
-    .invite-button {
-      width: 40px;
-      height: 40px;
-      position: absolute;
-      right: 0;
-    }
-  }
-  
-  .file-upload-modal {
-    padding: 0;
-    position: relative;
-    .dropzone {
-      margin: 0 auto;
-      margin-bottom: 15px;
-      position: relative;
-      width: 220px;
-      height: 220px;
-      border-width: 2px;
-      border-color: #666666;
-      border-style: dashed;
-      border-radius: 5px;
-      cursor: pointer;
-    }
-    input {
-      width: 100%;
-      height: 40px;
-      border-radius: 3px;
-      border: 1px solid #999;
-      color: #999999;
-      text-indent: 8px; 
-      margin-bottom: 16px;
-      &:focus {
-        border-color: ${theme.colors.main};
-      }
-      &[disabled] {
-        border-color: #dddddd;
-        &::placeholder{
-          color: #dddddd;
-        }
-      }
-    }
-    button {
-      width: 100%;
-      height: 40px;
-    }
-  }
-  
-  .files-to-upload {
-    display: flex;
-  }
-  
-  .file-item {
-    width: 80px;
-    margin-bottom: 20px;
-    position: relative;
-    p {
-      font-size: 14px;
-      margin: 0;
-    }
-    button {
-      position: absolute;
-      border-radius: 100%;
-      width: 20px;
-      height: 20px;
-      cursor: pointer;
-      background-color: #111111;
-      top: -5px;
-      right: -5px;
-      padding: 0;
-      margin: 0;
-    }
-  }
-  
-  .file-preview {
-    border-radius: 3px;
-    width: 80px;
-    height: 80px;
-    padding: 16px;
-    background-color: #aaaaaa;
-    font-size: 44px;
-    display: flex;
-    align-items: center;
     justify-content: center;
-    margin-bottom: 8px;
-    img {
-      display: block;
-      width: 100%;
-    }
+    align-items: center;
+    z-index: 15;
   }
 
   .modal-wrap {
@@ -263,12 +126,6 @@ export const globalStyles = css`
     top: 0;
     left: 0;
     background-color: rgba(255, 255, 255, .66);
-    display: flex;
-    justify-content: center;
-    align-items: center;
-  }
-  
-  .ReactModal__Overlay {
     display: flex;
     justify-content: center;
     align-items: center;
@@ -288,6 +145,7 @@ export const globalStyles = css`
       padding: 0;
       height: 20px;
       position: absolute;
+      z-index: 1;
     };
     form {
       padding: 40px;

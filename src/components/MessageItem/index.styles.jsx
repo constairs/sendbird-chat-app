@@ -87,6 +87,14 @@ export const Message = styled.div`
 
   .message-body {
     padding: 10px 20px;
+    p {
+      ${media.phoneLg`
+      font-size: 14px;
+    `};
+    };
+    ${media.phoneLg`
+      padding: 5px;
+    `};
     ${media.phoneMd`
       padding: 5px;
     `}
@@ -95,6 +103,7 @@ export const Message = styled.div`
   .file-info {
     display: flex;
     align-items: center;
+    margin-bottom: 10px;
   }
 
   .message-file-preview {

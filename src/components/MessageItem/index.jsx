@@ -5,7 +5,14 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faPen, faPaperPlane, faTimes, faFile, faCircle, faFileAudio, faFileVideo } from '@fortawesome/free-solid-svg-icons';
 import LazyLoad from 'react-lazyload';
 import { Spinner } from 'react-preloading-component';
+import styled from 'styled-components';
 import { Message } from './index.styles';
+import { FilePreview } from '../UI/FilePreview';
+
+const MessageFilePreview = styled(FilePreview)`
+  margin-right: 10px;
+  margin-bottom: 0;
+`;
 
 export class MessageItem extends React.Component {
   constructor(props) {
@@ -80,7 +87,7 @@ export class MessageItem extends React.Component {
                       ) : null}
                   </div>
                   ) : (
-                    <div className="message-file-preview">
+                    <MessageFilePreview>
                       {message.customType === '' ? (
                         <FontAwesomeIcon icon={faFile} />
                       ) : (
@@ -104,7 +111,7 @@ export class MessageItem extends React.Component {
                           }
                         </div>
                       )}
-                    </div>
+                    </MessageFilePreview>
                   )
                 }
                 <p>
@@ -135,14 +142,14 @@ export class MessageItem extends React.Component {
               )}
         </div>
         {userId === message.sender.userId ? (
-          <div>
-            <button onClick={this.handleDeleteBtn} id="delMessage" className="x-btn">
-              <FontAwesomeIcon icon={faTimes} />
-            </button>
-            <button onClick={this.handleEditMessage} if="editMessage" className="edit-btn">
-              <FontAwesomeIcon icon={faPen} />
-            </button>
-          </div>
+          <button onClick={this.handleDeleteBtn} id="delMessage" className="x-btn">
+            <FontAwesomeIcon icon={faTimes} />
+          </button>
+        ) : null}
+        {userId === message.sender.userId ? (
+          <button onClick={this.handleEditMessage} if="editMessage" className="edit-btn">
+            <FontAwesomeIcon icon={faPen} />
+          </button>
         ) : null}
       </Message>
     );

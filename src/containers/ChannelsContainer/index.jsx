@@ -16,7 +16,7 @@ import { ChannelList } from '../../components/ChannelList';
 import { Channel } from '../../components/Channel';
 import { NotificationWindow } from '../../components/NotificationWindow';
 import { Page } from '../../components/UI/Page';
-import { FlexContainer } from '../../theme/FlexContainer';
+import { FlexContainer } from '../../components/UI/FlexContainer';
 import { media } from '../../theme/media';
 
 const ChannelsPage = styled(Page)`
@@ -64,7 +64,7 @@ const ChannelSidebar = styled.div`
     padding-left: 20px;
     position: absolute;
     top: 0;
-    height: calc(100vh - 90px);
+    height: calc(100vh - 76px);
     z-index: 5;
     box-shadow: 8px 0 20px -5px rgba(0,0,0,.33);
     visibility: ${props => (props.sidebarIsOpen ? 'visible' : 'hidden')};
@@ -170,6 +170,7 @@ export class Channels extends React.Component {
                   onLeave={this.handleLeaveChannel}
                   selectedChan={this.handleGetChannel}
                   channels={openChannelList}
+                  current={channel ? channel.url : null}
                   channelsFetching={channelsFetching}
                 />
               </div>
