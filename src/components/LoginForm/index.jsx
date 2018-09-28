@@ -36,7 +36,6 @@ export class LoginForm extends React.Component {
     const { userId, userNick } = this.state;
     return (
       <Form onSubmit={this.handleSubmit}>
-        {/* <form onSubmit={this.handleSubmit}> */}
         <label htmlFor="userId">
           <span>UserId</span>
           <input
@@ -58,7 +57,6 @@ export class LoginForm extends React.Component {
           />
         </label>
         <button disabled={!userId}>Login</button>
-        {/* </form> */}
       </Form>
     );
   }

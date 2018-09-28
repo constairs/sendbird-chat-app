@@ -1,7 +1,6 @@
 import React from 'react';
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
-import { Spinner } from 'react-preloading-component';
 import PropTypes from 'prop-types';
 import { Redirect } from 'react-router';
 import Modal from 'react-modal';
@@ -11,24 +10,12 @@ import { faTimes } from '@fortawesome/free-solid-svg-icons';
 import { loginUserRequest, clearLoginError } from '../../redux/user/actions';
 import { LoginForm } from '../../components/LoginForm';
 import { Page } from '../../components/UI/Page';
+import { Preloader } from '../../components/UI/Preloader';
 
 const LoginPage = styled(Page)`
   display: flex;
   justify-content: center;
   align-items: center; 
-
-  .preloader {
-    position: fixed;
-    left: 0;
-    top: 0;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    background-color: rgba(255,255,255,.7);
-    width: 100%;
-    height: 100vh;
-    z-index: 1;
-}
 `;
 
 export class Login extends React.Component {
@@ -44,9 +31,7 @@ export class Login extends React.Component {
     return (
       <LoginPage>
         {user.userFetching ? (
-          <div className="preloader">
-            <Spinner color="#ffffff" secondaryColor="#40c9ff" size={100} />
-          </div>
+          <Preloader color="#ffffff" secondaryColor="#40c9ff" size={100} />
         ) : null}
         {user.logged ? (
           <Redirect to="/channels" />

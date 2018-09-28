@@ -1,7 +1,6 @@
 import React from 'react';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
-import { Spinner } from 'react-preloading-component';
 import PropTypes from 'prop-types';
 import styled from 'styled-components';
 import { deleteMessage, editMessage, cancelUploadingMessage } from '../../redux/chat/actions';
@@ -9,16 +8,11 @@ import { MessageItem } from '../../components/MessageItem';
 import { ChatMessageField } from '../ChatMessageField';
 import { addHandler, removeHandler } from '../../services/sendbird';
 import { media } from '../../theme/media';
+import { Preloader } from '../../components/UI/Preloader';
 
 const ChatItem = styled.div`
   height: 100%;
   position: relative;
- .preloader {
-   width: 100%;
-   height: 100%;
-   position: absolute;
-   z-index: 1;
- }
 
   .chat-box {
     border-radius: 3px;
@@ -93,9 +87,7 @@ export class Chat extends React.Component {
     return (
       <ChatItem>
         {messFetching ? (
-          <div className="preloader">
-            <Spinner color="#ffffff" secondaryColor="#40c9ff" size={50} />
-          </div>
+          <Preloader color="#ffffff" secondaryColor="#40c9ff" size={50} />
           ) : null}
         <div className="chat-box" ref={this.ref}>
           {messages.map(message => (

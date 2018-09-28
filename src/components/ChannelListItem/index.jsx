@@ -5,7 +5,6 @@ import { ListItem, ItemBtn } from './index.styles';
 import { UsersToInvite } from '../UI/UsersToInvite';
 
 const InviteForm = styled.form`
-  box-shadow: none;
   background-color: #d6d4d4;
   min-width: auto;
   padding: 15px;

@@ -98,8 +98,8 @@ export const globalStyles = css`
       border: 1px solid ${theme.colors.main};
     }
     input[type="checkbox"] {
-      width: 20px;
-      height: 20px;
+      width: 14px;
+      height: 14px;
     }
     button {
       width: 100%;
@@ -117,40 +117,5 @@ export const globalStyles = css`
     justify-content: center;
     align-items: center;
     z-index: 15;
-  }
-
-  .modal-wrap {
-    position: fixed;
-    width: 100%;
-    height: 100vh;
-    top: 0;
-    left: 0;
-    background-color: rgba(255, 255, 255, .66);
-    display: flex;
-    justify-content: center;
-    align-items: center;
-  }
-  
-  .modal {
-    max-width: 300px;
-    position: relative;
-    z-index: 15;
-    &:focus {
-      outline: none
-    };
-    .x-btn {
-      right: 10px;
-      top: 10px;
-      width: 20px;
-      padding: 0;
-      height: 20px;
-      position: absolute;
-      z-index: 1;
-    };
-    form {
-      padding: 40px;
-      min-width: 300px;
-      box-shadow: 0 0 15px rgba(0,0,0,.3);
-    }
   }
 `;

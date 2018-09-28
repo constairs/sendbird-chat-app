@@ -21,16 +21,16 @@ export const FileUploadModal = styled.div`
     height: 40px;
     border-radius: 3px;
     border: 1px solid #999;
-    color: #999999;
+    color: ${colors.black};
     text-indent: 8px; 
     margin-bottom: 16px;
     &:focus {
       border-color: ${colors.main};
     }
     &[disabled] {
-      border-color: #dddddd;
+      border-color: ${colors.greyHover};
       &::placeholder{
-        color: #dddddd;
+        color: ${colors.greyHover};
       }
     }
   }

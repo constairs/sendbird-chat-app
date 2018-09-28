@@ -1,9 +1,8 @@
 import React from 'react';
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
-import { Spinner } from 'react-preloading-component';
 import PropTypes from 'prop-types';
-import Modal from 'react-modal';
+// import Modal from 'react-modal';
 import styled from 'styled-components';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faBars, faTimes } from '@fortawesome/free-solid-svg-icons';
@@ -18,18 +17,10 @@ import { NotificationWindow } from '../../components/NotificationWindow';
 import { Page } from '../../components/UI/Page';
 import { FlexContainer } from '../../components/UI/FlexContainer';
 import { media } from '../../theme/media';
+import { Preloader } from '../../components/UI/Preloader';
+import { ModalWindow } from '../../components/UI/ModalWindow';
 
 const ChannelsPage = styled(Page)`
-  .preloader {
-    position: fixed;
-    top: 50%;
-    left: 0;
-    margin-top: -50px;
-    width: 100%;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-  }
 `;
 
 const BurgerButton = styled.button`
@@ -66,7 +57,7 @@ const ChannelSidebar = styled.div`
     top: 0;
     height: calc(100vh - 76px);
     z-index: 5;
-    box-shadow: 8px 0 20px -5px rgba(0,0,0,.33);
+    box-shadow: 8px 0 20px -5px rgba(0,0,0, .33);
     visibility: ${props => (props.sidebarIsOpen ? 'visible' : 'hidden')};
     opacity: ${props => (props.sidebarIsOpen ? '100' : '0')}
     transform: ${props => (props.sidebarIsOpen ? 'translateX(-20px)' : 'translateX(-300px)')}
@@ -151,9 +142,7 @@ export class Channels extends React.Component {
     return (
       <ChannelsPage>
         {userFetching || channelFetching ? (
-          <div className="preloader">
-            <Spinner color="#ffffff" secondaryColor="#40c9ff" size={100} />
-          </div>
+          <Preloader color="#ffffff" secondaryColor="#40c9ff" size={100} />
         ) : null}
         <FlexContainer>
           <BurgerButton isOpen={this.state.sidebarIsOpen} onClick={this.handleOpenSidebar}>
@@ -205,7 +194,7 @@ export class Channels extends React.Component {
             ) : null
           }
         </FlexContainer>
-        <Modal
+        <ModalWindow
           className="modal"
           isOpen={this.state.modalIsOpen}
           onAfterOpen={this.afterOpenModal}
@@ -221,7 +210,7 @@ export class Channels extends React.Component {
           ) : (
             <CreateChannelForm onSubmitForm={this.handleOpenChannel} />
           )}
-        </Modal>
+        </ModalWindow>
         <NotificationWindow
           notificationShow={notificationShow}
           notification={notification}

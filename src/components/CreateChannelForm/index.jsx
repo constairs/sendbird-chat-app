@@ -37,41 +37,39 @@ export class CreateChannelForm extends React.Component {
   render() {
     const { channelName, coverUrl, customType } = this.state;
     return (
-      <div className="form create-channel-form">
-        <form onSubmit={this.handleSubmit}>
-          <label htmlFor="channelName">
-            <span>Name</span>
-            <input
-              id="channelName"
-              name="channelName"
-              value={channelName}
-              onChange={this.handleInput}
-              type="text"
-            />
-          </label>
-          <label htmlFor="coverUrl">
-            <span>Cover Url</span>
-            <input
-              id="coverUrl"
-              name="coverUrl"
-              value={coverUrl}
-              onChange={this.handleInput}
-              type="text"
-            />
-          </label>
-          <label htmlFor="customType">
-            <span>Custom Type</span>
-            <input
-              id="customType"
-              name="customType"
-              value={customType}
-              onChange={this.handleInput}
-              type="text"
-            />
-          </label>
-          <button disabled={!channelName}>Создать</button>
-        </form>
-      </div>
+      <form onSubmit={this.handleSubmit}>
+        <label htmlFor="channelName">
+          <span>Name</span>
+          <input
+            id="channelName"
+            name="channelName"
+            value={channelName}
+            onChange={this.handleInput}
+            type="text"
+          />
+        </label>
+        <label htmlFor="coverUrl">
+          <span>Cover Url</span>
+          <input
+            id="coverUrl"
+            name="coverUrl"
+            value={coverUrl}
+            onChange={this.handleInput}
+            type="text"
+          />
+        </label>
+        <label htmlFor="customType">
+          <span>Custom Type</span>
+          <input
+            id="customType"
+            name="customType"
+            value={customType}
+            onChange={this.handleInput}
+            type="text"
+          />
+        </label>
+        <button disabled={!channelName}>Создать</button>
+      </form>
     );
   }
 }
