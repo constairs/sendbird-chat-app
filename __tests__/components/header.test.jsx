@@ -1,8 +1,7 @@
 import React from 'react';
 import { shallow } from 'enzyme';
 
-import { Head } from '../../src/containers/Header';
-import { UserProfile } from '../../src/containers/UserProfile';
+import { Head, HeaderUserProfile } from '../../src/containers/Header';
 
 describe('<Header /> ', () => {
   it('should show channels link', () => {
@@ -11,6 +10,6 @@ describe('<Header /> ', () => {
   });
   it('should show prolife', () => {
     const header = shallow(<Head logged />);
-    expect(header.find(UserProfile)).toExist();
+    expect(header.find(HeaderUserProfile)).toExist();
   });
 });

@@ -8,6 +8,7 @@ export const FilePreview = styled.div`
   height: 80px;
   padding: 16px;
   background-color: #aaaaaa;
+  color: #000000;
   font-size: 44px;
   display: flex;
   align-items: center;

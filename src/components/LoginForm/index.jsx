@@ -2,7 +2,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import styled from 'styled-components';
 
-const Form = styled.form`
+export const Form = styled.form`
   background-color: rgba(240, 240, 240, 0.377);
   box-shadow: 0 0 15px rgba(0,0,0,.3);
   border-radius: 3px;

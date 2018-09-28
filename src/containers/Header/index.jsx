@@ -21,7 +21,7 @@ const StyledHeader = styled.header`
   `}
 `;
 
-const HeaderUserProfile = styled(UserProfile)`
+export const HeaderUserProfile = styled(UserProfile)`
   div {
     width: 60px!important;
     height: 60px;

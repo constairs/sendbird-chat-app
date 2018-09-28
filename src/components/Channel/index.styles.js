@@ -71,12 +71,12 @@ export const UserList = styled.ul`
 
 export const UserListItem = styled.li`
   transform: translateX(
-    ${props => (props.count > 8 ?
+${
+  props => (props.count > 8 ?
     `calc(${props.index}*(70%))`
     :
     `calc(${props.index}*(50%))`)
-}
-  );
+});
   display: inline-block;
   transition: all .2s;
   &:hover + li {

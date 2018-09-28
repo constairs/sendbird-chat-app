@@ -11,24 +11,6 @@ export const Message = styled.div`
   ${media.phoneSm`
     padding: 10px;
   `}
-
-  .edit-message-form {
-    display: flex;
-    box-shadow: none;
-    padding: 0;
-    input {
-      font-size: 14px;
-      height: 30px;
-      border-radius: 3px; 
-      border: 1px solid ${props => props.theme.colors.main};
-    }
-    button {
-      font-size: 12px;
-      height: 30px;
-      width: 30px;
-      padding: 0;
-    }
-  }
   p {
     margin: 0;
   }
@@ -77,6 +59,7 @@ export const Message = styled.div`
 
   .sender-img {
     width: 40px;
+    min-width: 40px;
     height: 40px;
     img {
       display: block;
@@ -104,52 +87,6 @@ export const Message = styled.div`
     display: flex;
     align-items: center;
     margin-bottom: 10px;
-  }
-
-  .message-file-preview {
-    border-radius: 3px;
-    width: 80px;
-    min-width: 80px;
-    height: 80px;
-    padding: 16px;
-    background-color: #aaaaaa;
-    color: ${props => props.theme.light};
-    font-size: 44px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    margin: 0 10px 10px 0;
-    position: relative;
-    img {
-      width: 100%;
-      display: block;
-    }
-    .loading-progress {
-      font-size: 14px;
-      text-align: center;
-      position: absolute;
-      display: block;
-    }
-    .PreLoading-Spinner {
-      position: absolute;
-      top: 0;
-      right: 0;
-    }
-    &:hover {
-      .cancel-button {
-        opacity: 1;
-      }
-    }
-    .cancel-button {
-      opacity: 0;
-      background-color: ${props => props.theme.colors.main};
-      position: absolute;
-      width: 40px;
-      height: 40px;
-      border-radius: 100%;
-      font-size: 20px;
-      transition: all .2s
-    }
   }
 
   .isReadIndicator {

@@ -1,7 +1,7 @@
 import React from 'react';
 import { shallow } from 'enzyme';
 
-import { Channel, ChannelInfo, UserList, ChannelName } from '../../src/components/Channel';
+import { Channel, ChannelInfo, UserList, ChannelName } from '../../src/components/Channel/index.styles';
 
 const channel = {
   coverUrl: 'http://img.jpg',

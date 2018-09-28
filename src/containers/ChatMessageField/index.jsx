@@ -3,17 +3,14 @@ import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import PropTypes from 'prop-types';
 import { Spinner, Text } from 'react-preloading-component';
-import Modal from 'react-modal';
-import Dropzone from 'react-dropzone';
 import styled from 'styled-components';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faFile, faTimes, faFileAudio, faFileVideo } from '@fortawesome/free-solid-svg-icons';
+import { faFile, faTimes } from '@fortawesome/free-solid-svg-icons';
 import { messageTyping, messageTypingEnd, userTypingStart, userTypingEnd, sendMessage, sendFileMessage } from '../../redux/chat/actions';
-import { FilePreview } from '../../components/UI/FilePreview';
-import { FileItem } from '../../components/UI/FileItem';
-import { FileUploadModal } from '../../components/UI/FileUploadModal';
+import { FileUploadForm } from '../../components/FileUploadForm';
+import { ModalWindow } from '../../components/UI/ModalWindow';
 
-const Field = styled.form`
+export const Field = styled.form`
   margin-top: 10px;
   display: flex;
   flex-wrap: wrap;
@@ -54,12 +51,7 @@ const Field = styled.form`
 export class MessageField extends React.Component {
   state = {
     messageText: '',
-    fileMessageText: '',
-    uploadedFile: [],
     fileUploadModal: false,
-    fileToUpload: '',
-    customMessageType: '',
-    errorUpload: ''
   };
 
   handleTextInput = ({ target }) => {
@@ -96,23 +88,17 @@ export class MessageField extends React.Component {
     }
   };
 
-  handleFileForm = (e) => {
-    e.preventDefault();
+  handleFileForm = (fileData) => {
     const fileMessageData = [
       this.props.channelUrl,
       this.props.channelType,
       'FILE',
       this.props.user,
-      ...this.state.uploadedFile,
-      this.state.fileMessageText,
-      this.state.customMessageType
+      ...fileData
     ];
     this.props.chatActions.sendFileMessage(fileMessageData);
     this.setState({
-      uploadedFile: [],
       fileUploadModal: false,
-      fileToUpload: '',
-      fileMessageText: '',
     });
   };
 
@@ -120,60 +106,10 @@ export class MessageField extends React.Component {
     this.setState({ fileUploadModal: !this.state.fileUploadModal });
   };
 
-  handleDropFile = (acceptedFiles) => {
-    acceptedFiles.forEach((file) => {
-      const reader = new FileReader();
-      reader.onload = () => {
-        this.setState({
-          fileToUpload: file,
-        });
-        this.setState({
-          uploadedFile: [file, file.name, file.type, file.size],
-        });
-        if (new RegExp('^image?', 'i').test(file.type)) {
-          this.setState({
-            customMessageType: 'IMAGE'
-          });
-        } else if (new RegExp('^audio?', 'i').test(file.type)) {
-          this.setState({
-            customMessageType: 'AUDIO'
-          });
-        } else if (new RegExp('^video?', 'i').test(file.type)) {
-          this.setState({
-            customMessageType: 'VIDEO'
-          });
-        } else {
-          this.setState({
-            customMessageType: ''
-          });
-        }
-      };
-      reader.onerror = () => {
-        this.setState({
-          errorUpload: 'Ошибка загрузки файла'
-        });
-      };
-      reader.readAsBinaryString(file);
-    });
-  };
-
-  handleClearFile = () => {
-    this.setState({
-      customMessageType: '',
-      uploadedFile: [],
-      fileToUpload: '',
-      fileMessageText: '',
-    });
-  }
-
   render() {
     const {
-      fileToUpload,
       messageText,
       fileUploadModal,
-      fileMessageText,
-      customMessageType,
-      errorUpload
     } = this.state;
     const { userTyping, user, membersTyping } = this.props;
     return (
@@ -234,7 +170,7 @@ export class MessageField extends React.Component {
               ) : null}
           </button>
         </Field>
-        <Modal
+        <ModalWindow
           className="modal file-upload-modal"
           isOpen={fileUploadModal}
           onAfterOpen={this.afterOpenModal}
@@ -245,56 +181,8 @@ export class MessageField extends React.Component {
           <button className="x-btn" onClick={this.fileUploadModal}>
             <FontAwesomeIcon icon={faTimes} />
           </button>
-          <FileUploadModal>
-            <form onSubmit={this.handleFileForm}>
-              <Dropzone className="dropzone" onDrop={this.handleDropFile} />
-              {fileToUpload ? (
-                <div>
-                  <p>Файл для отправки</p>
-                  <FileItem>
-                    <button className="clear-file-upload" onClick={this.handleClearFile}>
-                      <FontAwesomeIcon icon={faTimes} />
-                    </button>
-                    <FilePreview>
-                      {customMessageType === '' ? (
-                        <FontAwesomeIcon icon={faFile} />
-                      ) : (
-                        <div>
-                          {
-                            customMessageType === 'IMAGE' ?
-                              <img src={fileToUpload.preview} alt="preview" />
-                            :
-                              (
-                                <div>
-                                  {
-                                    customMessageType === 'AUDIO' ?
-                                      <FontAwesomeIcon icon={faFileAudio} />
-                                    :
-                                      <FontAwesomeIcon icon={faFileVideo} />
-                                  }
-                                </div>
-                              )
-                          }
-                        </div>
-                      )}
-                    </FilePreview>
-                    <p>{fileToUpload.size} кб</p>
-                  </FileItem>
-                </div>
-            ) : null}
-              {errorUpload || null}
-              <input
-                type="text"
-                placeholder="Сообщение"
-                name="fileMessageText"
-                value={fileMessageText}
-                onChange={this.handleTextInput}
-                disabled={!fileToUpload}
-              />
-              <button type="submit">Отправить</button>
-            </form>
-          </FileUploadModal>
-        </Modal>
+          <FileUploadForm onFileSend={this.handleFileForm} />
+        </ModalWindow>
       </div>
     );
   }

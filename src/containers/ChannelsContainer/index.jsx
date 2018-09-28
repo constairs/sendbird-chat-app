@@ -2,7 +2,6 @@ import React from 'react';
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
-// import Modal from 'react-modal';
 import styled from 'styled-components';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faBars, faTimes } from '@fortawesome/free-solid-svg-icons';
@@ -11,7 +10,6 @@ import { createGroupChannel, inviteUsers, notificationOff } from '../../redux/ch
 import { createOpenChannel } from '../../redux/channels/openChannelsActions';
 import { CreateChannelForm } from '../../components/CreateChannelForm';
 import { CreateGroupForm } from '../../components/CreateGroupForm';
-import { ChannelList } from '../../components/ChannelList';
 import { Channel } from '../../components/Channel';
 import { NotificationWindow } from '../../components/NotificationWindow';
 import { Page } from '../../components/UI/Page';
@@ -19,6 +17,7 @@ import { FlexContainer } from '../../components/UI/FlexContainer';
 import { media } from '../../theme/media';
 import { Preloader } from '../../components/UI/Preloader';
 import { ModalWindow } from '../../components/UI/ModalWindow';
+import { ChannelsSidebar } from '../ChannelSidebar';
 
 const ChannelsPage = styled(Page)`
 `;
@@ -38,33 +37,6 @@ const BurgerButton = styled.button`
     display:block;
     left: ${props => (props.isOpen ? '215px' : '15px')};
   `}
-`;
-
-const ChannelSidebar = styled.div`
-  width: 30%;
-  transition: .2s;
-  height: calc(100vh - 172px);
-  overflow-y: scroll;
-  margin-right: 20px;
-  padding-right: 10px;
-  background-color: ${props => props.theme.colors.light};
-  transition: .2s all;
-  ${media.tablet`
-    width: 280px;
-    padding-top: 20px;
-    padding-left: 20px;
-    position: absolute;
-    top: 0;
-    height: calc(100vh - 76px);
-    z-index: 5;
-    box-shadow: 8px 0 20px -5px rgba(0,0,0, .33);
-    visibility: ${props => (props.sidebarIsOpen ? 'visible' : 'hidden')};
-    opacity: ${props => (props.sidebarIsOpen ? '100' : '0')}
-    transform: ${props => (props.sidebarIsOpen ? 'translateX(-20px)' : 'translateX(-300px)')}
-  `};
-  ${media.phoneSm`
-    height: calc(100vh - 104px);
-  `};
 `;
 
 const ChannelContent = styled.div`
@@ -111,8 +83,8 @@ export class Channels extends React.Component {
     this.props.channelsActions.leaveChannel(channelInfo);
   };
 
-  handleOpenModal = (e) => {
-    if (e.target.name === 'createOpen') {
+  handleOpenModal = (type) => {
+    if (type === 'open') {
       this.setState({ groupChModal: false, modalIsOpen: true });
     } else {
       this.setState({ groupChModal: true, modalIsOpen: true });
@@ -128,12 +100,9 @@ export class Channels extends React.Component {
   };
 
   render() {
-    const { groupChModal } = this.state;
+    const { groupChModal, sidebarIsOpen } = this.state;
     const {
-      openChannelList,
-      groupChannelList,
       channel,
-      channelsFetching,
       channelFetching,
       notificationShow,
       notification,
@@ -141,57 +110,25 @@ export class Channels extends React.Component {
     const { userName, userFetching } = this.props.user;
     return (
       <ChannelsPage>
-        {userFetching || channelFetching ? (
-          <Preloader color="#ffffff" secondaryColor="#40c9ff" size={100} />
-        ) : null}
+        {
+          userFetching || channelFetching ? (
+            <Preloader color="#ffffff" secondaryColor="#40c9ff" size={100} />
+          ) : null
+        }
         <FlexContainer>
-          <BurgerButton isOpen={this.state.sidebarIsOpen} onClick={this.handleOpenSidebar}>
-            <FontAwesomeIcon icon={this.state.sidebarIsOpen ? faTimes : faBars} />
+          <BurgerButton isOpen={sidebarIsOpen} onClick={this.handleOpenSidebar}>
+            <FontAwesomeIcon icon={sidebarIsOpen ? faTimes : faBars} />
           </BurgerButton>
-          <ChannelSidebar sidebarIsOpen={this.state.sidebarIsOpen}>
-            <button name="createOpen" onClick={this.handleOpenModal}>
-              Создать открытый канал
-            </button>
-            {openChannelList ? (
-              <div>
-                <p>Открытые каналы</p>
-                <ChannelList
-                  onLeave={this.handleLeaveChannel}
-                  selectedChan={this.handleGetChannel}
-                  channels={openChannelList}
-                  current={channel ? channel.url : null}
-                  channelsFetching={channelsFetching}
-                />
-              </div>
-            ) : null}
-            <button name="createGroup" onClick={this.handleOpenModal}>
-              Создать групповой канал
-            </button>
-            {groupChannelList ? (
-              <div>
-                <p>
-                    Групповые каналы
-                </p>
-                <ChannelList
-                  onLeave={this.handleLeaveChannel}
-                  selectedChan={this.handleGetChannel}
-                  channels={groupChannelList}
-                  channelsFetching={channelsFetching}
-                  current={channel ? channel.url : null}
-                  inviteUsers={this.handleInviteUsers}
-                />
-              </div>
-            ) : null}
-          </ChannelSidebar>
+          <ChannelsSidebar openModal={this.handleOpenModal} sidebarIsOpen={sidebarIsOpen} />
           {
-            channel ? (
-              <ChannelContent>
-                <Channel
-                  user={this.props.user}
-                  channel={channel}
-                />
-              </ChannelContent>
-            ) : null
+          channel ? (
+            <ChannelContent>
+              <Channel
+                user={this.props.user}
+                channel={channel}
+              />
+            </ChannelContent>
+          ) : null
           }
         </FlexContainer>
         <ModalWindow
@@ -202,14 +139,14 @@ export class Channels extends React.Component {
           contentLabel="Example Modal"
           ariaHideApp={false}
         >
-          <button className="x-btn" onClick={this.closeModal}>
-            x
-          </button>
-          {groupChModal ? (
-            <CreateGroupForm onSubmitForm={this.handleGroupChannel} />
-          ) : (
-            <CreateChannelForm onSubmitForm={this.handleOpenChannel} />
-          )}
+          <button className="x-btn" onClick={this.closeModal}>x</button>
+          {
+            groupChModal ? (
+              <CreateGroupForm onSubmitForm={this.handleGroupChannel} />
+            ) : (
+              <CreateChannelForm onSubmitForm={this.handleOpenChannel} />
+            )
+          }
         </ModalWindow>
         <NotificationWindow
           notificationShow={notificationShow}

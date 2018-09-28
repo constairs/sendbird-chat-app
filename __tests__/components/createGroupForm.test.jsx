@@ -2,6 +2,7 @@ import React from 'react';
 import { shallow } from 'enzyme';
 
 import { CreateGroupForm } from '../../src/components/CreateGroupForm';
+import { UsersToInvite } from '../../src/components/UI/UsersToInvite';
 
 const mock = jest.fn();
 const mockEvent = { target: '', preventDefault: () => {} };
@@ -39,7 +40,7 @@ describe('<CreateGroupForm />', () => {
   it('should del user from array', () => {
     const form = shallow(<CreateGroupForm onSubmitForm={mock} />);
     form.setState({ usersToInvite: ['user', 'test'] });
-    form.find('.users-to-invite li:first-child button').simulate('click', { target: { id: 'user' } });
+    form.find(UsersToInvite).find('li:first-child button').simulate('click', { target: { id: 'user' } });
     expect(form.state('usersToInvite')).toHaveLength(1);
   });
   it('should call onSubmitForm', () => {

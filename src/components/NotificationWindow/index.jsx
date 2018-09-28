@@ -4,7 +4,7 @@ import styled from 'styled-components';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faTimes } from '@fortawesome/free-solid-svg-icons';
 
-const WindowInner = styled.div`
+export const WindowInner = styled.div`
   width: 280px;
   border-radius: 6px;
   box-shadow: 0 0 5px rgba(0,0,0,.33);

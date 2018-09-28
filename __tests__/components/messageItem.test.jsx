@@ -3,7 +3,7 @@ import { shallow } from 'enzyme';
 import moment from 'moment';
 
 import { user } from '../fixtures';
-import { MessageItem } from '../../src/components/MessageItem';
+import { MessageItem, MessageFilePreview } from '../../src/components/MessageItem';
 
 const message = {
   sender: {
@@ -86,8 +86,8 @@ describe('<MessageItem />', () => {
         onCancelUploading={mock}
       />
     );
-    expect(messageItem.find('.message-file-preview img').prop('src')).toBe(imageMessage.url);
-    expect(messageItem.find('.message-file-preview img').prop('alt')).toBe(imageMessage.name);
+    expect(messageItem.find(MessageFilePreview).find('img').prop('src')).toBe(imageMessage.url);
+    expect(messageItem.find(MessageFilePreview).find('img').prop('alt')).toBe(imageMessage.name);
   });
   it('should render file message link', () => {
     const messageItem = shallow(
