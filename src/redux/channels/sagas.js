@@ -151,12 +151,12 @@ export function* refreshMembersSaga(action) {
   }
 }
 
-export function* membersRefresher(action) {
-  while (action) {
-    yield call(delay, 20000);
-    yield refreshMembersSaga(action);
-  }
-}
+// export function* membersRefresher(action) {
+//   while (action) {
+//     yield call(delay, 20000);
+//     yield refreshMembersSaga(action);
+//   }
+// }
 
 export function* getParticipantsSaga(action) {
   yield put(getParticipants());
@@ -186,7 +186,7 @@ export function* channelsSagas() {
       [ON_USER_JOINED, ON_USER_LEFT, GET_SELECTED_CHANNEL_SUCCESSED],
       refreshMembersSaga
     ),
-    yield takeLatest(GET_SELECTED_CHANNEL_SUCCESSED, membersRefresher),
+    // yield takeLatest(GET_SELECTED_CHANNEL_SUCCESSED, membersRefresher),
     yield takeLatest([ON_USER_JOINED, ON_USER_LEFT], membersUpdatedSaga),
     yield takeLatest([NEW_USER_ENTERED, USER_EXITED], getParticipantsSaga),
     yield takeLatest(ON_USER_JOINED, getChannelsListSaga),

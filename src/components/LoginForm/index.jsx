@@ -1,15 +1,5 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import styled from 'styled-components';
-
-export const Form = styled.form`
-  background-color: rgba(240, 240, 240, 0.377);
-  box-shadow: 0 0 15px rgba(0,0,0,.3);
-  border-radius: 3px;
-  min-width: 300px;
-  padding: 40px;
-  box-sizing: border-box;
-`;
 
 export class LoginForm extends React.Component {
   state = {
@@ -35,7 +25,7 @@ export class LoginForm extends React.Component {
   render() {
     const { userId, userNick } = this.state;
     return (
-      <Form onSubmit={this.handleSubmit}>
+      <form onSubmit={this.handleSubmit}>
         <label htmlFor="userId">
           <span>UserId</span>
           <input
@@ -57,7 +47,7 @@ export class LoginForm extends React.Component {
           />
         </label>
         <button disabled={!userId}>Login</button>
-      </Form>
+      </form>
     );
   }
 }

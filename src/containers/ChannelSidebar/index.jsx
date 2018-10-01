@@ -114,7 +114,7 @@ Sidebar.propTypes = {
   groupChannelsActions: PropTypes.objectOf(PropTypes.func).isRequired,
   channels: PropTypes.objectOf(PropTypes.any).isRequired,
   openModal: PropTypes.func.isRequired,
-  sidebarIsOpen: PropTypes.func.isRequired,
+  sidebarIsOpen: PropTypes.bool.isRequired,
 };
 
 export const ChannelsSidebar = connect(

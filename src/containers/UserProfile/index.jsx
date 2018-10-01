@@ -2,13 +2,13 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
-import Modal from 'react-modal';
 import styled from 'styled-components';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faSignOutAlt } from '@fortawesome/free-solid-svg-icons';
 import { UserForm } from '../../components/UserForm';
 import { ImgWrap } from '../../components/ImgRound';
 import { changeUserRequest, logoutUserRequest } from '../../redux/user/actions';
+import { ModalWindow } from '../../components/UI/ModalWindow';
 
 const ProfileCard = styled.div`
   display: flex;
@@ -72,7 +72,7 @@ export class Profile extends React.Component {
         >
           <FontAwesomeIcon icon={faSignOutAlt} size="xs" />
         </LogoutBtn>
-        <Modal
+        <ModalWindow
           className="modal"
           isOpen={this.state.modalIsOpen}
           onAfterOpen={this.afterOpenModal}
@@ -84,7 +84,7 @@ export class Profile extends React.Component {
             x
           </button>
           <UserForm onChangeProfile={this.handleChangeProfile} />
-        </Modal>
+        </ModalWindow>
       </ProfileCard>
     );
   }

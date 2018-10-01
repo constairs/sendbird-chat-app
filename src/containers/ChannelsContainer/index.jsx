@@ -32,7 +32,7 @@ const BurgerButton = styled.button`
   height: 40px;
   box-shadow: 5px 0 25px rgba(0,0,0,.4);
   transition: .2s all;
-  ${media.desktop`display:none`}
+  display:none;
   ${media.tablet`
     display:block;
     left: ${props => (props.isOpen ? '215px' : '15px')};

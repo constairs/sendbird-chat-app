@@ -3,7 +3,6 @@ import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
 import { Redirect } from 'react-router';
-import Modal from 'react-modal';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import styled from 'styled-components';
 import { faTimes } from '@fortawesome/free-solid-svg-icons';
@@ -11,6 +10,7 @@ import { loginUserRequest, clearLoginError } from '../../redux/user/actions';
 import { LoginForm } from '../../components/LoginForm';
 import { Page } from '../../components/UI/Page';
 import { Preloader } from '../../components/UI/Preloader';
+import { ModalWindow } from '../../components/UI/ModalWindow';
 
 const LoginPage = styled(Page)`
   display: flex;
@@ -39,7 +39,7 @@ export class Login extends React.Component {
           <LoginForm onLogin={this.handleLogin} />
         )}
         {
-          <Modal
+          <ModalWindow
             className="modal file-upload-modal"
             isOpen={!!user.error}
             onAfterOpen={this.afterOpenModal}
@@ -51,7 +51,7 @@ export class Login extends React.Component {
               <FontAwesomeIcon icon={faTimes} />
             </button>
             <h3>{user.error}</h3>
-          </Modal>
+          </ModalWindow>
         }
       </LoginPage>
     );

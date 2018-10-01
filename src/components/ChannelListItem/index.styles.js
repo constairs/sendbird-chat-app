@@ -6,20 +6,9 @@ export const ListItem = styled.li`
   border: none;
   border-radius: 3px;
   font-size: 16px;
-  .channel-item-name {
-    margin-left: 10px;
-  }
-  .img {
-    width: 36px;
-    height: 36px;
-    display: block;
-    margin-right: 10px;
+  .img-wrap {
     position: relative;
-    img {
-    width: 100%;
-    display: block;
-    border-radius: 100%;
-    };
+    margin-right: 10px;
     .unread-count {
       position: absolute;
       width: 12px;

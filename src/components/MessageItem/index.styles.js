@@ -57,17 +57,6 @@ export const Message = styled.div`
     background-color: ${props => props.theme.colors.main};
   }
 
-  .sender-img {
-    width: 40px;
-    min-width: 40px;
-    height: 40px;
-    img {
-      display: block;
-      width: 100%;
-      border-radius: 100%;
-    }
-  }
-
   .message-body {
     padding: 10px 20px;
     p {

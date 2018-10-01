@@ -3,10 +3,18 @@ import PropTypes from 'prop-types';
 import moment from 'moment';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faPen, faTimes, faCircle } from '@fortawesome/free-solid-svg-icons';
+import styled from 'styled-components';
 import { MessageFilePreview } from '../../components/MessageFilePreview';
 import { FilePreloader } from '../../components/FilePreloader';
 import { Message } from './index.styles';
 import { EditMessageForm } from '../EditMessageForm';
+import { ImgWrap } from '../ImgRound';
+
+const StyledImg = styled(ImgWrap)`
+  width: 40px;
+  min-width: 40px;
+  height: 40px;
+`;
 
 export class MessageItem extends React.Component {
   state = {
@@ -36,28 +44,25 @@ export class MessageItem extends React.Component {
     const { message, userId, uploadProgress } = this.props;
     return (
       <Message>
-        <div className="sender-img">
-          <img
-            src={
-              message.sender || message.sender.profileUrl
-                ? message.sender.profileUrl
-                : 'http://dxstmhyqfqr1o.cloudfront.net/images/icon-chat-04.png'
-            }
-            alt={message.sender.nickname}
-          />
-        </div>
+        <StyledImg
+          src={
+            message.sender.profileUrl || 'http://dxstmhyqfqr1o.cloudfront.net/images/icon-chat-04.png'
+          }
+        />
         <div className="message-body">
           <p className="sender-info">
             <span className="sender-nick">{message.sender.nickname || 'noname'}</span>
-            {message.updatedAt ? (
-              <span className="sending-date">
+            {
+              message.updatedAt ? (
+                <span className="sending-date">
                   Обновлено: {moment(message.updatedAt).format('DD/MM/YY hh:mm a')}
-              </span>
+                </span>
               ) : (
                 <span className="sending-date">
                   {moment(message.createdAt).format('DD/MM/YY hh:mm a')}
                 </span>
-                )}
+              )
+            }
           </p>
           {message.messageType === 'file' ? (
             <div className="file-info">

@@ -1,7 +1,15 @@
 import React from 'react';
 import PropTypes from 'prop-types';
+import styled from 'styled-components';
 import { ListItem, ItemBtn } from './index.styles';
 import { InviteForm } from '../InviteForm';
+import { ImgWrap } from '../ImgRound';
+
+const StyledImg = styled(ImgWrap)`
+  width: 36px;
+  height: 36px;
+  min-width: 36px;
+`;
 
 export class ChannelListItem extends React.Component {
   state = {
@@ -38,15 +46,10 @@ export class ChannelListItem extends React.Component {
       <ListItem>
         <ItemBtn isActive={isActive} custom={channelItem.customType} onClick={this.handleItemClick}>
           <div className="channel-info">
-            <span className="img">
-              <img
-                src={
-                  channelItem.coverUrl || 'http://dxstmhyqfqr1o.cloudfront.net/images/icon-chat-04.png'
-                }
-                alt={channelItem.name}
-              />
+            <div className="img-wrap">
+              <StyledImg src={channelItem.coverUrl || 'http://dxstmhyqfqr1o.cloudfront.net/images/icon-chat-04.png'} />
               {channelItem.unreadMessageCount > 0 ? <span className="unread-count">{channelItem.unreadMessageCount}</span> : null }
-            </span>
+            </div>
             <span className="channel-item-name">{channelItem.name}</span>
           </div>
           {channelItem.lastMessage ? (

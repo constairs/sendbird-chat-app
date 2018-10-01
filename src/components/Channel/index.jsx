@@ -1,16 +1,19 @@
 import React from 'react';
 import PropTypes from 'prop-types';
+import styled from 'styled-components';
 import { ImgWrap } from '../ImgRound';
 import {
   ChannelItem,
   ChannelHeader,
   ChannelInfo,
   ChannelName,
-  ConnectionStatus,
-  UserList,
-  UserListItem
 } from './index.styles';
 import { ChatBox } from '../../containers/ChatBox';
+import { UserList } from '../../containers/UserList';
+
+const StyledImg = styled(ImgWrap)`
+  margin-right: 15px;
+`;
 
 export const Channel = ({ ...props }) => {
   const { channel } = props;
@@ -19,7 +22,7 @@ export const Channel = ({ ...props }) => {
     <ChannelItem>
       <ChannelHeader>
         <ChannelInfo>
-          <ImgWrap
+          <StyledImg
             src={coverUrl ||
               'http://dxstmhyqfqr1o.cloudfront.net/images/icon-chat-04.png'}
           />
@@ -28,22 +31,7 @@ export const Channel = ({ ...props }) => {
             <p className="channel-users">Online: {memberCount}</p>
           </div>
         </ChannelInfo>
-        <UserList>
-          {channel.members ? channel.members.map((cur, i) => (
-            <UserListItem
-              key={cur.userId}
-              index={i}
-              count={channel.members.length}
-            >
-              <img
-                src={cur.profileUrl}
-                title={cur.nickname}
-                alt={cur.nickname}
-              />
-              <ConnectionStatus status={cur.connectionStatus} />
-            </UserListItem>
-          )) : null}
-        </UserList>
+        <UserList />
       </ChannelHeader>
       <ChatBox
         currentChannel={channel}
