@@ -2,7 +2,7 @@ import React from 'react';
 import { shallow } from 'enzyme';
 
 import { CreateChannelForm } from '../../src/components/CreateChannelForm';
-
+import { Form } from '../../src/components/UI/Form';
 
 const mock = jest.fn();
 const mockedEvent = { target: {}, preventDefault: () => {} };
@@ -29,7 +29,7 @@ describe('<CreateChannelForm />', () => {
     const form = shallow(
       <CreateChannelForm onSubmitForm={mock} />
     );
-    form.find('form').simulate('submit', mockedEvent);
+    form.find(Form).simulate('submit', mockedEvent);
     const formData = [
       form.state('channelName'),
       form.state('coverUrl'),

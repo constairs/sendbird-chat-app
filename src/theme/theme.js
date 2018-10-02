@@ -7,6 +7,7 @@ export const colors = {
   main: '#40c9ff',
   mainDarken: 'darken(#40c9ff, 6%)',
   accent: '#e36209',
+  blank: '#ffffff',
 };
 
 export const fonts = {

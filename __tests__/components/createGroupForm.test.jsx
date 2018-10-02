@@ -3,6 +3,7 @@ import { shallow } from 'enzyme';
 
 import { CreateGroupForm } from '../../src/components/CreateGroupForm';
 import { UsersToInvite } from '../../src/components/UI/UsersToInvite';
+import { Form } from '../../src/components/UI/Form';
 
 const mock = jest.fn();
 const mockEvent = { target: '', preventDefault: () => {} };
@@ -45,7 +46,7 @@ describe('<CreateGroupForm />', () => {
   });
   it('should call onSubmitForm', () => {
     const form = shallow(<CreateGroupForm onSubmitForm={mock} />);
-    form.find('form').simulate('submit', mockEvent);
+    form.find(Form).simulate('submit', mockEvent);
     const formData = [
       form.state('usersToInvite'),
       form.state('channelDistinct'),

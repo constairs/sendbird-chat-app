@@ -1,7 +1,8 @@
 import React from 'react';
 import { shallow } from 'enzyme';
 
-import { Channel, ChannelInfo, UserList, ChannelName } from '../../src/components/Channel/index.styles';
+import { Channel } from '../../src/components/Channel';
+import { ChannelInfo, UserList, ChannelName, StyledImg } from '../../src/components/Channel/index.styles';
 
 const channel = {
   coverUrl: 'http://img.jpg',
@@ -25,7 +26,6 @@ describe('<Channel />', () => {
   });
   it('should render channel img', () => {
     const wrapper = shallow(<Channel channel={channel} />);
-    expect(wrapper.find(ChannelInfo).find('img').prop('src')).toBe(channel.coverUrl);
-    expect(wrapper.find(ChannelInfo).find('img').prop('alt')).toBe(channel.name);
+    expect(wrapper.find(ChannelInfo).find(StyledImg).prop('src')).toBe(channel.coverUrl);
   });
 });

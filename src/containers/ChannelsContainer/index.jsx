@@ -2,7 +2,6 @@ import React from 'react';
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
-import styled from 'styled-components';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faBars, faTimes } from '@fortawesome/free-solid-svg-icons';
 import { getSelectedChannel, leaveChannel } from '../../redux/channels/actions';
@@ -12,38 +11,16 @@ import { CreateChannelForm } from '../../components/CreateChannelForm';
 import { CreateGroupForm } from '../../components/CreateGroupForm';
 import { Channel } from '../../components/Channel';
 import { NotificationWindow } from '../../components/NotificationWindow';
-import { Page } from '../../components/UI/Page';
 import { FlexContainer } from '../../components/UI/FlexContainer';
-import { media } from '../../theme/media';
 import { Preloader } from '../../components/UI/Preloader';
 import { ModalWindow } from '../../components/UI/ModalWindow';
 import { ChannelsSidebar } from '../ChannelSidebar';
 import { Button } from '../../components/UI/Button';
-
-const ChannelsPage = styled(Page)`
-`;
-
-const BurgerButton = styled.button`
-  position: absolute;
-  top: -20px;
-  left: 15px;
-  z-index: 10;
-  border-radius: 100%;
-  width: 40px;
-  height: 40px;
-  box-shadow: 5px 0 25px rgba(0,0,0,.4);
-  transition: .2s all;
-  display:none;
-  ${media.tablet`
-    display:block;
-    left: ${props => (props.isOpen ? '215px' : '15px')};
-  `}
-`;
-
-const ChannelContent = styled.div`
-  width: 70%;
-  ${media.tablet`width: 100%`}
-`;
+import {
+  ChannelsPage,
+  BurgerButton,
+  ChannelContent
+} from './index.styles';
 
 export class Channels extends React.Component {
   state = {

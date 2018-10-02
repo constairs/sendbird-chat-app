@@ -2,6 +2,7 @@ import React from 'react';
 import { shallow } from 'enzyme';
 
 import { ImgWrap } from '../../src/components/ImgRound';
+import { Button } from '../../src/components/UI/Button';
 
 const mock = jest.fn();
 
@@ -15,7 +16,7 @@ describe('<ImgRound />', () => {
         onClickBtn={mock}
         additionalTitle="Change profile data"
       />);
-    wrapper.find('button').simulate('click');
+    wrapper.find(Button).simulate('click');
     expect(mock).toHaveBeenCalled();
   });
 });

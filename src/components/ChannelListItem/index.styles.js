@@ -1,4 +1,5 @@
 import styled from 'styled-components';
+import { Button } from '../UI/Button';
 
 export const ListItem = styled.li`
   margin-bottom: 5px;
@@ -41,7 +42,7 @@ export const ListItem = styled.li`
   }
 `;
 
-export const ItemBtn = styled.button`
+export const ItemBtn = styled(Button)`
   background-color: ${props => (props.isActive ? props.theme.colors.main : 'inherit')};
   border: 1px solid ${props => (props.custom ? props.theme.colors.main : 'inherit')};
   color: ${props => (props.isActive ? props.theme.colors.light : props.theme.colors.black)};

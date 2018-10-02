@@ -1,7 +1,8 @@
 import React from 'react';
 import { shallow } from 'enzyme';
 
-import { Head, HeaderUserProfile } from '../../src/containers/Header';
+import { Head } from '../../src/containers/Header';
+import { HeaderUserProfile } from '../../src/containers/Header/index.styles';
 
 describe('<Header /> ', () => {
   it('should show channels link', () => {

@@ -1,7 +1,8 @@
 import React from 'react';
 import { shallow } from 'enzyme';
 
-import { LoginForm, Form } from '../../src/components/LoginForm';
+import { LoginForm } from '../../src/components/LoginForm';
+import { Form } from '../../src/components/UI/Form';
 
 const mock = jest.fn();
 

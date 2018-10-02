@@ -16,6 +16,7 @@ export const globalStyles = css`
   #root {
     height: 100vh;
     width: 100%;
+    background-color: ${theme.colors.blank};
   }
 
   h1,

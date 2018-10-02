@@ -2,6 +2,7 @@ import React from 'react';
 import { shallow } from 'enzyme';
 
 import { UserForm } from '../../src/components/UserForm';
+import { Form } from '../../src/components/UI/Button';
 
 const mock = jest.fn();
 const mockEvent = {
@@ -28,7 +29,7 @@ describe('<LoginForm />', () => {
       <UserForm
         onChangeProfile={mock}
       />);
-    form.find('form').simulate('submit', mockEvent);
+    form.find(Form).simulate('submit', mockEvent);
     expect(mock).toHaveBeenCalledWith([form.state('userNick'), form.state('userImg')]);
   });
 });
