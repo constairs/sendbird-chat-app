@@ -1,7 +1,9 @@
 import React from 'react';
 import { shallow } from 'enzyme';
 
-import { ChannelListItem } from '../../src/components/ChannelListItem';
+import { ChannelListItem, InviteForm } from '../../src/components/ChannelListItem';
+import { ListItem } from '../../src/components/ChannelListItem/index.styles';
+import { UsersToInvite } from '../../src/components/UI/UsersToInvite';
 
 const channelItem = {
   name: 'neme',
@@ -135,7 +137,7 @@ describe('<ChannelListItem />', () => {
       />);
     channelListItem.setState({ usersToInvite: ['user', 'test'] });
     channelListItem.find('#inviteBtn').simulate('click');
-    channelListItem.find('.users-to-invite li:first-child button').simulate('click', { target: { id: 'user' } });
+    channelListItem.find(UsersToInvite).find('li:first-child button').simulate('click', { target: { id: 'user' } });
     expect(channelListItem.state('usersToInvite')).toHaveLength(1);
   });
   it('should show invite form', () => {
@@ -160,7 +162,7 @@ describe('<ChannelListItem />', () => {
         onInviteUsers={mock}
       />);
     channelListItem.find('#inviteBtn').simulate('click');
-    channelListItem.find('.invite-form').simulate('submit', mockEvent);
+    channelListItem.find(InviteForm).simulate('submit', mockEvent);
     channelListItem.setState({ userToInvite: ['user', 'test'] });
     const formData = [
       channelItem.url,
@@ -183,7 +185,7 @@ describe('<ChannelListItem />', () => {
       channelType: channelItem.channelType
     });
   });
-  it('should call selecteChan', () => {
+  it('should call selectedChan', () => {
     const channelListItem = shallow(
       <ChannelListItem
         channelItem={channelItem}
@@ -192,7 +194,7 @@ describe('<ChannelListItem />', () => {
         onLeave={mock}
         onInviteUsers={mock}
       />);
-    channelListItem.find('.channel-list-item').simulate('click');
+    channelListItem.find(ListItem).simulate('click');
     expect(mock).toHaveBeenCalledWith({
       channelUrl: channelItem.url,
       channelType: channelItem.channelType,

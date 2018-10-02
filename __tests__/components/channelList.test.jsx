@@ -1,7 +1,8 @@
 import React from 'react';
 import { shallow } from 'enzyme';
 
-import { ChannelList } from '../../src/components/ChannelList';
+import { ChannelList, List, ListPreloader } from '../../src/components/ChannelList';
+import { Preloader } from '../../src/components/UI/Preloader';
 
 const channelsFetching = true;
 const channelList = [{ name: '1', createdAt: 111 }, { name: '2', createdAt: 111 }, { name: '3', createdAt: 111 }];
@@ -15,7 +16,7 @@ describe('<ChannelList />', () => {
       selectedChan={mock}
       onLeave={mock}
     />);
-    expect(list.find('.preloader').children()).toExist();
+    expect(list.find(Preloader)).toExist();
   });
   it('should render ChannelListItem component', () => {
     const list = shallow(
@@ -24,6 +25,6 @@ describe('<ChannelList />', () => {
         selectedChan={mock}
         onLeave={mock}
       />);
-    expect(list.find('.channels-list').children()).toHaveLength(3);
+    expect(list.find(List).children()).toHaveLength(3);
   });
 });

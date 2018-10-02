@@ -2,6 +2,7 @@ import React from 'react';
 import { shallow } from 'enzyme';
 
 import { Channels } from '../../src/containers/ChannelsContainer';
+import { Preloader } from '../../src/components/UI/Preloader';
 
 const mockObj = {
   fn: jest.fn(),
@@ -40,7 +41,7 @@ describe('<Channels />', () => {
         user={user}
         channels={channels}
       />);
-    expect(wrapper.find('.preloader')).toExist();
+    expect(wrapper.find(Preloader)).toExist();
   });
   it('should render channel', () => {
     const wrapper = shallow(

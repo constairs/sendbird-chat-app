@@ -2,13 +2,32 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
-import Modal from 'react-modal';
+import styled from 'styled-components';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faSignOutAlt } from '@fortawesome/free-solid-svg-icons';
 import { UserForm } from '../../components/UserForm';
+import { ImgWrap } from '../../components/ImgRound';
 import { changeUserRequest, logoutUserRequest } from '../../redux/user/actions';
+import { ModalWindow } from '../../components/UI/ModalWindow';
+import { Button } from '../../components/UI/Button';
 
-import './index.scss';
+const ProfileCard = styled.div`
+  display: flex;
+  align-items: center;
+  padding: 10px;
+  h2 {
+    margin-left: 10px;
+  }
+`;
+
+const LogoutBtn = styled(Button)`
+  width: 20px;
+  height: 20px;
+  padding: 0;
+  font-size: 12px;
+  text-align: center;
+  margin: 8px;
+`;
 
 export class Profile extends React.Component {
   state = {
@@ -43,22 +62,17 @@ export class Profile extends React.Component {
     const { userName, userImg } = this.props.user;
 
     return (
-      <div className="user-profile">
-        <div className="user-cover">
-          <img src={userImg} alt="user-img" />
-          <button onClick={this.handleOpenModal} className="change-profile-btn" title="Change profile data">
-            Change
-          </button>
-        </div>
-        <h2 className="user-nickname">{userName}</h2>
-        <button
+      <ProfileCard className={this.props.className}>
+        <ImgWrap src={userImg} btn btnTitle="change" onClickBtn={this.handleOpenModal} additionalTitle="Change profile data" />
+        <h2>{userName}</h2>
+        <LogoutBtn
           className="user-logout-btn"
           title="Logout"
           onClick={this.handleLogout}
         >
           <FontAwesomeIcon icon={faSignOutAlt} size="xs" />
-        </button>
-        <Modal
+        </LogoutBtn>
+        <ModalWindow
           className="modal"
           isOpen={this.state.modalIsOpen}
           onAfterOpen={this.afterOpenModal}
@@ -66,21 +80,26 @@ export class Profile extends React.Component {
           contentLabel="Example Modal"
           ariaHideApp={false}
         >
-          <button className="x-btn" onClick={this.closeModal}>
+          <Button className="x-btn" onClick={this.closeModal}>
             x
-          </button>
+          </Button>
           <UserForm onChangeProfile={this.handleChangeProfile} />
-        </Modal>
-      </div>
+        </ModalWindow>
+      </ProfileCard>
     );
   }
 }
+
+Profile.defaultProps = {
+  className: ''
+};
 
 Profile.propTypes = {
   user: PropTypes.objectOf(PropTypes.any).isRequired,
   userActions: PropTypes.objectOf(PropTypes.any).isRequired,
   channelUrl: PropTypes.string.isRequired,
   channelType: PropTypes.string.isRequired,
+  className: PropTypes.string,
 };
 
 export const UserProfile = connect(

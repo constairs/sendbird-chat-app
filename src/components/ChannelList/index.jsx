@@ -1,8 +1,17 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { Spinner } from 'react-preloading-component';
+import styled from 'styled-components';
 import { ChannelListItem } from '../ChannelListItem';
-import './index.scss';
+import { Preloader } from '../UI/Preloader';
+
+export const List = styled.ul`
+  padding-left: 0;
+  list-style-type: none;
+  margin-top: 20px;
+  margin-bottom: 30px;
+  position: relative;
+  min-height: 200px;
+`;
 
 export class ChannelList extends React.Component {
   handleChanSelect = (element) => {
@@ -16,11 +25,9 @@ export class ChannelList extends React.Component {
   };
   render() {
     return (
-      <ul className="list channels-list">
+      <List>
         {this.props.channelsFetching ? (
-          <div className="preloader">
-            <Spinner color="#ffffff" secondaryColor="#40c9ff" size={50} />
-          </div>
+          <Preloader color="#ffffff" secondColor="#40c9ff" size={50} />
         ) : null}
         {
           this.props.channels.map(channelItem => (
@@ -30,10 +37,11 @@ export class ChannelList extends React.Component {
               selectedChan={this.handleChanSelect}
               onInviteUsers={this.handleInviteUsers}
               onLeave={this.handleLeaveGroup}
+              isActive={this.props.current === channelItem.url}
             />
           ))
         }
-      </ul>
+      </List>
     );
   }
 }
@@ -41,6 +49,7 @@ export class ChannelList extends React.Component {
 ChannelList.defaultProps = {
   channelsFetching: false,
   inviteUsers: PropTypes.func,
+  current: null,
 };
 
 ChannelList.propTypes = {
@@ -49,4 +58,5 @@ ChannelList.propTypes = {
   channelsFetching: PropTypes.bool,
   inviteUsers: PropTypes.func,
   onLeave: PropTypes.func.isRequired,
+  current: PropTypes.string,
 };

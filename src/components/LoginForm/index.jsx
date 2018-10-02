@@ -1,7 +1,8 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-
-import './index.scss';
+import { Button } from '../UI/Button';
+import { Form } from '../../components/UI/Form';
+import { Input } from '../../components/UI/Input';
 
 export class LoginForm extends React.Component {
   state = {
@@ -27,31 +28,29 @@ export class LoginForm extends React.Component {
   render() {
     const { userId, userNick } = this.state;
     return (
-      <div className="form login-form">
-        <form onSubmit={this.handleSubmit}>
-          <label htmlFor="userId">
-            <span>UserId</span>
-            <input
-              id="userId"
-              name="userId"
-              value={userId}
-              onChange={this.handleTextInput}
-              type="text"
-            />
-          </label>
-          <label htmlFor="userLogin">
-            <span>UserNick</span>
-            <input
-              id="userNick"
-              name="userNick"
-              value={userNick}
-              onChange={this.handleTextInput}
-              type="text"
-            />
-          </label>
-          <button disabled={!userId}>Login</button>
-        </form>
-      </div>
+      <Form onSubmit={this.handleSubmit}>
+        <label htmlFor="userId">
+          <span>UserId</span>
+          <Input
+            id="userId"
+            name="userId"
+            value={userId}
+            onChange={this.handleTextInput}
+            type="text"
+          />
+        </label>
+        <label htmlFor="userLogin">
+          <span>UserNick</span>
+          <Input
+            id="userNick"
+            name="userNick"
+            value={userNick}
+            onChange={this.handleTextInput}
+            type="text"
+          />
+        </label>
+        <Button disabled={!userId}>Login</Button>
+      </Form>
     );
   }
 }

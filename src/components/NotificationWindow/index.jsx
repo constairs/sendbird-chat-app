@@ -1,38 +1,51 @@
 import React from 'react';
 import PropTypes from 'prop-types';
+import styled from 'styled-components';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faTimes } from '@fortawesome/free-solid-svg-icons';
+import { Button } from '../UI/Button';
 
-import './index.scss';
+export const WindowInner = styled.div`
+  width: 280px;
+  border-radius: 6px;
+  box-shadow: 0 0 5px rgba(0,0,0,.33);
+  padding: 20px;
+  position: fixed;
+  top: 10%;
+  right: 10px;
+  background-color: ${props => props.theme.colors.light};
+  transition: .3s ease-in-out;
+  z-index: 10;
+  visibility: ${props => (props.show ? 'visible' : 'hidden')};  
+  opacity: ${props => (props.show ? 100 : 0)};
+  .x-btn {
+    background-color: #d6d4d4;
+    position: absolute;
+    right: 10px;
+    top: 10px;
+    border-radius: 100%;
+    width: 20px;
+    height: 20px;
+    padding: 0;
+    font-size: 10px;
+    &:hover {
+      background-color: #ccc;
+    }
+  }
+`;
 
 export class NotificationWindow extends React.Component {
-  static getDerivedStateFromProps(props, state) {
-    if (props.notificationShow !== state.show) {
-      return { show: props.notificationShow };
-    }
-    return null;
-  }
-
-  constructor(props) {
-    super(props);
-    this.state = {
-      show: props.notificationShow,
-    };
-  }
-
   handleClose = () => {
-    this.setState({ show: false });
     this.props.onNotificationClose();
   };
+
   render() {
-    const { user, channel, type } = this.props.notification;
+    const {
+      user, channel, type
+    } = this.props.notification;
     const { nickname } = this.props;
     return (
-      <div
-        className={
-          this.state.show ? 'notification-window show' : 'notification-window'
-        }
-      >
+      <WindowInner show={this.props.notificationShow} >
         {type === 'onUserJoined' ? (
           <p>
             {
@@ -45,23 +58,23 @@ export class NotificationWindow extends React.Component {
           </p>
         ) : (
           <p>
-            {user.nickname === nickname
+            {
+              user.nickname === nickname
               ? `Вы покинули в групповой канал ${channel.name}`
               : `Пользователь ${user.nickname} покинул канал ${channel.name}`
             }
           </p>
         )}
-
-        <button className="x-btn" onClick={this.handleClose}>
+        <Button className="x-btn" onClick={this.handleClose}>
           <FontAwesomeIcon icon={faTimes} />
-        </button>
-      </div>
+        </Button>
+      </WindowInner>
     );
   }
 }
 
 NotificationWindow.defaultProps = {
-  notificationShow: false
+  notificationShow: false,
 };
 
 NotificationWindow.propTypes = {

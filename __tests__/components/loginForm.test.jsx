@@ -1,7 +1,7 @@
 import React from 'react';
 import { shallow } from 'enzyme';
 
-import { LoginForm } from '../../src/components/LoginForm';
+import { LoginForm, Form } from '../../src/components/LoginForm';
 
 const mock = jest.fn();
 
@@ -24,7 +24,7 @@ describe('<LoginForm />', () => {
     const form = shallow(<LoginForm
       onLogin={mock}
     />);
-    form.find('form').simulate('submit', mockedEvent);
+    form.find(Form).simulate('submit', mockedEvent);
     const formData = {
       userId: form.state('userId'),
       userNick: form.state('userNick'),

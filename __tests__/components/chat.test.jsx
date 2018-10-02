@@ -3,6 +3,7 @@ import { shallow } from 'enzyme';
 
 import { Chat } from '../../src/containers/ChatBox';
 import { receipt } from '../fixtures';
+import { Preloader } from '../../src/components/UI/Preloader';
 
 const user = {
   userId: 'user',
@@ -39,7 +40,7 @@ describe('<Chat />', () => {
       channelUrl={channelUrl}
       channelType={channelType}
     />);
-    expect(chat.find('.preloader').children()).toExist();
+    expect(chat.find(Preloader)).toExist();
   });
   it('should render messages', () => {
     const chat = shallow(<Chat

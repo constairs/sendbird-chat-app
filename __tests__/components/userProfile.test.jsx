@@ -2,6 +2,7 @@ import React from 'react';
 import { shallow } from 'enzyme';
 
 import { Profile } from '../../src/containers/UserProfile';
+import { ImgWrap } from '../../src/components/ImgRound';
 
 const user = {
   userName: 'test2',
@@ -24,7 +25,7 @@ describe('<UserProfile />', () => {
         channelType={channelType}
         userActions={mockObj}
       />);
-    expect(profile.find('.user-cover img').prop('src')).toBe(user.userImg);
+    expect(profile.find(ImgWrap).prop('src')).toBe(user.userImg);
   });
   it('should render user nickname', () => {
     const profile = shallow(
@@ -34,7 +35,7 @@ describe('<UserProfile />', () => {
         channelType={channelType}
         userActions={mockObj}
       />);
-    expect(profile.find('.user-nickname').text()).toBe(user.userName);
+    expect(profile.find('h2').text()).toBe(user.userName);
   });
   it('should open/hide modal', () => {
     const profile = shallow(
@@ -45,8 +46,6 @@ describe('<UserProfile />', () => {
         userActions={mockObj}
       />);
     expect(profile.state('modalIsOpen')).toBe(false);
-    profile.find('.change-profile-btn').simulate('click');
-    expect(profile.state('modalIsOpen')).toBe(true);
     profile.find('.x-btn').simulate('click');
     expect(profile.state('modalIsOpen')).toBe(false);
   });

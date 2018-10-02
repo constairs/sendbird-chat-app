@@ -1,14 +1,43 @@
 import React from 'react';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
-import { Spinner } from 'react-preloading-component';
 import PropTypes from 'prop-types';
+import styled from 'styled-components';
 import { deleteMessage, editMessage, cancelUploadingMessage } from '../../redux/chat/actions';
 import { MessageItem } from '../../components/MessageItem';
 import { ChatMessageField } from '../ChatMessageField';
 import { addHandler, removeHandler } from '../../services/sendbird';
+import { media } from '../../theme/media';
+import { Preloader } from '../../components/UI/Preloader';
 
-import './index.scss';
+const ChatItem = styled.div`
+  height: 100%;
+  position: relative;
+
+  .chat-box {
+    border-radius: 3px;
+    height: calc(100vh - 370px);
+    overflow-y: scroll;
+    color: ${props => props.theme.colors.black};
+    background-color: ${props => props.theme.colors.grey};
+    position: relative;
+    &__update-btn {
+      background-color: ${props => props.theme.colors.main};
+    }
+    ${media.phoneMd`
+      height: calc(100vh - 300px);
+    `}
+    ${media.phoneSm`
+      height: calc(100vh - 320px);
+    `}
+  }
+
+  .chat-user {
+    text-decoration: underline;
+    color: ${props => props.theme.colors.main};
+    font-weight: bold;
+  }
+`;
 
 export class Chat extends React.Component {
   constructor(props) {
@@ -56,11 +85,9 @@ export class Chat extends React.Component {
     const { messFetching, messages, user } = this.props;
     const { channelUrl, channelType } = this.props;
     return (
-      <div className="chat">
+      <ChatItem>
         {messFetching ? (
-          <div className="preloader">
-            <Spinner color="#ffffff" secondaryColor="#40c9ff" size={50} />
-          </div>
+          <Preloader color="#ffffff" secondaryColor="#40c9ff" size={50} />
           ) : null}
         <div className="chat-box" ref={this.ref}>
           {messages.map(message => (
@@ -83,7 +110,7 @@ export class Chat extends React.Component {
           channelUrl={channelUrl}
           channelType={channelType}
         />
-      </div>
+      </ChatItem>
     );
   }
 }

@@ -6,11 +6,9 @@ import { ConnectedRouter } from 'connected-react-router';
 import { LoginContainer } from './containers/LoginContainer/';
 import { ChannelsConstainer } from './containers/ChannelsContainer';
 import { Banner } from './components/Banner';
-import { UserProfile } from './containers/UserProfile';
+import { ProfilePage } from './components/ProfilePage';
 import { history } from './redux/store';
 import { Header } from './containers/Header';
-
-import './containers/UserProfile/index.scss';
 
 const Private = ({ component: Component, logged, ...rest }) => (
   <Route
@@ -50,7 +48,7 @@ export const Navigation = () => (
         <Route exact path="/" component={Banner} />
         <Route exact path="/login/" component={LoginContainer} />
         <PrivateRoute component={ChannelsConstainer} path="/channels/" />
-        <PrivateRoute component={UserProfile} path="/profile/" />
+        <PrivateRoute component={ProfilePage} path="/profile/" />
       </Switch>
     </React.Fragment>
   </ConnectedRouter>

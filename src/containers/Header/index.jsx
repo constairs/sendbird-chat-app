@@ -2,17 +2,15 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { Link } from 'react-router-dom';
 import { connect } from 'react-redux';
-import { UserProfile } from '../UserProfile';
-
-import './index.scss';
+import { StyledHeader, HeaderUserProfile, Nav } from './index.styles';
 
 export class Head extends React.Component {
   state = {};
   render() {
     const { logged } = this.props;
     return (
-      <header>
-        <nav>
+      <StyledHeader>
+        <Nav>
           <ul>
             <li>
               <Link href="/" to="/">
@@ -32,9 +30,9 @@ export class Head extends React.Component {
               </li>
             ) : null}
           </ul>
-        </nav>
+        </Nav>
         {logged ? (
-          <UserProfile />
+          <HeaderUserProfile />
         ) : (
           <div>
             <Link href="/login" to="/login">
@@ -42,7 +40,7 @@ export class Head extends React.Component {
             </Link>
           </div>
         )}
-      </header>
+      </StyledHeader>
     );
   }
 }
@@ -50,7 +48,6 @@ export class Head extends React.Component {
 Head.propTypes = {
   logged: PropTypes.bool.isRequired,
 };
-
 
 export const Header = connect(
   state => ({ logged: state.persistedUser.logged, }),

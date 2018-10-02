@@ -1,7 +1,7 @@
 import React from 'react';
 import { shallow } from 'enzyme';
 
-import { NotificationWindow } from '../../src/components/NotificationWindow';
+import { NotificationWindow, WindowInner } from '../../src/components/NotificationWindow';
 import { groupChannel, user } from '../fixtures';
 import { getChannelFunc } from '../../src/redux/channels/helpers';
 
@@ -24,7 +24,7 @@ describe('<NotificationWindow />', () => {
         notificationShow
         onNotificationClose={mock}
       />);
-    expect(wrapper.find('.notification-window p')).toExist();
+    expect(wrapper.find(WindowInner).find('p')).toExist();
   });
   it('should show notification', () => {
     const wrapper = shallow(
@@ -35,7 +35,7 @@ describe('<NotificationWindow />', () => {
         onNotificationClose={mock}
       />
     );
-    expect(wrapper.prop('className')).toBe('notification-window show');
+    expect(wrapper.find(WindowInner).prop('show')).toBeTruthy();
   });
   it('should close notification', () => {
     const wrapper = shallow(

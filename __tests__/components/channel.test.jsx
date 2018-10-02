@@ -1,7 +1,7 @@
 import React from 'react';
 import { shallow } from 'enzyme';
 
-import { Channel } from '../../src/components/Channel';
+import { Channel, ChannelInfo, UserList, ChannelName } from '../../src/components/Channel/index.styles';
 
 const channel = {
   coverUrl: 'http://img.jpg',
@@ -13,11 +13,11 @@ const channel = {
 describe('<Channel />', () => {
   it('should render members list', () => {
     const wrapper = shallow(<Channel channel={channel} />);
-    expect(wrapper.find('.users-list').children()).toHaveLength(3);
+    expect(wrapper.find(UserList).children()).toHaveLength(3);
   });
   it('should render channel name', () => {
     const wrapper = shallow(<Channel channel={channel} />);
-    expect(wrapper.find('.channel-name').text()).toEqual(channel.name);
+    expect(wrapper.find(ChannelName).children().text()).toEqual(channel.name);
   });
   it('should render members count', () => {
     const wrapper = shallow(<Channel channel={channel} />);
@@ -25,8 +25,7 @@ describe('<Channel />', () => {
   });
   it('should render channel img', () => {
     const wrapper = shallow(<Channel channel={channel} />);
-    expect(wrapper.find('.channel-info img').prop('src')).toBe(channel.coverUrl);
-    expect(wrapper.find('.channel-info img').prop('alt')).toBe(channel.name);
+    expect(wrapper.find(ChannelInfo).find('img').prop('src')).toBe(channel.coverUrl);
+    expect(wrapper.find(ChannelInfo).find('img').prop('alt')).toBe(channel.name);
   });
 });
-

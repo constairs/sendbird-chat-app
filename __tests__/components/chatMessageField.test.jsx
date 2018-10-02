@@ -1,7 +1,7 @@
 import React from 'react';
 import { shallow } from 'enzyme';
 
-import { MessageField } from '../../src/containers/ChatMessageField';
+import { MessageField, Field } from '../../src/containers/ChatMessageField';
 
 
 const channelUrl = 'https://url.com';
@@ -160,7 +160,7 @@ describe('<MessageField />', () => {
         membersTyping={membersTyping}
       />
     );
-    wrapper.find('.chat-message-form').simulate('submit', mockEvent);
+    wrapper.find(Field).simulate('submit', mockEvent);
     const messageData = [
       channelUrl,
       channelType,

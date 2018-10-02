@@ -1,5 +1,8 @@
 import React from 'react';
 import PropTypes from 'prop-types';
+import { Button } from '../UI/Button';
+import { Form } from '../../components/UI/Form';
+import { Input } from '../../components/UI/Input';
 
 export class CreateChannelForm extends React.Component {
   state = {
@@ -37,41 +40,39 @@ export class CreateChannelForm extends React.Component {
   render() {
     const { channelName, coverUrl, customType } = this.state;
     return (
-      <div className="form create-channel-form">
-        <form onSubmit={this.handleSubmit}>
-          <label htmlFor="channelName">
-            <span>Name</span>
-            <input
-              id="channelName"
-              name="channelName"
-              value={channelName}
-              onChange={this.handleInput}
-              type="text"
-            />
-          </label>
-          <label htmlFor="coverUrl">
-            <span>Cover Url</span>
-            <input
-              id="coverUrl"
-              name="coverUrl"
-              value={coverUrl}
-              onChange={this.handleInput}
-              type="text"
-            />
-          </label>
-          <label htmlFor="customType">
-            <span>Custom Type</span>
-            <input
-              id="customType"
-              name="customType"
-              value={customType}
-              onChange={this.handleInput}
-              type="text"
-            />
-          </label>
-          <button disabled={!channelName}>Создать</button>
-        </form>
-      </div>
+      <Form onSubmit={this.handleSubmit}>
+        <label htmlFor="channelName">
+          <span>Name</span>
+          <Input
+            id="channelName"
+            name="channelName"
+            value={channelName}
+            onChange={this.handleInput}
+            type="text"
+          />
+        </label>
+        <label htmlFor="coverUrl">
+          <span>Cover Url</span>
+          <Input
+            id="coverUrl"
+            name="coverUrl"
+            value={coverUrl}
+            onChange={this.handleInput}
+            type="text"
+          />
+        </label>
+        <label htmlFor="customType">
+          <span>Custom Type</span>
+          <Input
+            id="customType"
+            name="customType"
+            value={customType}
+            onChange={this.handleInput}
+            type="text"
+          />
+        </label>
+        <Button disabled={!channelName}>Создать</Button>
+      </Form>
     );
   }
 }
