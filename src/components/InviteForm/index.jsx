@@ -2,8 +2,11 @@ import React from 'react';
 import styled from 'styled-components';
 import PropTypes from 'prop-types';
 import { UsersToInvite } from '../UI/UsersToInvite';
+import { Button } from '../UI/Button';
+import { Form } from '../../components/UI/Form';
+import { Input } from '../../components/UI/Input';
 
-export const Form = styled.form`
+export const StyledForm = styled(Form)`
   background-color: #d6d4d4;
   min-width: auto;
   padding: 15px;
@@ -41,28 +44,28 @@ export class InviteForm extends React.Component {
   render() {
     const { usersIdsInput, usersToInvite } = this.state;
     return (
-      <Form onSubmit={this.handleFormSubmit}>
+      <StyledForm onSubmit={this.handleFormSubmit}>
         <label htmlFor="userId" className="groupUsers">
           <span>user ids</span>
-          <input id="userId" value={usersIdsInput} onChange={this.handleInput} type="text" />
-          <button className="invite-button" onClick={this.handleAddUser} type="button">
+          <Input id="userId" value={usersIdsInput} onChange={this.handleInput} type="text" />
+          <Button className="invite-button" onClick={this.handleAddUser} type="button">
           ок
-          </button>
+          </Button>
           {usersToInvite.length !== 0 ? (
             <UsersToInvite>
               {usersToInvite.map(item => (
                 <li key={item}>
                   {item}{' '}
-                  <button id={item} onClick={this.handleDelUser} type="button">
+                  <Button id={item} onClick={this.handleDelUser} type="button">
               x
-                  </button>
+                  </Button>
                 </li>
         ))}
             </UsersToInvite>
     ) : null}
         </label>
-        <button type="submit">Пригласить</button>
-      </Form>
+        <Button type="submit">Пригласить</Button>
+      </StyledForm>
     );
   }
 }

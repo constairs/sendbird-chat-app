@@ -3,8 +3,11 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faPaperPlane } from '@fortawesome/free-solid-svg-icons';
 import styled from 'styled-components';
 import PropTypes from 'prop-types';
+import { Form } from '../UI/Form';
+import { Button } from '../UI/Button';
+import { Input } from '../UI/Input';
 
-const Form = styled.form`
+const EditForm = styled(Form)`
   display: flex;
   box-shadow: none;
   padding: 0;
@@ -14,7 +17,7 @@ const Form = styled.form`
     border-radius: 3px; 
     border: 1px solid ${props => props.theme.colors.main};
   }
-  button {
+  ${Button} {
     font-size: 12px;
     height: 30px;
     width: 30px;
@@ -43,12 +46,12 @@ export class EditMessageForm extends React.Component {
 
   render() {
     return (
-      <Form onSubmit={this.handleSubmit}>
-        <input type="text" onChange={this.handleTextInput} value={this.state.messageInput} />
-        <button>
+      <EditForm onSubmit={this.handleSubmit}>
+        <Input type="text" onChange={this.handleTextInput} value={this.state.messageInput} />
+        <Button>
           <FontAwesomeIcon icon={faPaperPlane} />
-        </button>
-      </Form>
+        </Button>
+      </EditForm>
     );
   }
 }

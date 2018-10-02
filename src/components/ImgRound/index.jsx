@@ -2,6 +2,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import styled from 'styled-components';
 import { media } from '../../theme/media';
+import { Button } from '../UI/Button';
 
 const ImgRound = ({ ...props }) => {
   const {
@@ -15,9 +16,9 @@ const ImgRound = ({ ...props }) => {
     <div className={props.className}>
       <img src={src} alt={src} />
       {btn ? (
-        <button onClick={onClickBtn} title={additionalTitle}>
+        <Button onClick={onClickBtn} title={additionalTitle}>
           {btnTitle}
-        </button>
+        </Button>
       ) : null}
     </div>
   );

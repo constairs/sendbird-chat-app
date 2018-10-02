@@ -7,6 +7,7 @@ import { getSelectedChannel, leaveChannel } from '../../redux/channels/actions';
 import { inviteUsers, notificationOff } from '../../redux/channels/groupChannelsActions';
 import { ChannelList } from '../../components/ChannelList';
 import { media } from '../../theme/media';
+import { Button } from '../../components/UI/Button';
 
 const StyledSidebar = styled.div`
   width: 30%;
@@ -15,13 +16,13 @@ const StyledSidebar = styled.div`
   overflow-y: scroll;
   margin-right: 20px;
   padding-right: 10px;
-  background-color: ${props => props.theme.colors.light};
   transition: .2s all;
   ${media.tablet`
     width: 280px;
     padding-top: 20px;
     padding-left: 20px;
     position: absolute;
+    background-color: ${props => props.theme.colors.light};
     top: 0;
     height: calc(100vh - 76px);
     z-index: 5;
@@ -71,9 +72,9 @@ export class Sidebar extends React.Component {
     } = this.props.channels;
     return (
       <StyledSidebar sidebarIsOpen={this.props.sidebarIsOpen}>
-        <button name="createOpen" onClick={this.handleOpenModal}>
+        <Button name="createOpen" onClick={this.handleOpenModal}>
           Создать открытый канал
-        </button>
+        </Button>
         {openChannelList ? (
           <div>
             <p>Открытые каналы</p>
@@ -86,9 +87,9 @@ export class Sidebar extends React.Component {
             />
           </div>
         ) : null}
-        <button name="createGroup" onClick={this.handleOpenModal}>
+        <Button name="createGroup" onClick={this.handleOpenModal}>
           Создать групповой канал
-        </button>
+        </Button>
         {groupChannelList ? (
           <div>
             <p>

@@ -1,6 +1,9 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { UsersToInvite } from '../UI/UsersToInvite';
+import { Button } from '../UI/Button';
+import { Form } from '../UI/Form';
+import { Input } from '../../components/UI/Input';
 
 export class CreateGroupForm extends React.Component {
   state = {
@@ -69,10 +72,10 @@ export class CreateGroupForm extends React.Component {
       customType
     } = this.state;
     return (
-      <form onSubmit={this.handleSubmit}>
+      <Form onSubmit={this.handleSubmit}>
         <label htmlFor="channelName">
           <span>Name</span>
-          <input
+          <Input
             id="channelName"
             name="channelName"
             value={channelName}
@@ -82,7 +85,7 @@ export class CreateGroupForm extends React.Component {
         </label>
         <label htmlFor="coverUrl">
           <span>Cover Url</span>
-          <input
+          <Input
             id="coverUrl"
             name="coverUrl"
             value={coverUrl}
@@ -91,7 +94,7 @@ export class CreateGroupForm extends React.Component {
           />
         </label>
         <label htmlFor="channelDistinct">
-          <input
+          <Input
             type="checkbox"
             id="channelDistinct"
             name="channelDistinct"
@@ -106,7 +109,7 @@ export class CreateGroupForm extends React.Component {
           disabled={channelDistinct && usersToInvite.length > 0}
         >
           <span>Group Users</span>
-          <input
+          <Input
             id="groupUsers"
             name="groupUsersInput"
             value={groupUsersInput}
@@ -114,22 +117,22 @@ export class CreateGroupForm extends React.Component {
             type="text"
             disabled={channelDistinct && usersToInvite.length > 0}
           />
-          <button
+          <Button
             className="invite-button"
             onClick={this.handleAddUser}
             type="button"
             disabled={channelDistinct && usersToInvite.length > 0}
           >
                       ок
-          </button>
+          </Button>
           {usersToInvite.length !== 0 ? (
             <UsersToInvite>
               {usersToInvite.map(item => (
                 <li key={item}>
                   {item}{' '}
-                  <button id={item} onClick={this.handleDelUser} type="button">
+                  <Button id={item} onClick={this.handleDelUser} type="button">
                       x
-                  </button>
+                  </Button>
                 </li>
                     ))}
             </UsersToInvite>
@@ -137,7 +140,7 @@ export class CreateGroupForm extends React.Component {
         </label>
         <label htmlFor="customType">
           <span>Custom Type</span>
-          <input
+          <Input
             id="customType"
             name="customType"
             value={customType}
@@ -145,8 +148,8 @@ export class CreateGroupForm extends React.Component {
             type="text"
           />
         </label>
-        <button disabled={!channelName}>Создать</button>
-      </form>
+        <Button disabled={!channelName}>Создать</Button>
+      </Form>
     );
   }
 }

@@ -11,6 +11,7 @@ import { LoginForm } from '../../components/LoginForm';
 import { Page } from '../../components/UI/Page';
 import { Preloader } from '../../components/UI/Preloader';
 import { ModalWindow } from '../../components/UI/ModalWindow';
+import { Button } from '../../components/UI/Button';
 
 const LoginPage = styled(Page)`
   display: flex;
@@ -47,9 +48,9 @@ export class Login extends React.Component {
             contentLabel="Example Modal"
             ariaHideApp={false}
           >
-            <button className="x-btn" onClick={this.handleCloseModal}>
+            <Button className="x-btn" onClick={this.handleCloseModal}>
               <FontAwesomeIcon icon={faTimes} />
-            </button>
+            </Button>
             <h3>{user.error}</h3>
           </ModalWindow>
         }

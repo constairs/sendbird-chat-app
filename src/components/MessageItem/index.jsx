@@ -9,6 +9,7 @@ import { FilePreloader } from '../../components/FilePreloader';
 import { Message } from './index.styles';
 import { EditMessageForm } from '../EditMessageForm';
 import { ImgWrap } from '../ImgRound';
+import { Button } from '../UI/Button';
 
 const StyledImg = styled(ImgWrap)`
   width: 40px;
@@ -105,14 +106,14 @@ export class MessageItem extends React.Component {
               )}
         </div>
         {userId === message.sender.userId ? (
-          <button onClick={this.handleDeleteBtn} id="delMessage" className="x-btn">
+          <Button onClick={this.handleDeleteBtn} id="delMessage" className="x-btn">
             <FontAwesomeIcon icon={faTimes} />
-          </button>
+          </Button>
         ) : null}
         {userId === message.sender.userId ? (
-          <button onClick={this.handleEditMessage} if="editMessage" className="edit-btn">
+          <Button onClick={this.handleEditMessage} if="editMessage" className="edit-btn">
             <FontAwesomeIcon icon={faPen} />
-          </button>
+          </Button>
         ) : null}
       </Message>
     );

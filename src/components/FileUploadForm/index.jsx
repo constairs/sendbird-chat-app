@@ -6,6 +6,8 @@ import PropTypes from 'prop-types';
 import { FileUpload } from './index.styles';
 import { FilePreview } from '../UI/FilePreview';
 import { FileItem } from '../UI/FileItem';
+import { Button } from '../UI/Button';
+import { Input } from '../../components/UI/Input';
 
 export class FileUploadForm extends React.Component {
   state = {
@@ -101,9 +103,9 @@ export class FileUploadForm extends React.Component {
           <div>
             <p>Файл для отправки</p>
             <FileItem>
-              <button className="clear-file-upload" onClick={this.handleClearFile}>
+              <Button className="clear-file-upload" onClick={this.handleClearFile}>
                 <FontAwesomeIcon icon={faTimes} />
-              </button>
+              </Button>
               <FilePreview>
                 {customMessageType === '' ? (
                   <FontAwesomeIcon icon={faFile} />
@@ -132,7 +134,7 @@ export class FileUploadForm extends React.Component {
           </div>
       ) : null}
         {errorUpload || null}
-        <input
+        <Input
           type="text"
           placeholder="Сообщение"
           name="fileMessageText"
@@ -140,7 +142,7 @@ export class FileUploadForm extends React.Component {
           onChange={this.handleTextInput}
           disabled={!fileToUpload}
         />
-        <button type="submit">Отправить</button>
+        <Button type="submit">Отправить</Button>
       </FileUpload>
     );
   }

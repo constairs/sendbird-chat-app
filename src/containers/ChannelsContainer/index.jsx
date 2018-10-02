@@ -18,6 +18,7 @@ import { media } from '../../theme/media';
 import { Preloader } from '../../components/UI/Preloader';
 import { ModalWindow } from '../../components/UI/ModalWindow';
 import { ChannelsSidebar } from '../ChannelSidebar';
+import { Button } from '../../components/UI/Button';
 
 const ChannelsPage = styled(Page)`
 `;
@@ -139,7 +140,7 @@ export class Channels extends React.Component {
           contentLabel="Example Modal"
           ariaHideApp={false}
         >
-          <button className="x-btn" onClick={this.closeModal}>x</button>
+          <Button className="x-btn" onClick={this.closeModal}>x</Button>
           {
             groupChModal ? (
               <CreateGroupForm onSubmitForm={this.handleGroupChannel} />

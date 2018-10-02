@@ -9,6 +9,7 @@ import { UserForm } from '../../components/UserForm';
 import { ImgWrap } from '../../components/ImgRound';
 import { changeUserRequest, logoutUserRequest } from '../../redux/user/actions';
 import { ModalWindow } from '../../components/UI/ModalWindow';
+import { Button } from '../../components/UI/Button';
 
 const ProfileCard = styled.div`
   display: flex;
@@ -19,11 +20,10 @@ const ProfileCard = styled.div`
   }
 `;
 
-const LogoutBtn = styled.button`
+const LogoutBtn = styled(Button)`
   width: 20px;
   height: 20px;
   padding: 0;
-  background-color: #e4dcdc;
   font-size: 12px;
   text-align: center;
   margin: 8px;
@@ -80,9 +80,9 @@ export class Profile extends React.Component {
           contentLabel="Example Modal"
           ariaHideApp={false}
         >
-          <button className="x-btn" onClick={this.closeModal}>
+          <Button className="x-btn" onClick={this.closeModal}>
             x
-          </button>
+          </Button>
           <UserForm onChangeProfile={this.handleChangeProfile} />
         </ModalWindow>
       </ProfileCard>

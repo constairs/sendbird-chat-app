@@ -1,5 +1,8 @@
 import React from 'react';
 import PropTypes from 'prop-types';
+import { Button } from '../UI/Button';
+import { Form } from '../../components/UI/Form';
+import { Input } from '../../components/UI/Input';
 
 export class LoginForm extends React.Component {
   state = {
@@ -25,10 +28,10 @@ export class LoginForm extends React.Component {
   render() {
     const { userId, userNick } = this.state;
     return (
-      <form onSubmit={this.handleSubmit}>
+      <Form onSubmit={this.handleSubmit}>
         <label htmlFor="userId">
           <span>UserId</span>
-          <input
+          <Input
             id="userId"
             name="userId"
             value={userId}
@@ -38,7 +41,7 @@ export class LoginForm extends React.Component {
         </label>
         <label htmlFor="userLogin">
           <span>UserNick</span>
-          <input
+          <Input
             id="userNick"
             name="userNick"
             value={userNick}
@@ -46,8 +49,8 @@ export class LoginForm extends React.Component {
             type="text"
           />
         </label>
-        <button disabled={!userId}>Login</button>
-      </form>
+        <Button disabled={!userId}>Login</Button>
+      </Form>
     );
   }
 }

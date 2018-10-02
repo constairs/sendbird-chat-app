@@ -1,6 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import styled from 'styled-components';
+import { Button } from '../UI/Button';
 import { ListItem, ItemBtn } from './index.styles';
 import { InviteForm } from '../InviteForm';
 import { ImgWrap } from '../ImgRound';
@@ -71,8 +72,8 @@ export class ChannelListItem extends React.Component {
         {
           channelItem.channelType === 'group' && !channelItem.isDistinct ? (
             <div className="btns">
-              <button id="inviteBtn" onClick={this.handleInviteClick}>Пригласить</button>
-              <button id="leaveBtn" onClick={this.handleLeaveClick}>Покинуть</button>
+              <Button id="inviteBtn" onClick={this.handleInviteClick}>Пригласить</Button>
+              <Button id="leaveBtn" onClick={this.handleLeaveClick}>Покинуть</Button>
             </div>
         ) : null
         }

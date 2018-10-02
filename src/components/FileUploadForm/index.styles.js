@@ -1,5 +1,6 @@
 import styled from 'styled-components';
 import { colors } from '../../theme/theme';
+import { Button } from '../UI/Button';
 
 export const FileUpload = styled.form`
   padding: 0;
@@ -33,5 +34,8 @@ export const FileUpload = styled.form`
         color: ${colors.greyHover};
       }
     }
+  }
+  ${Button} {
+    width: 100%;
   }
 `;

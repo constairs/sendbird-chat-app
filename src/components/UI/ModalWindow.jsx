@@ -1,10 +1,15 @@
 import Modal from 'react-modal';
 import styled from 'styled-components';
+import { theme } from '../../theme/theme';
 
 export const ModalWindow = styled(Modal)`
   max-width: 300px;
   position: relative;
   z-index: 15;
+  background-color: ${theme.colors.light};
+  display: flex;
+  justify-content: center;
+  align-items: center;
   &:focus {
     outline: none
   };

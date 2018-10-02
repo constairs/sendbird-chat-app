@@ -9,6 +9,8 @@ import { faFile, faTimes } from '@fortawesome/free-solid-svg-icons';
 import { messageTyping, messageTypingEnd, userTypingStart, userTypingEnd, sendMessage, sendFileMessage } from '../../redux/chat/actions';
 import { FileUploadForm } from '../../components/FileUploadForm';
 import { ModalWindow } from '../../components/UI/ModalWindow';
+import { Button } from '../../components/UI/Button';
+import { Input } from '../../components/UI/Input';
 
 export const Field = styled.form`
   margin-top: 10px;
@@ -115,7 +117,7 @@ export class MessageField extends React.Component {
     return (
       <div>
         <Field onSubmit={this.handleSubmit}>
-          <input
+          <Input
             type="text"
             onInput={this.handleTextInput}
             name="messageText"
@@ -149,15 +151,15 @@ export class MessageField extends React.Component {
               />
             </span>
             ) : null}
-          <button
+          <Button
             onClick={this.fileUploadModal}
             type="button"
             title="Отправить файл"
             className="file-upload-modal-btn"
           >
             <FontAwesomeIcon icon={faFile} />
-          </button>
-          <button
+          </Button>
+          <Button
             className="send-message-btn"
             type="submit"
             disabled={!messageText}
@@ -168,7 +170,7 @@ export class MessageField extends React.Component {
                 <Spinner color="#ffffff" secondaryColor="#40c9ff" size={10} />
               </span>
               ) : null}
-          </button>
+          </Button>
         </Field>
         <ModalWindow
           className="modal file-upload-modal"
@@ -178,9 +180,9 @@ export class MessageField extends React.Component {
           contentLabel="Example Modal"
           ariaHideApp={false}
         >
-          <button className="x-btn" onClick={this.fileUploadModal}>
+          <Button className="x-btn" onClick={this.fileUploadModal}>
             <FontAwesomeIcon icon={faTimes} />
-          </button>
+          </Button>
           <FileUploadForm onFileSend={this.handleFileForm} />
         </ModalWindow>
       </div>

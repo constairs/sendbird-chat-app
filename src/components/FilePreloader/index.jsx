@@ -4,6 +4,7 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faTimes } from '@fortawesome/free-solid-svg-icons';
 import { Spinner } from 'react-preloading-component';
 import styled from 'styled-components';
+import { Button } from '../UI/Button';
 
 export class FilePreloader extends React.Component {
   handleCancelUploading = () => {
@@ -17,9 +18,9 @@ export class FilePreloader extends React.Component {
         <Spinner color="#ffffff" secondaryColor="#40c9ff" size={70} />
         <span className="loading-progress">{progress} %</span>
         {progress < 100 ? (
-          <button onClick={this.handleCancelUploading} className="cancel-button">
+          <Button onClick={this.handleCancelUploading} className="cancel-button">
             <FontAwesomeIcon icon={faTimes} />
-          </button>
+          </Button>
           ) : null}
       </Preloader>
     );

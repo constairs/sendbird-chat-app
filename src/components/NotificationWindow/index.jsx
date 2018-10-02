@@ -3,6 +3,7 @@ import PropTypes from 'prop-types';
 import styled from 'styled-components';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faTimes } from '@fortawesome/free-solid-svg-icons';
+import { Button } from '../UI/Button';
 
 export const WindowInner = styled.div`
   width: 280px;
@@ -64,9 +65,9 @@ export class NotificationWindow extends React.Component {
             }
           </p>
         )}
-        <button className="x-btn" onClick={this.handleClose}>
+        <Button className="x-btn" onClick={this.handleClose}>
           <FontAwesomeIcon icon={faTimes} />
-        </button>
+        </Button>
       </WindowInner>
     );
   }
