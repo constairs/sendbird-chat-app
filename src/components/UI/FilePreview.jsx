@@ -25,4 +25,19 @@ export const FilePreview = styled.div`
     display: block;
     width: 100%;
   }
+  button {
+    position: absolute;
+    border-radius: 100%;
+    width: 20px;
+    max-width: 20px;
+    height: 20px;
+    z-index: 1;
+    cursor: pointer;
+    background-color: #111111;
+    top: -5px;
+    right: -5px;
+    padding: 0;
+    margin: 0;
+    font-size: 14px;
+  }
 `;

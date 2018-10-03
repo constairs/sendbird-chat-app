@@ -22,6 +22,10 @@
     "@fortawesome/fontawesome-svg-core": "^1.2.0-14",
     "@fortawesome/free-solid-svg-icons": "^5.1.0-11",
     "@fortawesome/react-fontawesome": "0.1.0-11",
+    "@kadira/react-storybook-addon-info": "^3.4.0",
+    "@storybook/addon-actions": "^3.4.11",
+    "@storybook/addon-links": "^3.4.11",
+    "@storybook/addon-notes": "^3.4.11",
     "@storybook/react": "^4.0.0-alpha.23",
     "classnames": "2.2.5",
     "connected-react-router": "^4.3.0",
@@ -50,6 +54,7 @@
     "uuid": "^3.3.2"
   },
   "devDependencies": {
+    "@storybook/addons": "^4.0.0-alpha.23",
     "autoprefixer": "8.4.1",
     "babel-core": "6.26.3",
     "babel-eslint": "8.2.3",

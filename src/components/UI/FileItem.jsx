@@ -12,6 +12,7 @@ export const FileItem = styled.div`
     position: absolute;
     border-radius: 100%;
     width: 20px;
+    max-width: 20px;
     height: 20px;
     z-index: 1;
     cursor: pointer;
