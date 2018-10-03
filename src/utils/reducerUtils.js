@@ -6,7 +6,7 @@ export const createReducer = (initialState, handlers) =>
 
     const handler = handlers[action.type];
     if (typeof handler === 'function') {
-      return handler(state, action.payload);
+      return handler(action.payload)(state);
     }
 
     return state;

@@ -1,3 +1,8 @@
+import {
+  assoc,
+  pipe
+} from 'ramda';
+
 import { createReducer } from '../../utils/reducerUtils';
 import * as TYPES from './types';
 
@@ -6,71 +11,50 @@ export const initState = {
   logged: false,
 };
 
-const userLoginRequest = state => ({
-  ...state,
-  userFetching: true,
-});
-const userLoginSuccessed = (state, user) => ({
-  ...state,
-  userFetching: false,
-  userId: user.userId,
-  userName: user.nickname,
-  userImg: user.profileUrl,
-  logged: true,
-});
-const userLoginFailed = (state, error) => ({
-  ...state,
-  userFetching: false,
-  error,
-});
-const userLoginTimeout = (state, error) => ({
-  ...state,
-  userFetching: false,
-  error
-});
+const userLoginRequest = () => assoc('userFetching', true);
+const userLoginSuccessed = user => pipe(
+  assoc('userId', user.userId),
+  assoc('userName', user.nickname),
+  assoc('userImg', user.profileUrl),
+  assoc('userFetching', false),
+  assoc('logged', true),
+);
+const userLoginFailed = error => pipe(
+  assoc('userFetching', false),
+  assoc('error', error),
+);
 
-const clearLoginError = state => ({
-  ...state,
-  error: ''
-});
+const userLoginTimeout = error => pipe(
+  assoc('error', error),
+  assoc('userFetching', false),
+);
 
-const userReconnect = state => ({
-  ...state,
-  userFetching: true,
-});
-const userReconnectSuccessed = state => ({
-  ...state,
-  userFetching: false,
-});
-const userReconnectFailed = (state, error) => ({
-  ...state,
-  userFetching: false,
-  error,
-});
+const clearLoginError = () => assoc('error', '');
 
-const userLogoutSuccessed = () => ({
-  logged: false,
-});
-const userLogoutFailed = (state, error) => ({
-  ...state,
-  error,
-});
+const userLogoutSuccessed = () => assoc('logged', false);
+const userLogoutFailed = error => assoc('error', error);
 
-const changeUserRequest = state => ({
-  ...state,
-  userFetching: true,
-});
-const changeUserSuccessed = (state, newData) => ({
-  ...state,
-  userFetching: false,
-  userName: newData.nickname,
-  userImg: newData.profileUrl,
-});
-const changeUserFailed = (state, error) => ({
-  ...state,
-  userFetching: false,
-  error,
-});
+const changeUserRequest = () => assoc('userFetching', true);
+
+const changeUserSuccessed = newData => pipe(
+  assoc('userName', newData.nickname),
+  assoc('userImg', newData.profileUrl),
+  assoc('userFetching', false),
+);
+
+const changeUserFailed = error => pipe(
+  assoc('userFetching', false),
+  assoc('error', error),
+);
+
+const userReconnect = () => assoc('userFetching', true);
+
+const userReconnectSuccessed = () => assoc('userFetching', false);
+
+const userReconnectFailed = error => pipe(
+  assoc('error', error),
+  assoc('userFetching', false),
+);
 
 const handlers = {
   [TYPES.USER_LOGIN_REQUEST]: userLoginRequest,

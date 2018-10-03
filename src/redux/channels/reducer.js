@@ -1,3 +1,9 @@
+import {
+  assoc,
+  assocPath,
+  pipe
+} from 'ramda';
+
 import { createReducer } from '../../utils/reducerUtils';
 import * as TYPES from './types';
 import { channelListFunc, getChannelFunc, updateChannelListItem } from './helpers';
@@ -15,122 +21,157 @@ export const initState = {
   },
 };
 
-const getChannelList = state => ({
-  ...state,
-  channelsFetching: true
-});
-const getChannelListSuccessed = (state, channelsList) => ({
-  ...state,
-  openChannelList: channelListFunc(channelsList).openChannelList,
-  groupChannelList: channelListFunc(channelsList).groupChannelList,
-  channelsFetching: false
-});
-const getChannelListFailed = (state, error) => ({
-  ...state,
-  error,
-  channelsFetching: false,
-});
+const getChannelList = () => assoc('channelsFetching', true);
+const getChannelListSuccessed = channelsList => pipe(
+  assoc('openChannelList', channelListFunc(channelsList).openChannelList),
+  assoc('groupChannelList', channelListFunc(channelsList).groupChannelList),
+  assoc('channelsFetching', false),
+);
+const getChannelListFailed = error => pipe(
+  assoc('channelsFetching', false),
+  assoc('error', error),
+);
 
-const createGroupChannel = state => ({
-  ...state,
-  channelFetching: true,
-});
+const createGroupChannel = () => assoc('channelFetching', true);
 
-const createGroupChannelSuccessed = state => ({
-  ...state,
-  channelFetching: false,
-});
+const createGroupChannelSuccessed = () => assoc('channelFetching', false);
 
-const createGroupChannelFailed = (state, error) => ({
-  ...state,
-  error,
-  channelFetching: false,
-});
+const createGroupChannelFailed = error => pipe(
+  assoc('error', error),
+  assoc('channelFetching', false)
+);
 
-const inviteUsersFailed = (state, error) => ({
-  ...state,
-  error,
-});
+const inviteUsersFailed = error => assoc('error', error);
 
-const onUserJoined = (state, userData) => ({
-  ...state,
-  notificationShow: true,
-  notification: {
-    type: 'onUserJoined',
-    channel: getChannelFunc(userData.groupChannel),
-    user: userData.user,
-  },
-});
+const onUserJoined = userData => pipe(
+  assoc('notificationShow', true),
+  assocPath(['notification', 'type'], 'onUserJoined'),
+  assocPath(['notification', 'channel'], getChannelFunc(userData.groupChannel)),
+  assocPath(['notification', 'user'], userData.user),
+);
 
-const onUserLeft = (state, userData) => ({
-  ...state,
-  notificationShow: true,
-  notification: {
-    type: 'userLeft',
-    channel: getChannelFunc(userData.groupChannel),
-    user: userData.user,
-  },
-});
+const onUserLeft = userData => pipe(
+  assoc('notificationShow', true),
+  assocPath(['notification', 'type'], 'userLeft'),
+  assocPath(['notification', 'channel'], getChannelFunc(userData.groupChannel)),
+  assocPath(['notification', 'user'], userData.user),
+);
 
-const notificationOff = state => ({
-  ...state,
-  notification: {
-    type: '',
-    channel: '',
-    user: '',
-  },
-  notificationShow: false,
-});
+const notificationOff = () => pipe(
+  assoc('notificationShow', false),
+  assocPath(['notification', 'type'], ''),
+  assocPath(['notification', 'channel'], null),
+  assocPath(['notification', 'user'], ''),
+);
 
-const refreshEnteredMember = (state, members) => ({
-  ...state,
-  channel: { ...state.channel, members }
-});
+const refreshEnteredMember = members => assocPath(['channel', 'members'], members);
+const refreshedMembers = members => assocPath(['channel', 'members'], members);
 
-const refreshedMembers = (state, members) => ({
-  ...state,
-  channel: { ...state.channel, members }
-});
+const refreshFailed = error => assoc('error', error);
 
-const refreshFailed = (state, error) => ({
-  ...state,
-  error,
-});
+const changeActiveChannel = () => assoc('channel', null);
 
-const changeActiveChannel = state => ({
-  ...state,
-  channel: null
-});
+const createOpenChannel = () => assoc('channelFetching', true);
+const createOpenChannelSuccessed = () => assoc('channelFetching', false);
+const createOpenChannelFailed = error => pipe(
+  assoc('channelFetching', false),
+  assoc('error', error)
+);
 
-const createOpenChannel = state => ({
-  ...state,
-  channelFetching: true,
-});
-const createOpenChannelSuccessed = state => ({
-  ...state,
-  channelFetching: false,
-});
-const createOpenChannelFailed = (state, error) => ({
-  ...state,
-  error,
-  channelFetching: false,
-});
+const enterChannel = () => pipe(
+  assoc('channelFetching', true),
+  assoc('channel', null),
+);
 
-const enterChannel = state => ({
-  ...state,
-  channelFetching: true,
-  channel: ''
-});
-const enterChannelSuccessed = (state, channel) => ({
-  ...state,
-  channel: getChannelFunc(channel),
-  channelFetching: false,
-});
-const enterChannelFailed = (state, error) => ({
-  ...state,
-  error,
-  channelFetching: false,
-});
+const enterChannelSuccessed = channel => pipe(
+  assoc('channelFetching', false),
+  assoc('channel', getChannelFunc(channel)),
+);
+
+const enterChannelFailed = error => pipe(
+  assoc('channelFetching', false),
+  assoc('error', error),
+);
+
+// const onUserJoined = (state, userData) => ({
+//   ...state,
+//   notificationShow: true,
+//   notification: {
+//     type: 'onUserJoined',
+//     channel: getChannelFunc(userData.groupChannel),
+//     user: userData.user,
+//   },
+// });
+
+// const onUserLeft = (state, userData) => ({
+//   ...state,
+//   notificationShow: true,
+//   notification: {
+//     type: 'userLeft',
+//     channel: getChannelFunc(userData.groupChannel),
+//     user: userData.user,
+//   },
+// });
+
+// const notificationOff = state => ({
+//   ...state,
+//   notification: {
+//     type: '',
+//     channel: '',
+//     user: '',
+//   },
+//   notificationShow: false,
+// });
+
+// const refreshEnteredMember = (state, members) => ({
+//   ...state,
+//   channel: { ...state.channel, members }
+// });
+
+// const refreshedMembers = (state, members) => ({
+//   ...state,
+//   channel: { ...state.channel, members }
+// });
+
+// const refreshFailed = (state, error) => ({
+//   ...state,
+//   error,
+// });
+
+// const changeActiveChannel = state => ({
+//   ...state,
+//   channel: null
+// });
+
+// const createOpenChannel = state => ({
+//   ...state,
+//   channelFetching: true,
+// });
+// const createOpenChannelSuccessed = state => ({
+//   ...state,
+//   channelFetching: false,
+// });
+// const createOpenChannelFailed = (state, error) => ({
+//   ...state,
+//   error,
+//   channelFetching: false,
+// });
+
+// const enterChannel = state => ({
+//   ...state,
+//   channelFetching: true,
+//   channel: ''
+// });
+// const enterChannelSuccessed = (state, channel) => ({
+//   ...state,
+//   channel: getChannelFunc(channel),
+//   channelFetching: false,
+// });
+// const enterChannelFailed = (state, error) => ({
+//   ...state,
+//   error,
+//   channelFetching: false,
+// });
 
 const getParticipantsSuccessed = (state, participantList) => ({
   ...state,
