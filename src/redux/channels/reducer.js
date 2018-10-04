@@ -1,7 +1,16 @@
 import {
   assoc,
   assocPath,
-  pipe
+  pipe,
+  lensProp,
+  set,
+  over,
+  when,
+  where,
+  filter,
+  propSatisfies,
+  not,
+  equals,
 } from 'ramda';
 
 import { createReducer } from '../../utils/reducerUtils';
@@ -12,6 +21,7 @@ export const initState = {
   channelsFetching: false,
   openChannelList: [],
   groupChannelList: [],
+  channelFetching: false,
   channel: null,
   notificationShow: false,
   notification: {
@@ -21,10 +31,14 @@ export const initState = {
   },
 };
 
+const ch = lensProp('channel');
+const chList = lensProp('openChannelList');
+const grChList = lensProp('groupChannelList');
+
 const getChannelList = () => assoc('channelsFetching', true);
 const getChannelListSuccessed = channelsList => pipe(
-  assoc('openChannelList', channelListFunc(channelsList).openChannelList),
-  assoc('groupChannelList', channelListFunc(channelsList).groupChannelList),
+  set(chList, channelListFunc(channelsList).openChannelList),
+  set(grChList, channelListFunc(channelsList).groupChannelList),
   assoc('channelsFetching', false),
 );
 const getChannelListFailed = error => pipe(
@@ -60,7 +74,7 @@ const onUserLeft = userData => pipe(
 const notificationOff = () => pipe(
   assoc('notificationShow', false),
   assocPath(['notification', 'type'], ''),
-  assocPath(['notification', 'channel'], null),
+  assocPath(['notification', 'channel'], ''),
   assocPath(['notification', 'user'], ''),
 );
 
@@ -69,7 +83,7 @@ const refreshedMembers = members => assocPath(['channel', 'members'], members);
 
 const refreshFailed = error => assoc('error', error);
 
-const changeActiveChannel = () => assoc('channel', null);
+const changeActiveChannel = () => set(ch, null);
 
 const createOpenChannel = () => assoc('channelFetching', true);
 const createOpenChannelSuccessed = () => assoc('channelFetching', false);
@@ -80,12 +94,12 @@ const createOpenChannelFailed = error => pipe(
 
 const enterChannel = () => pipe(
   assoc('channelFetching', true),
-  assoc('channel', null),
+  set(ch, null),
 );
 
 const enterChannelSuccessed = channel => pipe(
   assoc('channelFetching', false),
-  assoc('channel', getChannelFunc(channel)),
+  set(ch, getChannelFunc(channel)),
 );
 
 const enterChannelFailed = error => pipe(
@@ -93,144 +107,73 @@ const enterChannelFailed = error => pipe(
   assoc('error', error),
 );
 
-// const onUserJoined = (state, userData) => ({
-//   ...state,
-//   notificationShow: true,
-//   notification: {
-//     type: 'onUserJoined',
-//     channel: getChannelFunc(userData.groupChannel),
-//     user: userData.user,
-//   },
-// });
+const getParticipantsSuccessed = participantList => assocPath(['channel', 'members'], participantList);
 
-// const onUserLeft = (state, userData) => ({
-//   ...state,
-//   notificationShow: true,
-//   notification: {
-//     type: 'userLeft',
-//     channel: getChannelFunc(userData.groupChannel),
-//     user: userData.user,
-//   },
-// });
+const getParticipantsFailed = error => assoc('error', error);
 
-// const notificationOff = state => ({
-//   ...state,
-//   notification: {
-//     type: '',
-//     channel: '',
-//     user: '',
-//   },
-//   notificationShow: false,
-// });
+const leaveChannel = () => assoc('channelFetching', true);
 
-// const refreshEnteredMember = (state, members) => ({
-//   ...state,
-//   channel: { ...state.channel, members }
-// });
+// const filterCh = when(
+//   propSatisfies(equals('group'), 'channelType'),
+//   over(
+//     grChList, filter(
+//       where({
+//         url: not(equals('channelUrl'))
+//       }),
+//       grChList
+//     )
+//   ),
+// );
 
-// const refreshedMembers = (state, members) => ({
-//   ...state,
-//   channel: { ...state.channel, members }
-// });
+const leaveChannelSuccessed = channelInfo => pipe(
+  set(ch, null),
+  assoc('channelFetching', false),
+  when(
+    propSatisfies(equals('group'), 'channelType'),
+    over(
+      grChList, filter(
+        where({
+          url: not(equals(channelInfo.channelUrl))
+        })
+      ),
+    ),
+    channelInfo
+  )
+);
 
-// const refreshFailed = (state, error) => ({
-//   ...state,
-//   error,
-// });
+const leaveChannelFailed = error => pipe(
+  assoc('channelFetching', false),
+  assoc('error', error)
+);
 
-// const changeActiveChannel = state => ({
-//   ...state,
-//   channel: null
-// });
+const channelUpdated = channel => pipe(
+  when(
+    ch && ch.url === channel.url,
+    getChannelFunc(channel)
+  ),
+  when(
+    channel.channelType === 'open',
+    set(chList, updateChannelListItem(chList, channel, 'open'))
+  ),
+  when(
+    channel.channelType === 'group',
+    set(grChList, updateChannelListItem(grChList, channel, 'group')),
+  ),
+);
 
-// const createOpenChannel = state => ({
-//   ...state,
-//   channelFetching: true,
-// });
-// const createOpenChannelSuccessed = state => ({
-//   ...state,
-//   channelFetching: false,
-// });
-// const createOpenChannelFailed = (state, error) => ({
-//   ...state,
-//   error,
-//   channelFetching: false,
-// });
+const userEntered = enterData => set(ch, getChannelFunc(enterData.channel));
 
-// const enterChannel = state => ({
-//   ...state,
-//   channelFetching: true,
-//   channel: ''
-// });
-// const enterChannelSuccessed = (state, channel) => ({
-//   ...state,
-//   channel: getChannelFunc(channel),
-//   channelFetching: false,
-// });
-// const enterChannelFailed = (state, error) => ({
-//   ...state,
-//   error,
-//   channelFetching: false,
-// });
+const userExited = exitData => set(ch, getChannelFunc(exitData.channel));
 
-const getParticipantsSuccessed = (state, participantList) => ({
-  ...state,
-  channel: { ...state.channel, members: participantList },
-});
-
-const getParticipantsFailed = (state, error) => ({
-  ...state,
-  error,
-});
-
-const leaveChannel = state => ({
-  ...state,
-  channelFetching: true,
-});
-const leaveChannelSuccessed = (state, channelInfo) => ({
-  ...state,
-  channel: null,
-  groupChannelList: channelInfo.channelType === 'group' ? state.groupChannelList.filter(channel => channel.url !== channelInfo.channelUrl) : state.groupChannelList,
-  channelFetching: false,
-});
-const leaveChannelFailed = (state, error) => ({
-  ...state,
-  channelFetching: false,
-  error
-});
-
-const channelUpdated = (state, channel) => ({
-  ...state,
-  channel: state.channel && state.channel.url === channel.url ?
-    getChannelFunc(channel) : state.channel,
-  openChannelList: channel.channelType === 'open' ? updateChannelListItem(state.openChannelList, channel, 'open') : state.openChannelList,
-  groupChannelList: channel.channelType === 'group' ? updateChannelListItem(state.groupChannelList, channel, 'group') : state.groupChannelList,
-});
-
-const userEntered = (state, enterData) => ({
-  ...state,
-  channel: getChannelFunc(enterData.channel),
-});
-
-const userExited = (state, exitData) => ({
-  ...state,
-  channel: getChannelFunc(exitData.channel),
-});
-
-const getSelectedChannel = state => ({
-  ...state,
-  channelFetching: true,
-});
-const getSelectedChannelSuccessed = (state, channel) => ({
-  ...state,
-  channel: getChannelFunc(channel),
-  channelFetching: false,
-});
-const getSelectedChannelFailed = (state, error) => ({
-  ...state,
-  channelFetching: false,
-  error
-});
+const getSelectedChannel = () => assoc('channelFetching', true);
+const getSelectedChannelSuccessed = channel => pipe(
+  set(ch, getChannelFunc(channel)),
+  assoc('channelFetching', false),
+);
+const getSelectedChannelFailed = error => pipe(
+  assoc('channelFetching', false),
+  assoc('error', error),
+);
 
 const handlers = {
   [TYPES.CREATE_GROUP_CHANNEL]: createGroupChannel,

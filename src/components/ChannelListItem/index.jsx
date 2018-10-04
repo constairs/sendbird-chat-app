@@ -35,9 +35,8 @@ export class ChannelListItem extends React.Component {
     });
   };
 
-  handleInviteUsers = (e) => {
-    e.preventDefault();
-    this.props.onInviteUsers([this.props.channelItem.url, this.state.usersToInvite]);
+  handleInviteUsers = (formData) => {
+    this.props.onInviteUsers([this.props.channelItem.url, formData]);
   };
 
   render() {

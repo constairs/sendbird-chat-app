@@ -24,7 +24,7 @@ export class InviteForm extends React.Component {
 
   handleFormSubmit = (e) => {
     e.preventDefault();
-    this.props.onInviteUsers();
+    this.props.onInviteUsers(this.state.usersToInvite);
     this.setState({ usersIdsInput: '', usersToInvite: [] });
   };
 

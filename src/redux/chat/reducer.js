@@ -1,3 +1,16 @@
+import {
+  assoc,
+  append,
+  pipe,
+  lensProp,
+  set,
+  over,
+  when,
+  ifElse,
+  map,
+  filter
+} from 'ramda';
+
 import { createReducer } from '../../utils/reducerUtils';
 import * as TYPES from './types';
 import { ENTER_CHANNEL_SUCCESSED, GET_SELECTED_CHANNEL_SUCCESSED, ON_USERS_TYPING, CHANNEL_UPDATED } from '../channels/types';
@@ -16,182 +29,254 @@ export const initState = {
   receipt: 0
 };
 
-const sendMessage = state => ({
-  ...state,
-  sendingMessage: true,
-});
+const curCh = lensProp('currentChannel');
+const mgs = lensProp('messages');
 
-const sendMessageSuccessed = (state, sendRes) => ({
-  ...state,
-  messages: state.messages.length === 10 ?
-    [...state.messages, sendRes.message].slice(1) : [...state.messages, sendRes.message],
-  sendingMessage: false,
-});
-const sendMessageFailed = (state, error) => ({
-  ...state,
-  error,
-  sendingMessage: false,
-});
+const sendMessage = () => assoc('sendingMessage', true);
 
-const sendFileMessageSuccessed = (state, sendRes) => ({
-  ...state,
-  messages: [...state.messages, sendRes.message],
-});
-const sendFileMessageFailed = (state, error) => ({
-  ...state,
-  error,
-});
-
-const deleteMessageFailed = (state, error) => ({
-  ...state,
-  error
-});
-
-const editMessageSuccessed = (state, editRes) => ({
-  ...state,
-  messages: state.messages.map(
-    cur => (cur.messageId === editRes.messageId ? editRes : cur)
-  ),
-});
-const editMessageFailed = (state, error) => ({
-  ...state,
-  error,
-});
-
-const editFileMessageSuccessed = (state, editRes) => ({
-  ...state,
-  messages: state.messages.map(
-    message => (message.messageId === editRes.messageId ? editRes : message)
-  ),
-});
-
-const editFileMessageFailed = (state, error) => ({
-  ...state,
-  error,
-});
-
-const getMessages = state => ({
-  ...state,
-  messFetching: true,
-});
-const getMessagesSuccessed = (state, messages) => ({
-  ...state,
-  messages,
-  messFetching: false,
-});
-const getMessagesFailed = (state, error) => ({
-  ...state,
-  error,
-  messFetching: false,
-});
-
-const messageReceived = (state, messageData) => {
-  if (state.currentChannel && state.currentChannel.url === messageData.channel.url) {
-    return {
-      ...state,
-      messages: state.messages.length === 10 ?
-        [...state.messages.slice(1), messageData.message]
-        :
-        [...state.messages, messageData.message]
-    };
-  }
-  return {
-    ...state,
-  };
+const sendMessageSuccessed = (sendRes) => {
+  pipe(
+    ifElse(
+      mgs.length > 10,
+      over(mgs.slice(1), append(sendRes.message)),
+      over(mgs, append(sendRes.message)),
+    ),
+    assoc('sendingMessage', false),
+  );
 };
 
-const messageUpdated = (state, updatedData) => ({
-  ...state,
-  messages: state.messages.map(
-    cur =>
-      (cur.messageId === updatedData.message.messageId
-        ? updatedData.message
-        : cur)
+const sendMessageFailed = error => pipe(
+  assoc('error', error),
+  assoc('sendingMessage', false),
+);
+
+const sendFileMessageSuccessed = sendRes => over(mgs, append(sendRes.message));
+
+const sendFileMessageFailed = error => assoc('error', error);
+
+const deleteMessageFailed = error => assoc('error', error);
+
+const editMessageSuccessed = editRes =>
+  over(mgs, map(curMess => (curMess.messageId === editRes.messageId ? editRes : curMess)));
+
+const editMessageFailed = error => assoc('error', error);
+
+const editFileMessageSuccessed = editRes =>
+  over(mgs, map(curMess => (curMess.messageId === editRes.messageId ? editRes : curMess)));
+
+const editFileMessageFailed = error => assoc('error', error);
+
+const getMessages = () => assoc('messFetching', true);
+
+const getMessagesSuccessed = messages => pipe(
+  assoc('messages', messages),
+  assoc('messFetching', false),
+);
+
+const getMessagesFailed = error => pipe(
+  assoc('error', error),
+  assoc('messFetching', false)
+);
+
+const messageReceived = messageData =>
+  when(
+    curCh && curCh.url === messageData.channel.url,
+    ifElse(
+      mgs.length > 10,
+      over(mgs.slice(1), append(messageData.message)),
+      over(mgs, append(messageData.message))
+    ),
+  );
+
+const messageUpdated = updatedData => over(
+  mgs,
+  map(curMess =>
+    (curMess.messageId === updatedData.message.messageId ? updatedData.message : curMess)
+  )
+);
+
+const messageDeleted = messageId => over(mgs, filter(curMsg => `${curMsg.messageId}` !== messageId));
+
+const messageTypingSet = userTyping => assoc('userTyping', userTyping.userTyping);
+
+const messageTypingEnd = () => assoc('userTyping', '');
+
+const messageTypingError = error => assoc('error', error);
+
+const cleanChat = () => assoc('messages', []);
+
+const onUsersTyping = typingData => when(
+  curCh && curCh.url === typingData.channel.url,
+  assoc('membersTyping', typingData.typingMembers)
+);
+
+const changeChannelGroup = channel => pipe(
+  set(curCh, channel),
+  assoc('receipt', getLeastReceiptStatusTime(channel))
+);
+
+const changeOpenChannel = openChannel => pipe(
+  set(curCh, openChannel),
+  assoc('receipt', 0)
+);
+
+const readReceipt = receiptData => pipe(
+  when(
+    curCh && curCh.url === receiptData.channelUrl,
+    assoc('receipt', receiptData.receipt),
   ),
-});
+  'receipt'
+);
 
-const messageDeleted = (state, messageId) => ({
-  ...state,
-  messages: [...state.messages.filter(cur => `${cur.messageId}` !== messageId)],
-});
+const channelUpdated = channel => pipe(
+  when(
+    curCh && curCh.url === channel.url,
+    set(curCh, getChannelFunc(channel))
+  )
+);
 
-const messageTypingSet = (state, userTyping) => ({
-  ...state,
-  userTyping: userTyping.userTyping,
-});
+const preloadFileMessage = progress => assoc('uploadProgress', progress);
 
-const messageTypingEnd = state => ({
-  ...state,
-  userTyping: ''
-});
-
-const messageTypingError = (state, error) => ({
-  ...state,
-  error,
-});
-
-const cleanChat = state => ({
-  ...state,
-  messages: [],
-});
-
-const onUsersTyping = (state, typingData) => ({
-  ...state,
-  membersTyping:
-    state.currentChannel && typingData.channel.url === state.currentChannel.url
-      ? typingData.typingMembers
-      : state.membersTyping,
-});
-
-const changeChannelGroup = (state, channel) => ({
-  ...state,
-  currentChannel: channel,
-  receipt: getLeastReceiptStatusTime(channel),
-});
-
-const changeOpenChannel = (state, openChannel) => ({
-  ...state,
-  currentChannel: openChannel,
-  receipt: 0,
-});
-
-const readReceipt = (state, receiptData) => ({
-  ...state,
-  receipt:
-    state.currentChannel && receiptData.channelUrl === state.currentChannel.url
-      ? receiptData.receipt
-      : state.receipt,
-});
-
-const channelUpdated = (state, channel) => ({
-  ...state,
-  currentChannel: state.currentChannel && state.currentChannel.url === channel.url ?
-    getChannelFunc(channel) : state.currentChannel
-});
-
-const preloadFileMessage = (state, progress) => ({
-  ...state,
-  uploadProgress: progress,
-});
-
-const replaceMessage = (state, replacer) => ({
-  ...state,
-  messages: state.messages.map(
-    message =>
-      (message.messageId === replacer.messageId ? replacer.message : message)
+const replaceMessage = replacer => pipe(
+  over(mgs, map(curMess =>
+    (curMess.messageId === replacer.messageId ? replacer.message : curMess))
   ),
-  uploadProgress: { reqId: '', progress: 0 },
-});
+  assoc('uploadProgress', { reqId: '', progress: 0 }),
+);
 
-const cancelUploadingSuccessed = (state, messageId) => ({
-  ...state,
-  messages: state.messages.filter(message => message.messageId !== messageId),
-});
+const cancelUploadingSuccessed = messageId => over(
+  mgs, filter(curMess => curMess.messageId !== messageId)
+);
 
-const cancelUploadingFailed = (state, error) => ({
-  ...state,
-  error,
-});
+const cancelUploadingFailed = error => assoc('error', error);
+
+// const sendMessageSuccessed = (state, sendRes) => ({
+//   ...state,
+//   messages: state.messages.length === 10 ?
+//     [...state.messages, sendRes.message].slice(1) : [...state.messages, sendRes.message],
+//   sendingMessage: false,
+// });
+// const sendMessageFailed = (state, error) => ({
+//   ...state,
+//   error,
+//   sendingMessage: false,
+// });
+
+// const sendFileMessageSuccessed = (state, sendRes) => ({
+//   ...state,
+//   messages: [...state.messages, sendRes.message],
+// });
+// const sendFileMessageFailed = (state, error) => ({
+//   ...state,
+//   error,
+// });
+
+// const deleteMessageFailed = (state, error) => ({
+//   ...state,
+//   error
+// });
+
+// const editMessageSuccessed = (state, editRes) => ({
+//   ...state,
+//   messages: state.messages.map(
+//     cur => (cur.messageId === editRes.messageId ? editRes : cur)
+//   ),
+// });
+// const editMessageFailed = (state, error) => ({
+//   ...state,
+//   error,
+// });
+
+// const editFileMessageSuccessed = (state, editRes) => ({
+//   ...state,
+//   messages: state.messages.map(
+//     message => (message.messageId === editRes.messageId ? editRes : message)
+//   ),
+// });
+
+// const editFileMessageFailed = (state, error) => ({
+//   ...state,
+//   error,
+// });
+
+
+// const messageReceived = (state, messageData) => {
+//   if (state.currentChannel && state.currentChannel.url === messageData.channel.url) {
+//     return {
+//       ...state,
+//       messages: state.messages.length === 10 ?
+//         [...state.messages.slice(1), messageData.message]
+//         :
+//         [...state.messages, messageData.message]
+//     };
+//   }
+//   return {
+//     ...state,
+//   };
+// };
+
+
+// const messageUpdated = (state, updatedData) => ({
+//   ...state,
+//   messages: state.messages.map(
+//     cur =>
+//       (cur.messageId === updatedData.message.messageId
+//         ? updatedData.message
+//         : cur)
+//   ),
+// });
+
+// const messageDeleted = (state, messageId) => ({
+//   ...state,
+//   messages: [...state.messages.filter(cur => `${cur.messageId}` !== messageId)],
+// });
+
+// const messageTypingSet = (state, userTyping) => ({
+//   ...state,
+//   userTyping: userTyping.userTyping,
+// });
+
+// const messageTypingEnd = state => ({
+//   ...state,
+//   userTyping: ''
+// });
+
+// const messageTypingError = (state, error) => ({
+//   ...state,
+//   error,
+// });
+
+// const onUsersTyping = (state, typingData) => ({
+//   ...state,
+//   membersTyping:
+//     state.currentChannel && typingData.channel.url === state.currentChannel.url
+//       ? typingData.typingMembers
+//       : state.membersTyping,
+// });
+
+// const preloadFileMessage = (state, progress) => ({
+//   ...state,
+//   uploadProgress: progress,
+// });
+
+// const replaceMessage = (state, replacer) => ({
+//   ...state,
+//   messages: state.messages.map(
+//     message =>
+//       (message.messageId === replacer.messageId ? replacer.message : message)
+//   ),
+//   uploadProgress: { reqId: '', progress: 0 },
+// });
+
+// const cancelUploadingSuccessed = (state, messageId) => ({
+//   ...state,
+//   messages: state.messages.filter(message => message.messageId !== messageId),
+// });
+
+// const cancelUploadingFailed = (state, error) => ({
+//   ...state,
+//   error,
+// });
 
 const handlers = {
   [TYPES.SEND_MESSAGE]: sendMessage,
