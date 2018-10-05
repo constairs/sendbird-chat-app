@@ -138,7 +138,7 @@ describe('channels reducer tests', () => {
   it('enterChannel', () => {
     const state = reducer(initState, openChannelsActions.enterChannel());
     expect(state.channelFetching).toBe(true);
-    expect(state.channel).toBe('');
+    expect(state.channel).toBe(null);
   });
   it('enterChannelSuccessed', () => {
     const state = reducer(initState, openChannelsActions.enterChannelSuccessed(openChannel));

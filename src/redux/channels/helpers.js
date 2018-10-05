@@ -54,11 +54,18 @@ export function getChannelFunc(channel) {
 }
 
 
-export function updateChannelListItem(channelList, channel, type) {
+// export function updateChannelListItem(channelList, channel, type) {
+//   if (type === 'open') {
+//     return channelList.map(channelItem =>
+//       (channelItem.url === channel.url ? openChannelItemCreator(channel) : channelItem));
+//   }
+//   return channelList.map(channelItem =>
+//     (channelItem.url === channel.url ? groupChannelItemCreator(channel) : channelItem));
+// }
+
+export function updateChannelListItem(channel, type) {
   if (type === 'open') {
-    return channelList.map(channelItem =>
-      (channelItem.url === channel.url ? openChannelItemCreator(channel) : channelItem));
+    return openChannelItemCreator(channel);
   }
-  return channelList.map(channelItem =>
-    (channelItem.url === channel.url ? groupChannelItemCreator(channel) : channelItem));
+  return groupChannelItemCreator(channel);
 }

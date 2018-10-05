@@ -6,11 +6,11 @@ import {
   set,
   over,
   when,
-  where,
   filter,
+  map,
   propSatisfies,
-  not,
   equals,
+  path
 } from 'ramda';
 
 import { createReducer } from '../../utils/reducerUtils';
@@ -34,6 +34,7 @@ export const initState = {
 const ch = lensProp('channel');
 const chList = lensProp('openChannelList');
 const grChList = lensProp('groupChannelList');
+
 
 const getChannelList = () => assoc('channelsFetching', true);
 const getChannelListSuccessed = channelsList => pipe(
@@ -113,31 +114,16 @@ const getParticipantsFailed = error => assoc('error', error);
 
 const leaveChannel = () => assoc('channelFetching', true);
 
-// const filterCh = when(
-//   propSatisfies(equals('group'), 'channelType'),
-//   over(
-//     grChList, filter(
-//       where({
-//         url: not(equals('channelUrl'))
-//       }),
-//       grChList
-//     )
-//   ),
-// );
-
 const leaveChannelSuccessed = channelInfo => pipe(
   set(ch, null),
   assoc('channelFetching', false),
   when(
-    propSatisfies(equals('group'), 'channelType'),
+    () => propSatisfies(equals('group'), 'channelType', channelInfo),
     over(
       grChList, filter(
-        where({
-          url: not(equals(channelInfo.channelUrl))
-        })
+        item => item.url !== channelInfo.channelUrl
       ),
     ),
-    channelInfo
   )
 );
 
@@ -146,20 +132,43 @@ const leaveChannelFailed = error => pipe(
   assoc('error', error)
 );
 
-const channelUpdated = channel => pipe(
+const channelUpdated = channel =>
   when(
-    ch && ch.url === channel.url,
-    getChannelFunc(channel)
-  ),
-  when(
-    channel.channelType === 'open',
-    set(chList, updateChannelListItem(chList, channel, 'open'))
-  ),
-  when(
-    channel.channelType === 'group',
-    set(grChList, updateChannelListItem(grChList, channel, 'group')),
-  ),
-);
+    propSatisfies(equals(channel.url), path(['channel', 'url'])),
+    pipe(
+      set(ch, getChannelFunc(channel)),
+      when(
+        () => propSatisfies(equals('open'), 'channelType', channel),
+        set(
+          chList,
+          map(item => (item.url === channel.url ? updateChannelListItem(channel, 'open') : item))
+        )
+      ),
+      when(
+        () => propSatisfies(equals('group'), 'channelType', channel),
+        set(
+          grChList,
+          map(item => (item.url === channel.url ? updateChannelListItem(channel, 'group') : item))
+        )
+      ),
+    )
+  );
+  // pipe(
+  //   when(
+  //     propSatisfies(equals(channel.url), path(['channel', 'url'])),
+  //     set(ch, getChannelFunc(channel)),
+  //   ),
+  //   when(
+  //     propSatisfies(equals(channel.url), path(['channel', 'url'])),
+  //     // set(chList, updateChannelListItem(prop('openChannelList'), channel, 'open'))
+
+  //     set(chList, updateChannelListItem(channel, 'open'))
+  //   ),
+  //   when(
+  //     propSatisfies(equals(channel.url), path(['channel', 'url'])),
+  //     set(grChList, updateChannelListItem(chList, channel, 'group')),
+  //   ),
+  // );
 
 const userEntered = enterData => set(ch, getChannelFunc(enterData.channel));
 
