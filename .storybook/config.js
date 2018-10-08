@@ -8,7 +8,7 @@ addDecorator(withThemesProvider([theme1, theme2]));
 setAddon(JSXAddon);
 
 function loadStories() {
-  require('../src/components/stories/index.jsx');
+  require('./stories/index.jsx');
 }
 
 configure(loadStories, module);

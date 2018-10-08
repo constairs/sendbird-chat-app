@@ -25,7 +25,7 @@ describe('<LoginForm />', () => {
     const form = shallow(<LoginForm
       onLogin={mock}
     />);
-    form.find(Form).simulate('submit', mockedEvent);
+    form.simulate('submit', mockedEvent);
     const formData = {
       userId: form.state('userId'),
       userNick: form.state('userNick'),

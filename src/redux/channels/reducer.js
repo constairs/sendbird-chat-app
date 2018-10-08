@@ -136,23 +136,23 @@ const leaveChannelFailed = error => pipe(
 );
 
 const channelUpdated = channel =>
-  when(
-    equals(prop('url', channel)), view(chUrl),
-    pipe(
+  pipe(
+    when(
+      equals(prop('url', channel)), view(chUrl),
       set(ch, getChannelFunc(channel)),
-      when(
-        () => propSatisfies(equals('open'), 'channelType', channel),
-        over(
-          chList,
-          map(item => (item.url === channel.url ? updateChannelListItem(channel, 'open') : item))
-        )
-      ),
-      when(
-        () => propSatisfies(equals('group'), 'channelType', channel),
-        over(
-          grChList,
-          map(item => (item.url === channel.url ? updateChannelListItem(channel, 'group') : item))
-        )
+    ),
+    when(
+      () => propSatisfies(equals('open'), 'channelType', channel),
+      over(
+        chList,
+        map(item => (item.url === channel.url ? updateChannelListItem(channel, 'open') : item))
+      )
+    ),
+    when(
+      () => propSatisfies(equals('group'), 'channelType', channel),
+      over(
+        grChList,
+        map(item => (item.url === channel.url ? updateChannelListItem(channel, 'group') : item))
       )
     )
   );

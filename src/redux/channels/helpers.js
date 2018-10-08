@@ -53,16 +53,6 @@ export function getChannelFunc(channel) {
   return groupChannelItemCreator(channel);
 }
 
-
-// export function updateChannelListItem(channelList, channel, type) {
-//   if (type === 'open') {
-//     return channelList.map(channelItem =>
-//       (channelItem.url === channel.url ? openChannelItemCreator(channel) : channelItem));
-//   }
-//   return channelList.map(channelItem =>
-//     (channelItem.url === channel.url ? groupChannelItemCreator(channel) : channelItem));
-// }
-
 export function updateChannelListItem(channel, type) {
   if (type === 'open') {
     return openChannelItemCreator(channel);

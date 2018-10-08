@@ -114,18 +114,14 @@ const changeOpenChannel = openChannel => pipe(
   assoc('receipt', 0)
 );
 
-const readReceipt = ({ receipt, channelUrl }) => pipe(
-  when(
-    () => propSatisfies(equals('url', channelUrl), view(curChUrl)),
-    assoc('receipt', receipt),
-  )
+const readReceipt = ({ receipt, channelUrl }) => when(
+  () => propSatisfies(equals('url', channelUrl), view(curChUrl)),
+  assoc('receipt', receipt),
 );
 
-const channelUpdated = channel => pipe(
-  when(
-    equals(prop('url', channel)), view(curChUrl),
-    set(curCh, getChannelFunc(channel))
-  )
+const channelUpdated = channel => when(
+  equals(prop('url', channel)), view(curChUrl),
+  set(curCh, getChannelFunc(channel))
 );
 
 const preloadFileMessage = progress => assoc('uploadProgress', progress);

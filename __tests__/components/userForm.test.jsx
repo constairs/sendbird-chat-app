@@ -29,7 +29,7 @@ describe('<LoginForm />', () => {
       <UserForm
         onChangeProfile={mock}
       />);
-    form.find(Form).simulate('submit', mockEvent);
+    form.simulate('submit', mockEvent);
     expect(mock).toHaveBeenCalledWith([form.state('userNick'), form.state('userImg')]);
   });
 });
