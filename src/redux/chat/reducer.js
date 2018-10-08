@@ -3,20 +3,16 @@ import {
   append,
   pipe,
   lensProp,
+  lensPath,
   set,
+  view,
   over,
   when,
-  ifElse,
   map,
   filter,
   propSatisfies,
   equals,
-  gt,
-  slice,
-  length,
   prop,
-  path,
-  __
 } from 'ramda';
 
 import { createReducer } from '../../utils/reducerUtils';
@@ -38,20 +34,13 @@ export const initState = {
 };
 
 const curCh = lensProp('currentChannel');
+const curChUrl = lensPath(['currentChannel', 'url']);
 const mgs = lensProp('messages');
 
 const sendMessage = () => assoc('sendingMessage', true);
 
 const sendMessageSuccessed = ({ message }) => pipe(
   over(mgs, append(message)),
-  ifElse(
-    propSatisfies(gt(__, 10), length(prop('messages'))),
-    pipe(
-      over(mgs, slice(1)),
-      over(mgs, append(message))
-    ),
-    over(mgs, append(message)),
-  ),
   assoc('sendingMessage', false),
 );
 
@@ -89,15 +78,8 @@ const getMessagesFailed = error => pipe(
 );
 
 const messageReceived = ({ channel, message }) => when(
-  propSatisfies(equals(prop('url', channel)), path(['currentChannel', 'url'])),
-  ifElse(
-    propSatisfies(gt(__, 10), length(prop('messages'))),
-    pipe(
-      over(mgs, slice(1)),
-      over(mgs, append(message))
-    ),
-    over(mgs, append(message))
-  ),
+  equals(prop('url', channel)), view(curChUrl),
+  over(mgs, append(message))
 );
 
 const messageUpdated = updatedData => over(
@@ -118,7 +100,7 @@ const messageTypingError = error => assoc('error', error);
 const cleanChat = () => assoc('messages', []);
 
 const onUsersTyping = ({ channel, typingMembers }) => when(
-  propSatisfies(equals(prop('url', channel)), path(['currentChannel', 'url'])),
+  equals(prop('url', channel)), view(curChUrl),
   assoc('membersTyping', typingMembers)
 );
 
@@ -134,14 +116,14 @@ const changeOpenChannel = openChannel => pipe(
 
 const readReceipt = ({ receipt, channelUrl }) => pipe(
   when(
-    () => propSatisfies(equals(curCh.url, channelUrl)),
+    () => propSatisfies(equals('url', channelUrl), view(curChUrl)),
     assoc('receipt', receipt),
   )
 );
 
 const channelUpdated = channel => pipe(
   when(
-    propSatisfies(equals(prop('url', channel)), path(['currentChannel', 'url'])),
+    equals(prop('url', channel)), view(curChUrl),
     set(curCh, getChannelFunc(channel))
   )
 );

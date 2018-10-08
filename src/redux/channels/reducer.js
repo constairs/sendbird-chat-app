@@ -3,14 +3,16 @@ import {
   assocPath,
   pipe,
   lensProp,
+  lensPath,
   set,
+  view,
   over,
   when,
   filter,
   map,
   propSatisfies,
   equals,
-  path
+  prop
 } from 'ramda';
 
 import { createReducer } from '../../utils/reducerUtils';
@@ -32,6 +34,7 @@ export const initState = {
 };
 
 const ch = lensProp('channel');
+const chUrl = lensPath(['channel', 'url']);
 const chList = lensProp('openChannelList');
 const grChList = lensProp('groupChannelList');
 
@@ -134,41 +137,25 @@ const leaveChannelFailed = error => pipe(
 
 const channelUpdated = channel =>
   when(
-    propSatisfies(equals(channel.url), path(['channel', 'url'])),
+    equals(prop('url', channel)), view(chUrl),
     pipe(
       set(ch, getChannelFunc(channel)),
       when(
         () => propSatisfies(equals('open'), 'channelType', channel),
-        set(
+        over(
           chList,
           map(item => (item.url === channel.url ? updateChannelListItem(channel, 'open') : item))
         )
       ),
       when(
         () => propSatisfies(equals('group'), 'channelType', channel),
-        set(
+        over(
           grChList,
           map(item => (item.url === channel.url ? updateChannelListItem(channel, 'group') : item))
         )
-      ),
+      )
     )
   );
-  // pipe(
-  //   when(
-  //     propSatisfies(equals(channel.url), path(['channel', 'url'])),
-  //     set(ch, getChannelFunc(channel)),
-  //   ),
-  //   when(
-  //     propSatisfies(equals(channel.url), path(['channel', 'url'])),
-  //     // set(chList, updateChannelListItem(prop('openChannelList'), channel, 'open'))
-
-  //     set(chList, updateChannelListItem(channel, 'open'))
-  //   ),
-  //   when(
-  //     propSatisfies(equals(channel.url), path(['channel', 'url'])),
-  //     set(grChList, updateChannelListItem(chList, channel, 'group')),
-  //   ),
-  // );
 
 const userEntered = enterData => set(ch, getChannelFunc(enterData.channel));
 
