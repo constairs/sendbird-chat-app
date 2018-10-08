@@ -90,7 +90,29 @@ export class Chat extends React.Component {
           <Preloader color="#ffffff" secondaryColor="#40c9ff" size={50} />
           ) : null}
         <div className="chat-box" ref={this.ref}>
-          {messages.map(message => (
+          {
+
+           messages.length > 10 ?
+
+            messages.slice((messages.length - 10), messages.length).map(message => (
+              <MessageItem
+                message={message}
+                onDeleteMessage={this.handleMessageDelete}
+                onEditMessage={this.handleMessageEdit}
+                key={message.createdAt}
+                userId={user.userId}
+                uploadProgress={this.props.uploadProgress}
+                onCancelUploading={this.handleCancelUploading}
+                isNotRead={
+                 this.props.readReceipt < message.createdAt &&
+                 this.props.readReceipt !== 0
+               }
+              />
+           ))
+
+          :
+
+          messages.map(message => (
             <MessageItem
               message={message}
               onDeleteMessage={this.handleMessageDelete}
@@ -104,7 +126,8 @@ export class Chat extends React.Component {
                 this.props.readReceipt !== 0
               }
             />
-          ))}
+          ))
+        }
         </div>
         <ChatMessageField
           channelUrl={channelUrl}

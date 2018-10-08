@@ -191,8 +191,9 @@ describe('channels reducer tests', () => {
     };
     const state = reducer(stateBefore, channelsActions.channelUpdated(newChannel));
     expect(state.channel).toEqual(getChannelFunc(newChannel));
-    expect(state.openChannelList).toEqual(newChannel.channelType === 'open' ? updateChannelListItem(stateBefore.openChannelList, newChannel, 'open') : stateBefore.openChannelList);
-    expect(state.groupChannelList).toEqual(newChannel.channelType === 'group' ? updateChannelListItem(stateBefore.groupChannelList, newChannel, 'group') : stateBefore.groupChannelList);
+
+    expect(state.openChannelList).toEqual(newChannel.channelType === 'open' ? [updateChannelListItem(newChannel, 'open')] : stateBefore.openChannelList);
+    expect(state.groupChannelList).toEqual(newChannel.channelType === 'group' ? [updateChannelListItem(newChannel, 'group')] : stateBefore.groupChannelList);
   });
   it('userEntered', () => {
     const stateBefore = {
