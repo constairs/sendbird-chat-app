@@ -3,6 +3,7 @@ import { shallow } from 'enzyme';
 
 import { Channels } from '../../src/containers/ChannelsContainer';
 import { Preloader } from '../../src/components/UI/Preloader';
+import { ChannelsPage } from '../../src/containers/ChannelsContainer/index.styles';
 
 const mockObj = {
   fn: jest.fn(),
@@ -24,11 +25,6 @@ const user = {
   userName: 'user',
   userImg: 'https://img.jpg',
   userFetching: true,
-};
-
-const mockEvent = {
-  target: {},
-  preventDefault: () => {}
 };
 
 describe('<Channels />', () => {
@@ -53,24 +49,21 @@ describe('<Channels />', () => {
         channels={channels}
       />
     );
-    expect(wrapper.find('.channel-page-content')).toExist();
+    expect(wrapper.find(ChannelsPage)).toExist();
   });
-  // it('should show modal', () => {
-  //   const wrapper = shallow(
-  //     <Channels
-  //       channelsActions={mockObj}
-  //       groupChannelsActions={mockObj}
-  //       createOpenChannel={jest.fn}
-  //       user={user}
-  //       channels={channels}
-  //     />
-  //   );
-  //   wrapper.find('button[name="createOpen"]').simulate('click', mockEvent);
-  //   expect(wrapper.state('modalIsOpen')).toBe(true);
-  //   wrapper.setState({ modalIsOpen: false });
-  //   wrapper.find('button[name="createGroup"]').simulate('click', mockEvent);
-  //   expect(wrapper.state('modalIsOpen')).toBe(true);
-  // });
+  it('should show modal', () => {
+    const wrapper = shallow(
+      <Channels
+        channelsActions={mockObj}
+        groupChannelsActions={mockObj}
+        createOpenChannel={jest.fn}
+        user={user}
+        channels={channels}
+      />
+    );
+    wrapper.setState({ modalIsOpen: true });
+    expect(wrapper.state('modalIsOpen')).toBe(true);
+  });
   it('should hide modal', () => {
     const wrapper = shallow(
       <Channels

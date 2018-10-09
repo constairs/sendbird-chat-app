@@ -1,7 +1,7 @@
 import React from 'react';
 import { shallow } from 'enzyme';
 
-import { ChannelList, List, ListPreloader } from '../../src/components/ChannelList';
+import { ChannelList, List } from '../../src/components/ChannelList';
 import { Preloader } from '../../src/components/UI/Preloader';
 
 const channelsFetching = true;

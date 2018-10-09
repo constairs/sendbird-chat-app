@@ -6,7 +6,7 @@ import { ListItem, ItemBtn } from './index.styles';
 import { InviteForm } from '../InviteForm';
 import { ImgWrap } from '../ImgRound';
 
-const StyledImg = styled(ImgWrap)`
+export const StyledImg = styled(ImgWrap)`
   width: 36px;
   height: 36px;
   min-width: 36px;
@@ -84,10 +84,14 @@ export class ChannelListItem extends React.Component {
   }
 }
 
+ChannelListItem.defaultProps = {
+  isActive: false,
+};
+
 ChannelListItem.propTypes = {
   selectedChan: PropTypes.func.isRequired,
   onLeave: PropTypes.func.isRequired,
   onInviteUsers: PropTypes.func.isRequired,
   channelItem: PropTypes.objectOf(PropTypes.any).isRequired,
-  isActive: PropTypes.bool.isRequired,
+  isActive: PropTypes.bool,
 };

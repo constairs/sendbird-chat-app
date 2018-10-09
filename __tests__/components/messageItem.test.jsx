@@ -3,9 +3,10 @@ import { shallow } from 'enzyme';
 import moment from 'moment';
 
 import { user } from '../fixtures';
-import { MessageItem, MessageFilePreview } from '../../src/components/MessageItem';
-import { ImgWrap } from '../../src/components/ImgRound';
+import { MessageItem, StyledImg } from '../../src/components/MessageItem';
 import { EditMessageForm } from '../../src/components/EditMessageForm';
+import { MessageFilePreview } from '../../src/components/MessageFilePreview';
+import { FilePreloader } from '../../src/components/FilePreloader';
 
 const message = {
   sender: {
@@ -58,53 +59,35 @@ describe('<MessageItem />', () => {
     );
     expect(messageItem.find('.sender-nick').text()).toBe(message.sender.nickname);
     expect(messageItem.find('.sending-date').text()).toBe(moment(message.createdAt).format('DD/MM/YY hh:mm a'));
-    expect(messageItem.find(ImgWrap).prop('src')).toBe(message.sender.profileUrl);
+    expect(messageItem.find(StyledImg).prop('src')).toBe(message.sender.profileUrl);
   });
-  // it('should render file message preview', () => {
-  //   const messageItem = shallow(
-  //     <MessageItem
-  //       message={fileMessage}
-  //       userId={user.userId}
-  //       uploadProgress={uploadProgress}
-  //       onDeleteMessage={mock}
-  //       onEditMessage={mock}
-  //       onCancelUploading={mock}
-  //     />
-  //   );
-  //   expect(messageItem.find(MessageFilePreview).children()).toExist();
-  // });
-  // it('should render image message preview', () => {
-  //   const imageMessage = {
-  //     ...fileMessage,
-  //     customType: 'IMAGE',
-  //   };
-  //   const messageItem = shallow(
-  //     <MessageItem
-  //       userId={user.userId}
-  //       uploadProgress={uploadProgress}
-  //       message={imageMessage}
-  //       onDeleteMessage={mock}
-  //       onEditMessage={mock}
-  //       onCancelUploading={mock}
-  //     />
-  //   );
-  //   expect(messageItem.find(MessageFilePreview).find('img').prop('src')).toBe(imageMessage.url);
-  //   expect(messageItem.find(MessageFilePreview).find('img').prop('alt')).toBe(imageMessage.name);
-  // });
-  // it('should render file message link', () => {
-  //   const messageItem = shallow(
-  //     <MessageItem
-  //       userId={user.userId}
-  //       uploadProgress={uploadProgress}
-  //       message={fileMessage}
-  //       onDeleteMessage={mock}
-  //       onEditMessage={mock}
-  //       onCancelUploading={mock}
-  //     />
-  //   );
-  //   expect(messageItem.find('.file-message-item a').prop('href')).toBe(fileMessage.url);
-  //   expect(messageItem.find('.file-message-item a').text()).toBe(`${fileMessage.name} (${fileMessage.size} кб)`);
-  // });
+  it('should render file message preview', () => {
+    const messageItem = shallow(
+      <MessageItem
+        message={fileMessage}
+        userId={user.userId}
+        uploadProgress={uploadProgress}
+        onDeleteMessage={mock}
+        onEditMessage={mock}
+        onCancelUploading={mock}
+      />
+    );
+    expect(messageItem.find(MessageFilePreview)).toExist();
+  });
+  it('should render file message link', () => {
+    const messageItem = shallow(
+      <MessageItem
+        userId={user.userId}
+        uploadProgress={uploadProgress}
+        message={fileMessage}
+        onDeleteMessage={mock}
+        onEditMessage={mock}
+        onCancelUploading={mock}
+      />
+    );
+    expect(messageItem.find('.file-info a').prop('href')).toBe(fileMessage.url);
+    expect(messageItem.find('.file-info a').text()).toBe(`${fileMessage.name} (${fileMessage.size} кб)`);
+  });
   it('should render message text', () => {
     const messageItem = shallow(
       <MessageItem
@@ -148,43 +131,23 @@ describe('<MessageItem />', () => {
     );
     expect(messageItem.find('.message-text').text()).toBe(fileMessage.data);
   });
-  // it('should render loading progress', () => {
-  //   const fakeMessage = {
-  //     ...fileMessage,
-  //     isFake: true,
-  //   };
-  //   const messageItem = shallow(
-  //     <MessageItem
-  //       userId={user.userId}
-  //       uploadProgress={uploadProgress}
-  //       message={fakeMessage}
-  //       onDeleteMessage={mock}
-  //       onEditMessage={mock}
-  //       onCancelUploading={mock}
-  //     />
-  //   );
-  //   expect(messageItem.find('.loading-progress').text()).toBe(`${uploadProgress.progress} %`);
-  // });
-  // it('should render upload cancel upload button', () => {
-  //   const progress = {
-  //     progress: 66
-  //   };
-  //   const fakeMessage = {
-  //     ...fileMessage,
-  //     isFake: true
-  //   };
-  //   const messageItem = shallow(
-  //     <MessageItem
-  //       userId={user.userId}
-  //       uploadProgress={progress}
-  //       message={fakeMessage}
-  //       onDeleteMessage={mock}
-  //       onEditMessage={mock}
-  //       onCancelUploading={mock}
-  //     />
-  //   );
-  //   expect(messageItem.find(MessageFilePreview).find('button')).toExist();
-  // });
+  it('should render file preloader', () => {
+    const fakeMessage = {
+      ...fileMessage,
+      isFake: true,
+    };
+    const messageItem = shallow(
+      <MessageItem
+        userId={user.userId}
+        uploadProgress={uploadProgress}
+        message={fakeMessage}
+        onDeleteMessage={mock}
+        onEditMessage={mock}
+        onCancelUploading={mock}
+      />
+    );
+    expect(messageItem.find(FilePreloader)).toExist();
+  });
   it('should render sender buttons', () => {
     const messageItem = shallow(
       <MessageItem
@@ -198,25 +161,22 @@ describe('<MessageItem />', () => {
     );
     expect(messageItem.find('.edit-btn')).toExist();
   });
-  // it('should show edit message form', () => {
-  //   const messageItem = shallow(
-  //     <MessageItem
-  //       userId={user.userId}
-  //       uploadProgress={uploadProgress}
-  //       message={message}
-  //       onDeleteMessage={mock}
-  //       onEditMessage={mock}
-  //       onCancelUploading={mock}
-  //     />
-  //   );
-  //   expect(messageItem.state('onEdit')).toBe(false);
-  //   messageItem.find('.edit-btn').simulate('click');
-  //   expect(messageItem.state('onEdit')).toBe(true);
-  //   expect(messageItem.find(EditMessageForm)).toExist();
-  //   expect(messageItem.state('messageInput')).toBe(message.message);
-  //   messageItem.find(EditMessageForm).find('input').simulate('change', mockEvent);
-  //   expect(messageItem.state('messageInput')).toBe(messageItem.find('.edit-message-form input').prop('value'));
-  // });
+  it('should show edit message form', () => {
+    const messageItem = shallow(
+      <MessageItem
+        userId={user.userId}
+        uploadProgress={uploadProgress}
+        message={message}
+        onDeleteMessage={mock}
+        onEditMessage={mock}
+        onCancelUploading={mock}
+      />
+    );
+    expect(messageItem.state('onEdit')).toBe(false);
+    messageItem.find('.edit-btn').simulate('click');
+    expect(messageItem.state('onEdit')).toBe(true);
+    expect(messageItem.find(EditMessageForm)).toExist();
+  });
   it('should call onDelete func', () => {
     const messageItem = shallow(
       <MessageItem
@@ -243,7 +203,7 @@ describe('<MessageItem />', () => {
       />
     );
     messageItem.setState({ onEdit: true });
-    messageItem.find(EditMessageForm).simulate('submit', mockEvent);
-    expect(mock).toHaveBeenCalledWith([message.messageType, message.messageId, messageItem.state('messageInput')]);
+    messageItem.find(EditMessageForm).simulate('onEditMessage', mockEvent);
+    expect(mock).toHaveBeenCalledWith(message);
   });
 });

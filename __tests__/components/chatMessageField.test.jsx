@@ -26,12 +26,6 @@ const membersTyping = [
     nickname: 'test2'
   }
 ];
-// const fileToUpload = {
-//   name: 'ddd',
-//   size: 111,
-//   preview: 'blob:http://0.0.0.0:3003/bc15c8f6-0252-47a0-b179-2e4bf52bf164',
-//   type: 'image/jpeg'
-// };
 
 const chatActions = {
   messageTyping: jest.fn(),
@@ -115,41 +109,6 @@ describe('<MessageField />', () => {
     );
     expect(wrapper.find('.send-message-btn span')).toExist();
   });
-  // it('should render file for uploading', () => {
-  //   const wrapper = shallow(
-  //     <MessageField
-  //       channelUrl={channelUrl}
-  //       channelType={channelType}
-  //       chatActions={{ fn: jest.fn() }}
-  //       user={user}
-  //       userTyping={userTyping}
-  //       sendingMessage
-  //       membersTyping={membersTyping}
-  //     />
-  //   );
-  //   expect(wrapper.state('fileToUpload')).toBe('');
-  //   wrapper.setState({ fileToUpload });
-  //   expect(wrapper.find('.files-to-upload')).toExist();
-  //   expect(wrapper.find('.file-preview').children()).toExist();
-  //   wrapper.setState({ customMessageType: 'IMAGE' });
-  //   expect(wrapper.find('.files-to-upload img').prop('src')).toBe(fileToUpload.preview);
-  //   expect(wrapper.find('.file-item p').text()).toBe(`${fileToUpload.size} кб`);
-  // });
-  // it('should clear file for uploading', () => {
-  //   const wrapper = shallow(
-  //     <MessageField
-  //       channelUrl={channelUrl}
-  //       channelType={channelType}
-  //       chatActions={{ fn: jest.fn() }}
-  //       user={user}
-  //       userTyping={userTyping}
-  //       sendingMessage
-  //       membersTyping={membersTyping}
-  //     />
-  //   );
-  //   wrapper.setState({ fileToUpload });
-  //   wrapper.find('.clear-file-upload').simulate('click');
-  // });
   it('should call sendMessage & messageTypingEnd/userTypingEnd', () => {
     const wrapper = shallow(
       <MessageField

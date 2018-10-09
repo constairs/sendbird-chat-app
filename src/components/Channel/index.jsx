@@ -11,7 +11,7 @@ import {
 import { ChatBox } from '../../containers/ChatBox';
 import { UserList } from '../../containers/UserList';
 
-const StyledImg = styled(ImgWrap)`
+export const StyledImg = styled(ImgWrap)`
   margin-right: 15px;
 `;
 

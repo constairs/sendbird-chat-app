@@ -19,7 +19,7 @@ const StyledImg = styled(ImgWrap)`
   `};
 `;
 
-const List = ({ ...props }) => {
+export const List = ({ ...props }) => {
   const { channel } = props;
   return (
     <StyledUserList>

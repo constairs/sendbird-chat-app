@@ -2,7 +2,6 @@ import React from 'react';
 import { shallow } from 'enzyme';
 
 import { CreateGroupForm } from '../../src/components/CreateGroupForm';
-import { UsersToInvite } from '../../src/components/UI/UsersToInvite';
 import { Form } from '../../src/components/UI/Form';
 
 const mock = jest.fn();
@@ -32,18 +31,6 @@ describe('<CreateGroupForm />', () => {
     form.find('#channelDistinct').simulate('change', mockEvent);
     expect(form.state('channelDistinct')).toBe(form.find('#channelDistinct').prop('value'));
   });
-  it('should add users to array', () => {
-    const form = shallow(<CreateGroupForm onSubmitForm={mock} />);
-    expect(form.state('usersToInvite')).toEqual([]);
-    form.find('.invite-button').simulate('click');
-    expect(form.state('usersToInvite').length).toBeGreaterThan(0);
-  });
-  // it('should del user from array', () => {
-  //   const form = shallow(<CreateGroupForm onSubmitForm={mock} />);
-  //   form.setState({ usersToInvite: ['user', 'test'] });
-  //   form.find(UsersToInvite).find('li:first-child button').simulate('click', { target: { id: 'user' } });
-  //   expect(form.state('usersToInvite')).toHaveLength(1);
-  // });
   it('should call onSubmitForm', () => {
     const form = shallow(<CreateGroupForm onSubmitForm={mock} />);
     form.find(Form).simulate('submit', mockEvent);

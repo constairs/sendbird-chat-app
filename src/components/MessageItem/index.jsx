@@ -11,7 +11,7 @@ import { EditMessageForm } from '../EditMessageForm';
 import { ImgWrap } from '../ImgRound';
 import { Button } from '../UI/Button';
 
-const StyledImg = styled(ImgWrap)`
+export const StyledImg = styled(ImgWrap)`
   width: 40px;
   min-width: 40px;
   height: 40px;
@@ -111,7 +111,7 @@ export class MessageItem extends React.Component {
           </Button>
         ) : null}
         {userId === message.sender.userId ? (
-          <Button onClick={this.handleEditMessage} if="editMessage" className="edit-btn">
+          <Button onClick={this.handleEditMessage} id="editMessage" className="edit-btn">
             <FontAwesomeIcon icon={faPen} />
           </Button>
         ) : null}

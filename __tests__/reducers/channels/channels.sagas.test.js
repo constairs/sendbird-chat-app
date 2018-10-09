@@ -240,17 +240,17 @@ describe('refreshMembersSaga', () => {
   });
 });
 
-describe('membersRefresher', () => {
-  const action = {
-    type: TYPES.GET_SELECTED_CHANNEL_SUCCESSED,
-    payload: { url: 'https://url.com/' },
-  };
-  const gen = sagas.membersRefresher(action);
-  it('should members refresh', () => {
-    expect(gen.next().value).toEqual(call(delay, 20000));
-    expect(gen.next().value).toEqual(sagas.refreshMembersSaga(action));
-  });
-});
+// describe('membersRefresher', () => {
+//   const action = {
+//     type: TYPES.GET_SELECTED_CHANNEL_SUCCESSED,
+//     payload: { url: 'https://url.com/' },
+//   };
+//   const gen = sagas.membersRefresher(action);
+//   it('should members refresh', () => {
+//     expect(gen.next().value).toEqual(call(delay, 20000));
+//     expect(gen.next().value).toEqual(sagas.refreshMembersSaga(action));
+//   });
+// });
 
 describe('getParticipantsSaga', () => {
   const action = {
